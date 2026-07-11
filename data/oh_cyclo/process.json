@@ -22,5 +22,9 @@
     "total_cases": 1073,
     "last_week": "2026-07-04",
     "hash": "91bd1a1c289039d9c2c8afa8d58e57ea"
+  },
+  "standard_state": {
+    "./data/oh_cyclo/measure_info.json": "4a51df2084eb928ef1df99bb05fa31df",
+    "./data/oh_cyclo/standard/data.csv.gz": "64f90d181e7027417e6f787f543128d1"
   }
 }
