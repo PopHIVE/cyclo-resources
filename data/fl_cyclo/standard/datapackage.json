@@ -1,0 +1,277 @@
+{
+  "name": "fl_cyclo",
+  "title": "Fl Cyclo",
+  "licence": {
+    "url": "http://opendatacommons.org/licenses/pddl",
+    "name": "Open Data Commons Public Domain",
+    "version": "1.0",
+    "id": "odc-pddl"
+  },
+  "resources": [
+    {
+      "bytes": 18529,
+      "encoding": "ISO-8859-1",
+      "md5": "7d79074da3397658642b3a036d6caa11",
+      "format": "csv",
+      "name": "data.csv",
+      "filename": "data.csv.gz",
+      "versions": {},
+      "source": [],
+      "data_format": "wide",
+      "ids": [
+        {
+          "variable": "geography"
+        }
+      ],
+      "id_length": 5,
+      "time": "time",
+      "profile": "data-resource",
+      "created": "2026-07-10 23:23:57.261183",
+      "last_modified": "2026-07-10 22:54:13.865677",
+      "vintage": {},
+      "row_count": 6968,
+      "entity_count": 67,
+      "schema": {
+        "fields": [
+          {
+            "name": "geography",
+            "duplicates": 6901,
+            "info": [],
+            "time_range": [0, 103],
+            "type": "integer",
+            "missing": 0,
+            "mean": 12067.910448,
+            "sd": 38.398469,
+            "min": 12001,
+            "max": 12133
+          },
+          {
+            "name": "time",
+            "duplicates": 6864,
+            "info": [],
+            "time_range": [0, 103],
+            "type": "string",
+            "missing": 0,
+            "table": {
+              "2024-07-13": 67,
+              "2024-07-20": 67,
+              "2024-07-27": 67,
+              "2024-08-03": 67,
+              "2024-08-10": 67,
+              "2024-08-17": 67,
+              "2024-08-24": 67,
+              "2024-08-31": 67,
+              "2024-09-07": 67,
+              "2024-09-14": 67,
+              "2024-09-21": 67,
+              "2024-09-28": 67,
+              "2024-10-05": 67,
+              "2024-10-12": 67,
+              "2024-10-19": 67,
+              "2024-10-26": 67,
+              "2024-11-02": 67,
+              "2024-11-09": 67,
+              "2024-11-16": 67,
+              "2024-11-23": 67,
+              "2024-11-30": 67,
+              "2024-12-07": 67,
+              "2024-12-14": 67,
+              "2024-12-21": 67,
+              "2024-12-28": 67,
+              "2025-01-04": 67,
+              "2025-01-11": 67,
+              "2025-01-18": 67,
+              "2025-01-25": 67,
+              "2025-02-01": 67,
+              "2025-02-08": 67,
+              "2025-02-15": 67,
+              "2025-02-22": 67,
+              "2025-03-01": 67,
+              "2025-03-08": 67,
+              "2025-03-15": 67,
+              "2025-03-22": 67,
+              "2025-03-29": 67,
+              "2025-04-05": 67,
+              "2025-04-12": 67,
+              "2025-04-19": 67,
+              "2025-04-26": 67,
+              "2025-05-03": 67,
+              "2025-05-10": 67,
+              "2025-05-17": 67,
+              "2025-05-24": 67,
+              "2025-05-31": 67,
+              "2025-06-07": 67,
+              "2025-06-14": 67,
+              "2025-06-21": 67,
+              "2025-06-28": 67,
+              "2025-07-05": 67,
+              "2025-07-12": 67,
+              "2025-07-19": 67,
+              "2025-07-26": 67,
+              "2025-08-02": 67,
+              "2025-08-09": 67,
+              "2025-08-16": 67,
+              "2025-08-23": 67,
+              "2025-08-30": 67,
+              "2025-09-06": 67,
+              "2025-09-13": 67,
+              "2025-09-20": 67,
+              "2025-09-27": 67,
+              "2025-10-04": 67,
+              "2025-10-11": 67,
+              "2025-10-18": 67,
+              "2025-10-25": 67,
+              "2025-11-01": 67,
+              "2025-11-08": 67,
+              "2025-11-15": 67,
+              "2025-11-22": 67,
+              "2025-11-29": 67,
+              "2025-12-06": 67,
+              "2025-12-13": 67,
+              "2025-12-20": 67,
+              "2025-12-27": 67,
+              "2026-01-03": 67,
+              "2026-01-10": 67,
+              "2026-01-17": 67,
+              "2026-01-24": 67,
+              "2026-01-31": 67,
+              "2026-02-07": 67,
+              "2026-02-14": 67,
+              "2026-02-21": 67,
+              "2026-02-28": 67,
+              "2026-03-07": 67,
+              "2026-03-14": 67,
+              "2026-03-21": 67,
+              "2026-03-28": 67,
+              "2026-04-04": 67,
+              "2026-04-11": 67,
+              "2026-04-18": 67,
+              "2026-04-25": 67,
+              "2026-05-02": 67,
+              "2026-05-09": 67,
+              "2026-05-16": 67,
+              "2026-05-23": 67,
+              "2026-05-30": 67,
+              "2026-06-06": 67,
+              "2026-06-13": 67,
+              "2026-06-20": 67,
+              "2026-06-27": 67,
+              "2026-07-04": 67
+            }
+          },
+          {
+            "name": "fl_cyclo_cases",
+            "duplicates": 6960,
+            "info": {
+              "id": "fl_cyclo_cases",
+              "short_name": "Cyclosporiasis cases (confirmed)",
+              "long_name": "Confirmed cyclosporiasis case counts, Florida counties, weekly",
+              "category": "infectious_disease",
+              "short_description": "Weekly count of confirmed cyclosporiasis cases reported by county in Florida.",
+              "long_description": "Weekly (MMWR epi-week, Sunday-Saturday) count of confirmed cyclosporiasis cases among Florida residents, by county of residence, as reported to the Florida Department of Health's Merlin reportable disease surveillance system and published via the FLHealthCHARTS Reportable Diseases Frequency Report. Counts reflect the diagnosis status filter 'CONFIRMED'. Weeks/counties with no reported cases are recorded as 0.",
+              "statement": "In {location}, {value} confirmed cyclosporiasis cases were reported for the week ending {time}.",
+              "measure_type": "Count",
+              "unit": "Count",
+              "time_resolution": "Week",
+              "restrictions": "Public domain / no restrictions noted.",
+              "sources": [
+                {
+                  "id": "fl_merlin"
+                }
+              ]
+            },
+            "time_range": [0, 103],
+            "type": "integer",
+            "missing": 0,
+            "mean": 0.059414,
+            "sd": 0.349168,
+            "min": 0,
+            "max": 8
+          },
+          {
+            "name": "fl_cyclo_cases_probable",
+            "duplicates": 6965,
+            "info": {
+              "id": "fl_cyclo_cases_probable",
+              "short_name": "Cyclosporiasis cases (probable)",
+              "long_name": "Probable cyclosporiasis case counts, Florida counties, weekly",
+              "category": "infectious_disease",
+              "short_description": "Weekly count of probable cyclosporiasis cases reported by county in Florida.",
+              "long_description": "Weekly (MMWR epi-week, Sunday-Saturday) count of probable cyclosporiasis cases among Florida residents, by county of residence, as reported to the Florida Department of Health's Merlin reportable disease surveillance system and published via the FLHealthCHARTS Reportable Diseases Frequency Report. Counts reflect the diagnosis status filter 'PROBABLE'. Weeks/counties with no reported cases are recorded as 0.",
+              "statement": "In {location}, {value} probable cyclosporiasis cases were reported for the week ending {time}.",
+              "measure_type": "Count",
+              "unit": "Count",
+              "time_resolution": "Week",
+              "restrictions": "Public domain / no restrictions noted.",
+              "sources": [
+                {
+                  "id": "fl_merlin"
+                }
+              ]
+            },
+            "time_range": [0, 103],
+            "type": "integer",
+            "missing": 0,
+            "mean": 0.003875,
+            "sd": 0.066592,
+            "min": 0,
+            "max": 2
+          }
+        ]
+      },
+      "sha512": "9928cc65408fe86558635a511c00aac911ac35a80b88e1e53adc049763aefa62b3df609696a714d0227227e9a2115eba452e4301a8c170fc3de704f6695949f5"
+    }
+  ],
+  "measure_info": {
+    "fl_cyclo_cases": {
+      "id": "fl_cyclo_cases",
+      "short_name": "Cyclosporiasis cases (confirmed)",
+      "long_name": "Confirmed cyclosporiasis case counts, Florida counties, weekly",
+      "category": "infectious_disease",
+      "short_description": "Weekly count of confirmed cyclosporiasis cases reported by county in Florida.",
+      "long_description": "Weekly (MMWR epi-week, Sunday-Saturday) count of confirmed cyclosporiasis cases among Florida residents, by county of residence, as reported to the Florida Department of Health's Merlin reportable disease surveillance system and published via the FLHealthCHARTS Reportable Diseases Frequency Report. Counts reflect the diagnosis status filter 'CONFIRMED'. Weeks/counties with no reported cases are recorded as 0.",
+      "statement": "In {location}, {value} confirmed cyclosporiasis cases were reported for the week ending {time}.",
+      "measure_type": "Count",
+      "unit": "Count",
+      "time_resolution": "Week",
+      "restrictions": "Public domain / no restrictions noted.",
+      "sources": [
+        {
+          "id": "fl_merlin"
+        }
+      ],
+      "citations": []
+    },
+    "fl_cyclo_cases_probable": {
+      "id": "fl_cyclo_cases_probable",
+      "short_name": "Cyclosporiasis cases (probable)",
+      "long_name": "Probable cyclosporiasis case counts, Florida counties, weekly",
+      "category": "infectious_disease",
+      "short_description": "Weekly count of probable cyclosporiasis cases reported by county in Florida.",
+      "long_description": "Weekly (MMWR epi-week, Sunday-Saturday) count of probable cyclosporiasis cases among Florida residents, by county of residence, as reported to the Florida Department of Health's Merlin reportable disease surveillance system and published via the FLHealthCHARTS Reportable Diseases Frequency Report. Counts reflect the diagnosis status filter 'PROBABLE'. Weeks/counties with no reported cases are recorded as 0.",
+      "statement": "In {location}, {value} probable cyclosporiasis cases were reported for the week ending {time}.",
+      "measure_type": "Count",
+      "unit": "Count",
+      "time_resolution": "Week",
+      "restrictions": "Public domain / no restrictions noted.",
+      "sources": [
+        {
+          "id": "fl_merlin"
+        }
+      ],
+      "citations": []
+    },
+    "_sources": {
+      "fl_merlin": {
+        "name": "FLHealthCHARTS Reportable Diseases Frequency Report (Merlin surveillance system)",
+        "url": "https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency",
+        "organization": "Florida Department of Health, Bureau of Epidemiology",
+        "organization_url": "https://www.floridahealth.gov/",
+        "description": "County-level, weekly frequency counts of reportable/infectious diseases in Florida, drawn from the state's Merlin disease surveillance system and published through the FLHealthCHARTS.gov 'Reportable Diseases Frequency Report'. Data are updated every Thursday to reflect the previous MMWR epidemiologic week (Sunday-Saturday). Counts include confirmed and/or probable cases among Florida residents, filterable by county (all 67), disease/condition, diagnosis status, acquired status, age group, and a custom report date range. This ingest queries the report's underlying dimension-grid endpoint directly (one request per MMWR week, per diagnosis status) because the report UI itself only exposes month/year-level pivot fields, not a week-level one; the date-range filter is used as the week selector to recover true weekly resolution. Case counts for recent weeks may be revised in subsequent updates as investigations are completed (reporting lag), and very small counts may reflect ongoing case classification.",
+        "restrictions": "Public domain / no restrictions noted.",
+        "date_accessed": 2026
+      },
+      "id": "_sources"
+    }
+  }
+}

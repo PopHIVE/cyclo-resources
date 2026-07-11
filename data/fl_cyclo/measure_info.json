@@ -1,0 +1,43 @@
+{
+  "fl_cyclo_cases": {
+    "id": "fl_cyclo_cases",
+    "short_name": "Cyclosporiasis cases (confirmed)",
+    "long_name": "Confirmed cyclosporiasis case counts, Florida counties, weekly",
+    "category": "infectious_disease",
+    "short_description": "Weekly count of confirmed cyclosporiasis cases reported by county in Florida.",
+    "long_description": "Weekly (MMWR epi-week, Sunday-Saturday) count of confirmed cyclosporiasis cases among Florida residents, by county of residence, as reported to the Florida Department of Health's Merlin reportable disease surveillance system and published via the FLHealthCHARTS Reportable Diseases Frequency Report. Counts reflect the diagnosis status filter 'CONFIRMED'. Weeks/counties with no reported cases are recorded as 0.",
+    "statement": "In {location}, {value} confirmed cyclosporiasis cases were reported for the week ending {time}.",
+    "measure_type": "Count",
+    "unit": "Count",
+    "time_resolution": "Week",
+    "restrictions": "Public domain / no restrictions noted.",
+    "sources": [{ "id": "fl_merlin" }],
+    "citations": []
+  },
+  "fl_cyclo_cases_probable": {
+    "id": "fl_cyclo_cases_probable",
+    "short_name": "Cyclosporiasis cases (probable)",
+    "long_name": "Probable cyclosporiasis case counts, Florida counties, weekly",
+    "category": "infectious_disease",
+    "short_description": "Weekly count of probable cyclosporiasis cases reported by county in Florida.",
+    "long_description": "Weekly (MMWR epi-week, Sunday-Saturday) count of probable cyclosporiasis cases among Florida residents, by county of residence, as reported to the Florida Department of Health's Merlin reportable disease surveillance system and published via the FLHealthCHARTS Reportable Diseases Frequency Report. Counts reflect the diagnosis status filter 'PROBABLE'. Weeks/counties with no reported cases are recorded as 0.",
+    "statement": "In {location}, {value} probable cyclosporiasis cases were reported for the week ending {time}.",
+    "measure_type": "Count",
+    "unit": "Count",
+    "time_resolution": "Week",
+    "restrictions": "Public domain / no restrictions noted.",
+    "sources": [{ "id": "fl_merlin" }],
+    "citations": []
+  },
+  "_sources": {
+    "fl_merlin": {
+      "name": "FLHealthCHARTS Reportable Diseases Frequency Report (Merlin surveillance system)",
+      "url": "https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency",
+      "organization": "Florida Department of Health, Bureau of Epidemiology",
+      "organization_url": "https://www.floridahealth.gov/",
+      "description": "County-level, weekly frequency counts of reportable/infectious diseases in Florida, drawn from the state's Merlin disease surveillance system and published through the FLHealthCHARTS.gov 'Reportable Diseases Frequency Report'. Data are updated every Thursday to reflect the previous MMWR epidemiologic week (Sunday-Saturday). Counts include confirmed and/or probable cases among Florida residents, filterable by county (all 67), disease/condition, diagnosis status, acquired status, age group, and a custom report date range. This ingest queries the report's underlying dimension-grid endpoint directly (one request per MMWR week, per diagnosis status) because the report UI itself only exposes month/year-level pivot fields, not a week-level one; the date-range filter is used as the week selector to recover true weekly resolution. Case counts for recent weeks may be revised in subsequent updates as investigations are completed (reporting lag), and very small counts may reflect ongoing case classification.",
+      "restrictions": "Public domain / no restrictions noted.",
+      "date_accessed": 2026
+    }
+  }
+}

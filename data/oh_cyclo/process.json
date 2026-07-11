@@ -1,0 +1,26 @@
+{
+  "name": "oh_cyclo",
+  "type": "source",
+  "scripts": [
+    {
+      "path": "ingest.R",
+      "manual": false,
+      "frequency": 0,
+      "last_run": "",
+      "run_time": "",
+      "last_status": {
+        "log": "",
+        "success": true
+      }
+    }
+  ],
+  "checked": "",
+  "check_results": [],
+  "standalone": false,
+  "raw_state": {
+    "n_rows": 608,
+    "total_cases": 1073,
+    "last_week": "2026-07-04",
+    "hash": "91bd1a1c289039d9c2c8afa8d58e57ea"
+  }
+}

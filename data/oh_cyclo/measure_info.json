@@ -1,0 +1,46 @@
+{
+  "oh_cyclo_cases": {
+    "id": "oh_cyclo_cases",
+    "short_name": "Cyclosporiasis cases (OH)",
+    "long_name": "Weekly reported Cyclosporiasis case counts by Ohio county",
+    "category": "respiratory",
+    "short_description": "Number of reported Cyclosporiasis cases in an Ohio county for a given Sunday-Saturday week.",
+    "long_description": "Weekly count of Cyclosporiasis cases by county of residence, extracted directly from the Ohio Department of Health's public 'Summary of Infectious Diseases in Ohio' Tableau dashboard. Values are read from the dashboard's own county map view, filtered to 'Reportable Condition' = Cyclosporiasis and to a single Sunday-Saturday week at a time. Counties with no cases reported in a given week are recorded as 0 (zero-filled from an annual pre-scan; see restrictions/methodology notes). Cases labeled 'Unknown' county by the source (residence not attributable to a specific Ohio county) are excluded from the county-level file.",
+    "statement": "In {location}, {value} Cyclosporiasis cases were reported for the week ending {time}",
+    "measure_type": "Count",
+    "unit": "Cases",
+    "time_resolution": "Week",
+    "restrictions": "Public domain. Ohio Department of Health data is generally not subject to copyright restrictions.",
+    "sources": [{ "id": "odh_infectious_disease_dashboard" }],
+    "citations": []
+  },
+  "suppressed_flag": {
+    "id": "suppressed_flag",
+    "short_name": "Suppressed/imputed flag",
+    "long_name": "Indicator for suppressed or imputed case counts",
+    "category": "respiratory",
+    "short_description": "1 if the case count was suppressed by the source and imputed, 0 otherwise.",
+    "long_description": "ODH's dashboard states that 'some data may be unavailable if fewer than ten cases are reported over the chosen timeframe.' During development, this county x week extraction was tested extensively (single-digit county counts, and statewide annual totals as low as 1-7 cases, were all returned by the source without being hidden), and no suppression was observed to occur at this specific resolution (county map, no age/sex/race breakdown). This column is always 0 in the current extraction and is retained for DCF schema compliance and so that if suppression is later observed (e.g. if the pipeline is extended to a demographic breakdown), imputed rows can be flagged consistently with other PopHIVE sources.",
+    "statement": "",
+    "measure_type": "Indicator",
+    "unit": "0/1",
+    "time_resolution": "Week",
+    "restrictions": "Public domain. Ohio Department of Health data is generally not subject to copyright restrictions.",
+    "sources": [{ "id": "odh_infectious_disease_dashboard" }],
+    "citations": []
+  },
+
+  "_sources": {
+    "odh_infectious_disease_dashboard": {
+      "name": "Summary of Infectious Diseases in Ohio",
+      "url": "https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio",
+      "organization": "Ohio Department of Health",
+      "organization_url": "https://odh.ohio.gov/",
+      "location": "Tableau Server dashboard (site ODHDPPUB, workbook GeneralCaseCountPublicPROD, view GeographicalDistribution)",
+      "location_url": "https://analytics.das.ohio.gov/t/ODHDPPUB/views/GeneralCaseCountPublicPROD/GeographicalDistribution",
+      "description": "Public dashboard launched March 2024 covering 100+ reportable infectious diseases in Ohio back to 2001, updated on a rolling basis (daily/weekly). Filterable by county, timeframe, age, sex, race, and ethnicity through the live dashboard UI; this ingest queries the dashboard's underlying Tableau Server view directly via its CSV crosstab export endpoint, setting the 'Reportable Condition' quick filter to Cyclosporiasis and the 'p_startdate'/'p_enddate' date parameters to each Sunday-Saturday week in turn, to obtain true county x week resolution. Non-perinatal hepatitis B, hepatitis C, HIV/AIDS, sexually transmitted diseases, and tuberculosis are excluded from this dashboard by ODH and are not part of this pipeline. ODH states that some data may be unavailable when fewer than ten cases are reported over a chosen timeframe, though this was not observed to affect the specific county-map view used here (see suppressed_flag notes).",
+      "restrictions": "Public domain. Ohio Department of Health data is generally not subject to copyright restrictions.",
+      "date_accessed": 2026
+    }
+  }
+}

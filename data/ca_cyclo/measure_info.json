@@ -1,0 +1,61 @@
+{
+  "ca_cyclo_cases_ytd": {
+    "id": "ca_cyclo_cases_ytd",
+    "short_name": "Cyclosporiasis cases, YTD (CA county)",
+    "long_name": "Year-to-date cumulative cyclosporiasis case counts by California county",
+    "category": "infectious_disease",
+    "short_description": "Cumulative cyclosporiasis cases reported in a California county since January 1 of that year, as of the most recent quarterly CDPH release.",
+    "long_description": "Cumulative (Year-to-Date, Jan 1 through the end of the covered period) count of confirmed or probable cyclosporiasis cases among California residents, by Local Health Jurisdiction (LHJ), as published in CDPH's 'Provisional Summary Report of Selected California Reportable Diseases'. CDPH republishes this report roughly quarterly (e.g. Jan-Mar, Jan-Jun, Jan-Sep, and a Dec year-end release), each time restating the full YTD total since January 1 of that year - it is NOT a within-period incremental count. LHJ values are mapped to county-level FIPS: the independent city health departments of Berkeley, Long Beach, and Pasadena are summed into their surrounding county (Alameda and Los Angeles respectively), mirroring the Detroit-City-into-Wayne-County convention used for mi_cyclo. Alpine and Sierra counties share a single combined 'Alpine/Sierra' LHJ in the source; since that single count cannot be disaggregated, the same value is duplicated onto BOTH counties' rows here, so a statewide sum across all 58 county rows will double-count that one LHJ's cases. Suppressed small counts ('SC' in the source, per DHCS de-identification guidelines) are recorded as missing (NA) with suppressed_flag = 1, not imputed to zero. IMPORTANT: unlike Michigan/Florida/Ohio, this source does NOT provide a true county x month cross-tab - the LHJ breakdown is YTD-cumulative only (no within-quarter month split by county); a separate month-level breakdown in the same source is statewide-only, with no county detail.",
+    "statement": "In {location}, {value} cumulative cyclosporiasis cases had been reported year-to-date as of {time}.",
+    "measure_type": "Count",
+    "unit": "Cumulative case count (YTD)",
+    "time_resolution": "Quarter",
+    "restrictions": "Public domain. CDPH data is generally not subject to copyright restrictions.",
+    "sources": [{ "id": "cdph_idb_provisional_report" }],
+    "citations": []
+  },
+  "ca_cyclo_cases_new": {
+    "id": "ca_cyclo_cases_new",
+    "short_name": "Cyclosporiasis new cases (CA county, quarterly)",
+    "long_name": "Newly reported cyclosporiasis cases since the prior quarterly CDPH release, by California county",
+    "category": "infectious_disease",
+    "short_description": "Incident (newly reported) cyclosporiasis cases in a California county since the previous quarterly CDPH release, within the same calendar year.",
+    "long_description": "Derived measure: the difference in ca_cyclo_cases_ytd for the same county between two consecutive quarterly CDPH releases WITHIN THE SAME CALENDAR YEAR (Year-to-Date resets to 0 every January 1, so a Q1-of-next-year value is never differenced against the prior year's Q4/year-end value - it is left NA instead). Because CDPH's provisional report page only ever displays the single latest YTD snapshot (no historical archive at this URL), this column can only be computed once this ingest script has collected at least two quarterly snapshots for a county in the same year; a county's first-observed quarter of a year will have a missing (NA) value here. Also NA whenever either endpoint quarter's count was suppressed ('SC'), since a safe increment cannot be computed through a suppressed value.",
+    "statement": "In {location}, {value} new cyclosporiasis cases were reported between the two most recent CDPH quarterly releases, ending {time}.",
+    "measure_type": "Incidence",
+    "unit": "New case count",
+    "time_resolution": "Quarter",
+    "restrictions": "Public domain. CDPH data is generally not subject to copyright restrictions.",
+    "sources": [{ "id": "cdph_idb_provisional_report" }],
+    "citations": []
+  },
+  "suppressed_flag": {
+    "id": "suppressed_flag",
+    "short_name": "Suppressed count flag",
+    "long_name": "Indicator for a CDPH-suppressed small case count",
+    "category": "infectious_disease",
+    "short_description": "1 if CDPH suppressed this county/quarter's case count as 'SC' (small numbers), 0 otherwise.",
+    "long_description": "CDPH masks ('SC' - Suppressed Count) case counts that are too small to publish under the California Department of Health Care Services (DHCS) Data De-identification Guidelines. When suppressed_flag = 1, ca_cyclo_cases_ytd (and any ca_cyclo_cases_new computed across a suppressed endpoint) is recorded as NA rather than imputed to zero or a small placeholder value, since the true count is confidentially masked and could be any small nonzero number.",
+    "statement": "",
+    "measure_type": "Indicator",
+    "unit": "0/1",
+    "time_resolution": "Quarter",
+    "restrictions": "Public domain. CDPH data is generally not subject to copyright restrictions.",
+    "sources": [{ "id": "cdph_idb_provisional_report" }],
+    "citations": []
+  },
+
+  "_sources": {
+    "cdph_idb_provisional_report": {
+      "name": "Provisional Summary Report of Selected California Reportable Diseases",
+      "url": "https://www.cdph.ca.gov/Programs/CID/DCDC/Pages/IDBProvisionalSummaryReport.aspx",
+      "organization": "California Department of Public Health (CDPH), Infectious Diseases Branch",
+      "organization_url": "https://www.cdph.ca.gov/",
+      "location": "Static Quarto/R Markdown report embedded via iframe on the CDPH page",
+      "location_url": "https://skylab.cdph.ca.gov/idbsssprovisional/SSSprovisional.html",
+      "description": "CDPH's Infectious Diseases Branch publishes a provisional, cumulative Year-to-Date summary of ~65 reportable diseases (including Cyclosporiasis) roughly quarterly, by month (statewide only) and by California Local Health Jurisdiction (county-level, YTD-cumulative only - see caveats). A separate static PDF 'Year-end' report is published annually for finalized prior-year totals (not currently ingested by this pipeline; only the live provisional report is scraped here). Data are provisional and subject to revision in later releases as case investigations complete. Small counts are suppressed ('SC') per DHCS de-identification guidelines.",
+      "restrictions": "Public domain. CDPH data is generally not subject to copyright restrictions.",
+      "date_accessed": 2026
+    }
+  }
+}
