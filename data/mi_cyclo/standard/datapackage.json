@@ -9,13 +9,18 @@
   },
   "resources": [
     {
-      "bytes": 253,
-      "encoding": "ISO-8859-1",
-      "md5": "4d835ab229a4c612ee1db2719236fe4e",
+      "bytes": 534,
+      "encoding": "windows-1252",
+      "md5": "e94dc0bb86c491f9e7024206114297ba",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
-      "versions": {},
+      "versions": {
+        "hash": ["d85a5e2ce223b3148d7912bdb4251aac1cb4a974"],
+        "author": ["weinbergerlab <dweinber@gmail.com>"],
+        "date": ["Fri Jul 10 23:35:15 2026 -0400"],
+        "message": ["init"]
+      },
       "source": [],
       "data_format": "wide",
       "ids": [
@@ -26,39 +31,93 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-07-10 22:23:56.940895",
-      "last_modified": "2026-07-10 22:23:56.926493",
+      "created": "2026-07-14 18:22:15.30228",
+      "last_modified": "2026-07-14 18:22:15.30228",
       "vintage": {},
-      "row_count": 43,
-      "entity_count": 43,
+      "row_count": 98,
+      "entity_count": 55,
       "schema": {
         "fields": [
           {
             "name": "geography",
-            "duplicates": 0,
+            "duplicates": 43,
             "info": [],
-            "time_range": [0, 0],
-            "type": "integer",
-            "missing": 0,
-            "mean": 26088.116279,
-            "sd": 45.350072,
-            "min": 26005,
-            "max": 26163
-          },
-          {
-            "name": "time",
-            "duplicates": 42,
-            "info": [],
-            "time_range": [0, 0],
+            "time_range": [0, 1],
             "type": "string",
             "missing": 0,
             "table": {
-              "2026-07-11": 43
+              "26005": 2,
+              "26007": 1,
+              "26015": 2,
+              "26019": 2,
+              "26021": 1,
+              "26023": 1,
+              "26025": 2,
+              "26027": 2,
+              "26029": 2,
+              "26035": 1,
+              "26037": 2,
+              "26039": 1,
+              "26041": 1,
+              "26045": 2,
+              "26047": 2,
+              "26049": 2,
+              "26055": 2,
+              "26057": 2,
+              "26059": 2,
+              "26061": 2,
+              "26063": 2,
+              "26065": 2,
+              "26067": 2,
+              "26073": 2,
+              "26075": 2,
+              "26077": 2,
+              "26081": 2,
+              "26087": 2,
+              "26089": 2,
+              "26091": 2,
+              "26093": 2,
+              "26099": 2,
+              "26101": 2,
+              "26105": 2,
+              "26107": 1,
+              "26111": 2,
+              "26115": 2,
+              "26117": 2,
+              "26121": 2,
+              "26123": 1,
+              "26125": 2,
+              "26127": 1,
+              "26133": 1,
+              "26137": 2,
+              "26139": 2,
+              "26143": 1,
+              "26145": 2,
+              "26147": 2,
+              "26149": 2,
+              "26151": 2,
+              "26155": 2,
+              "26157": 2,
+              "26159": 1,
+              "26161": 2,
+              "26163": 2
+            }
+          },
+          {
+            "name": "time",
+            "duplicates": 96,
+            "info": [],
+            "time_range": [0, 1],
+            "type": "string",
+            "missing": 0,
+            "table": {
+              "2026-07-11": 43,
+              "2026-07-18": 55
             }
           },
           {
             "name": "mi_cyclo_cases_cumulative",
-            "duplicates": 19,
+            "duplicates": 52,
             "info": {
               "id": "mi_cyclo_cases_cumulative",
               "short_name": "Cyclosporiasis cases, cumulative (MI county)",
@@ -76,17 +135,17 @@
                 }
               ]
             },
-            "time_range": [0, 0],
+            "time_range": [0, 1],
             "type": "integer",
             "missing": 0,
-            "mean": 29.046512,
-            "sd": 49.481576,
+            "mean": 39.581633,
+            "sd": 69.783897,
             "min": 1,
-            "max": 215
+            "max": 363
           },
           {
             "name": "mi_cyclo_cases_new",
-            "duplicates": 42,
+            "duplicates": 67,
             "info": {
               "id": "mi_cyclo_cases_new",
               "short_name": "Cyclosporiasis new cases (MI county, weekly)",
@@ -104,13 +163,17 @@
                 }
               ]
             },
-            "time_range": [-1, -1],
-            "type": "unknown",
-            "missing": 43
+            "time_range": [1, 1],
+            "type": "integer",
+            "missing": 55,
+            "mean": 31.186047,
+            "sd": 46.291137,
+            "min": 0,
+            "max": 191
           }
         ]
       },
-      "sha512": "ee360747296293ce3ba53f538f01dc799a96e6e3296c64a64495149df316b6f87f772505c221441875e81aa76f3af16c7abea8064b1b5bc7cf9235233797e500"
+      "sha512": "58bffa874d9f0edf1a085ed2b3a4fd6a197ddec91c01a256d6beeee965aae527b40c0ba37b97f6f98eaf1fb71fbafabdf58640f3d5d75bc90294a080e71bdec6"
     }
   ],
   "measure_info": {
@@ -163,6 +226,32 @@
         "date_accessed": 2026
       },
       "id": "_sources"
+    }
+  },
+  "change_report": {
+    "data.csv.gz": {
+      "state": "changed",
+      "variables": {
+        "geography": {
+          "status": "present",
+          "same_type": false,
+          "added_levels": ["26005", "26007", "26015", "26019", "26021", "26023", "26025", "26027", "26029", "26035", "26037", "26039", "26041", "26045", "26047", "26049", "26055", "26057", "26059", "26061", "26063", "26065", "26067", "26073", "26075", "26077", "26081", "26087", "26089", "26091", "26093", "26099", "26101", "26105", "26107", "26111", "26115", "26117", "26121", "26123", "26125", "26127", "26133", "26137", "26139", "26143", "26145", "26147", "26149", "26151", "26155", "26157", "26159", "26161", "26163"]
+        },
+        "time": {
+          "status": "present",
+          "same_type": true,
+          "added_levels": "2026-07-18",
+          "dropped_levels": []
+        },
+        "mi_cyclo_cases_cumulative": {
+          "status": "present",
+          "same_type": true
+        },
+        "mi_cyclo_cases_new": {
+          "status": "present",
+          "same_type": false
+        }
+      }
     }
   }
 }

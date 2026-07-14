@@ -6,6 +6,10 @@ case counts at the finest available spatial (county) and temporal (weekly)
 resolution, following the same conventions as
 [PopHIVE/Ingest](https://github.com/PopHIVE/Ingest).
 
+There is also a dashboard highlighting these resources: https://pophive.github.io/cyclo-resources/
+
+Please cite the use of data from PopHIVE and the original source. the DOI for PopHIVE is [![DOI](https://zenodo.org/badge/1018069747.svg)](https://doi.org/10.5281/zenodo.17345935)
+
 ## Scope
 
 Cyclosporiasis is a nationally notifiable disease, but CDC's national NNDSS

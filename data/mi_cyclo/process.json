@@ -5,24 +5,31 @@
     {
       "path": "ingest.R",
       "manual": false,
+      "last_run": "2026-07-14 18:22:15",
       "frequency": 0,
-      "last_run": "",
-      "run_time": "",
+      "run_time": 0.201,
       "last_status": {
-        "log": "",
+        "log": [],
         "success": true
       }
     }
   ],
-  "checked": "",
-  "check_results": [],
+  "checked": "2026-07-14 18:23:01",
+  "check_results": {
+    "data/mi_cyclo/raw/mi_cyclo_county_snapshots.csv": {
+      "data": "not_compressed"
+    },
+    "data/mi_cyclo/standard/data.csv.gz": {
+      "measures": ["type_changed: geography", "type_changed: mi_cyclo_cases_new"]
+    }
+  },
   "standalone": false,
   "raw_state": {
-    "last_update_date": "2026-07-09",
-    "county_data": "Allegan:2|Barry:1|Benzie:1|Calhoun:2|Cass:2|Charlevoix:2|Clinton:12|Detroit City:12|Eaton:12|Emmet:1|Genesee:35|Grand Traverse:1|Gratiot:17|Hillsdale:6|Houghton:1|Huron:26|Ingham:55|Ionia:14|Isabella:2|Jackson:56|Kalamazoo:6|Kent:9|Lapeer:4|Leelanau:1|Lenawee:105|Livingston:40|Macomb:15|Manistee:1|Mason:2|Midland:2|Monroe:215|Montcalm:6|Muskegon:25|Oakland:88|Otsego:1|Ottawa:15|Saginaw:13|Sanilac:21|Shiawassee:82|St. Clair:4|St Joseph:3|Tuscola:12|Washtenaw:159|Wayne:160"
+    "last_update_date": "2026-07-13",
+    "county_data": "Allegan:9|Alpena:1|Barry:2|Benzie:2|Berrien:4|Branch:4|Calhoun:32|Cass:4|Charlevoix:4|Clare:1|Clinton:71|Crawford:7|Delta:1|Detroit City:24|Eaton:59|Emmet:1|Genesee:85|Grand Traverse:2|Gratiot:22|Hillsdale:15|Houghton:1|Huron:35|Ingham:219|Ionia:54|Isabella:3|Jackson:82|Kalamazoo:28|Kent:20|Lapeer:10|Leelanau:1|Lenawee:161|Livingston:105|Macomb:42|Manistee:1|Mason:3|Mecosta:1|Midland:3|Monroe:258|Montcalm:19|Muskegon:63|Newaygo:4|Oakland:192|Oceana:1|Osceola:1|Otsego:1|Ottawa:38|Roscommon:3|Saginaw:25|Sanilac:29|Shiawassee:208|St. Clair:10|St Joseph:6|Tuscola:12|Van Buren:12|Washtenaw:290|Wayne:339"
   },
   "standard_state": {
     "./data/mi_cyclo/measure_info.json": "a637e2964c370746c7621070efc7844b",
-    "./data/mi_cyclo/standard/data.csv.gz": "4d835ab229a4c612ee1db2719236fe4e"
+    "./data/mi_cyclo/standard/data.csv.gz": "e94dc0bb86c491f9e7024206114297ba"
   }
 }
