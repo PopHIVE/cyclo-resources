@@ -1,4 +1,4 @@
-# cyclo_scraper
+# cyclo-resources
 
 A standalone [DCF](https://dissc-yale.github.io/dcf/) (Data Collection
 Framework) project that collects U.S. cyclosporiasis (Cyclospora infection)
@@ -48,7 +48,7 @@ county+weekly+current bar and did not qualify:
 Follows PopHIVE/Ingest conventions exactly:
 
 ```
-cyclo_scraper/
+cyclo-resources/
 ├── data/
 │   ├── fl_cyclo/{ingest.R, measure_info.json, process.json, raw/, standard/}
 │   ├── mi_cyclo/{...}

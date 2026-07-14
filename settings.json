@@ -1,7 +1,7 @@
 {
-  "name": "cyclo_scraper",
+  "name": "cyclo-resources",
   "data_dir": "data",
   "github_account": "",
   "branch": "main",
-  "repo_name": "cyclo_scraper"
+  "repo_name": "cyclo-resources"
 }
