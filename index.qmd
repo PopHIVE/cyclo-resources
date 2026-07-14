@@ -676,7 +676,7 @@ Epic Health Alerts has identified **Michigan** and **Ohio** as currently experie
 | Ohio | State-Wide | 6/22/2026 | 18.8* |
 
 ##### Stay Updated
-These numbers are preliminary and subject to change as more data arrive. Visit the Epic Health Alerts dashboard regularly for the latest information: https://www.epicresearch.org/health-alerts/
+These numbers are preliminary and subject to change as more data arrive. Visit the [Epic Health Alerts dashboard](https://www.epicresearch.org/health-alerts/) regularly for the latest information.
 
 ```{=html}
 <details class="chart-info">
