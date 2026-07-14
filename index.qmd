@@ -104,6 +104,12 @@ MAP_YEARS <- 2022:YEAR
 SCRAPER_STATE_FIPS <- c("12", "26", "39") # FL, MI, OH
 state_names <- c(FL = "Florida", MI = "Michigan", OH = "Ohio")
 
+# States with zero cyclosporiasis cases reported to NNDSS in every year
+# 2022-2026; shown as missing (not colored) on the national map rather than
+# as a true zero, since a flat zero more likely reflects no reporting than
+# no cases.
+NO_REPORT_STATES <- c("Idaho", "Minnesota", "Mississippi", "Pennsylvania")
+
 BASE_DIR  <- "C:/Users/as5325/Desktop"
 CACHE_DIR <- file.path(BASE_DIR, "cyclo_map_cache")
 dir.create(CACHE_DIR, showWarnings = FALSE, recursive = TRUE)
@@ -211,6 +217,10 @@ state_data_by_year <- bind_rows(lapply(MAP_YEARS, function(yr) {
   all_state_pop %>%
     left_join(ytd, by = "geography") %>%
     mutate(cases = ifelse(is.na(cases), 0, cases),
+           # Force perennial non-reporters to NA (missing) instead of 0, in
+           # every year, so they render as unfilled on the map rather than
+           # implying a confirmed zero-case count.
+           cases = ifelse(geography_name %in% NO_REPORT_STATES, NA_real_, cases),
            cases_per_100k = cases / popsize * 100000,
            mmwr_year = yr)
 }))
@@ -240,6 +250,20 @@ mi_county <- mi %>%
   filter(format(time, "%Y") == as.character(YEAR), time == max(time)) %>%
   group_by(geography) %>%
   summarize(cases = sum(mi_cyclo_cases_cumulative, na.rm = TRUE), .groups = "drop")
+
+# MDHHS's actual posted "Last Update" date - distinct from mi$time above,
+# which is that date rolled forward to the Saturday ending its reporting week
+# (see mi_cyclo's ingest.R). Read from the raw scrape snapshots, which record
+# the true posted date, so this stays current automatically as MDHHS updates
+# the page instead of being hardcoded here.
+mi_last_update <- vroom::vroom(
+  file.path(cyclo_dir, "data/mi_cyclo/raw/mi_cyclo_county_snapshots.csv"),
+  show_col_types = FALSE
+) %>%
+  pull(last_update_date) %>%
+  as.Date() %>%
+  max() %>%
+  format("%b %d, %Y")
 
 county_cases <- bind_rows(fl_county, oh_county, mi_county)
 
@@ -424,9 +448,13 @@ Standardized data can be found on our <a href="https://github.com/PopHIVE/Ingest
 annual_brks <- c(0, 0.1, 0.25, 0.5, 1, 2, 3, 5)
 
 state_data_by_year <- state_data_by_year %>%
-  mutate(hover_text = paste0(geography_name, ": ", scales::comma(cases),
-                              " case", ifelse(cases == 1, "", "s"),
-                              " (", sprintf("%.1f", cases_per_100k), " per 100,000)"))
+  mutate(hover_text = ifelse(
+    is.na(cases),
+    paste0(geography_name, ": missing (no cases reported since 2022)"),
+    paste0(geography_name, ": ", scales::comma(cases),
+           " case", ifelse(cases == 1, "", "s"),
+           " (", sprintf("%.1f", cases_per_100k), " per 100,000)")
+  ))
 
 z_max <- log1p(max(state_data_by_year$cases_per_100k, na.rm = TRUE))
 default_year <- YEAR
@@ -439,7 +467,7 @@ map_title <- list(
   text = paste0(
     "<b>Cyclosporiasis Cases by State (NNDSS)</b><br>",
     "<span style='font-size:12px;color:#767676'>Cases per 100,000 population by state. 2026 data are ",
-    "through July 4. See county-level detail for FL, MI, and OH below.</span>"
+    "through July 4. See county-level detail for MI, OH, and FL below.</span>"
   ),
   font = plotly_title_font, x = 0, xanchor = "left"
 )
@@ -498,6 +526,8 @@ p_national <- p_national %>%
 p_national
 ```
 
+<p class="source-note" style="margin-top: 1.5rem;">States shown as missing (unfilled) have reported zero cyclosporiasis cases to NNDSS in every year from 2022 onward.</p>
+
 ```{=html}
 <details class="chart-info">
 <summary>About this chart</summary>
@@ -516,23 +546,23 @@ state_totals <- county_data %>%
   mutate(abbr = fips_to_abbr[substr(geography, 1, 2)]) %>%
   group_by(abbr) %>%
   summarize(cases = sum(cases), popsize = sum(popsize), .groups = "drop") %>%
+  arrange(match(abbr, c("MI", "OH", "FL"))) %>%
   transmute(
     State = paste0(state_names[abbr], ifelse(abbr == "MI", "*", "")),
     `Number of cases` = scales::comma(cases),
     `Cases per 100,000` = sprintf("%.1f", cases / popsize * 100000),
     # state_asof["MI"] is the Saturday ending MI's reporting week (per
     # mi_cyclo's ingest convention), not MDHHS's own "Last Update" date -
-    # override with MDHHS's actual posted date here.
-    `Last updated` = ifelse(abbr == "MI", "Jul 13, 2026", state_asof[abbr])
-  ) %>%
-  arrange(State)
+    # override with MDHHS's actual posted date (mi_last_update) here.
+    `Last updated` = ifelse(abbr == "MI", mi_last_update, state_asof[abbr])
+  )
 
 cat("As noted above, data from NNDSS for this year may not be the most up-to-date. Below are totals reported by states for 2026:\n\n")
 cat(knitr::kable(state_totals, format = "pipe"), sep = "\n")
 cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026, not a full-year total.\n")
 ```
 
-### FL, MI, and OH: county-level detail
+### MI, OH, and FL: county-level detail
 
 These three states display case counts at the county level collected from state health departments. 
 Hover over a county to see its case count. Most states only report cases at the state level. 
@@ -608,14 +638,6 @@ make_county_plot <- function(abbr) {
 
 
 ```{r}
-#| label: county-fl
-#| fig-width: 9
-#| fig-height: 7
-make_county_plot("FL")
-```
-
-
-```{r}
 #| label: county-mi
 #| fig-width: 9
 #| fig-height: 7
@@ -628,6 +650,14 @@ make_county_plot("MI")
 #| fig-width: 9
 #| fig-height: 7
 make_county_plot("OH")
+```
+
+
+```{r}
+#| label: county-fl
+#| fig-width: 9
+#| fig-height: 7
+make_county_plot("FL")
 ```
 
 ```{=html}
