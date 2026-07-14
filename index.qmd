@@ -523,7 +523,7 @@ state_totals <- county_data %>%
   ) %>%
   arrange(State)
 
-cat("As noted above, data from NNDSS for this year may not be the most accurate. Below are totals reported by states for 2026:\n\n")
+cat("NNDSS data for 2026 are preliminary and subject to revision as delayed reports arrive. Below are totals reported by states for 2026:\n\n")
 cat(knitr::kable(state_totals, format = "pipe"), sep = "\n")
 cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026 (Southeast Michigan outbreak period), not a full-year total.\n")
 ```
