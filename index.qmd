@@ -10,6 +10,7 @@ format:
     title-block-banner-color: white
     toc: true
     toc-title: "On this page"
+    toc-expand: true
     code-fold: true
     fig-align: center
     smart: false
@@ -519,11 +520,14 @@ state_totals <- county_data %>%
     State = paste0(state_names[abbr], ifelse(abbr == "MI", "*", "")),
     `Number of cases` = scales::comma(cases),
     `Cases per 100,000` = sprintf("%.1f", cases / popsize * 100000),
-    `Last updated` = state_asof[abbr]
+    # state_asof["MI"] is the Saturday ending MI's reporting week (per
+    # mi_cyclo's ingest convention), not MDHHS's own "Last Update" date -
+    # override with MDHHS's actual posted date here.
+    `Last updated` = ifelse(abbr == "MI", "Jul 13, 2026", state_asof[abbr])
   ) %>%
   arrange(State)
 
-cat("NNDSS data for 2026 are preliminary and subject to revision as delayed reports arrive. Below are totals reported by states for 2026:\n\n")
+cat("As noted above, data from NNDSS for this year may not be the most up-to-date. Below are totals reported by states for 2026:\n\n")
 cat(knitr::kable(state_totals, format = "pipe"), sep = "\n")
 cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026 (Southeast Michigan outbreak period), not a full-year total.\n")
 ```
@@ -629,12 +633,12 @@ make_county_plot("OH")
 ```{=html}
 <details class="chart-info">
 <summary>About these charts</summary>
-<p>cyclosporiasis  cases are obtained from individual state health departments. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; and raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>.</p>
+<p>Cyclosporiasis  cases are obtained from individual state health departments. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; and raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>.</p>
 </details>
 ```
 
 ### Epic Health Alerts: elevated cyclosporiasis detected
-Epic Health Alerts has identified **Michigan** and **Ohio** as currently experiencing elevated rates of cyclosporiasis, with cases significantly above historical levels for this time of year.
+Epic Health Alerts has identified **Michigan** and **Ohio** as currently experiencing elevated rates of cyclosporiasis, with cases significantly above historical levels for this time of year. Data are current through July 14, 2026.
 
 | State | Location | Estimated Onset | Cases per 100k (Latest Week) |
 |---|---|---|---|
@@ -647,6 +651,7 @@ These numbers are preliminary and subject to change as more data arrive. Visit t
 ```{=html}
 <details class="chart-info">
 <summary>How alerts are triggered</summary>
+<p> Health Alerts are generated based on analysis in Epic Cosmos, based on data from Epic Cosmos participating organizations. They do not reflect complete case counts for a condition but rather evaluate population level trends of disease activity. The data can be viewed at https://www.epicresearch.org/health-alerts/. <br>
 <p>Epic Health Alerts flag conditions when three criteria are met:<br>
 1. Current rates exceed those from the same period last year<br>
 2. The proportion of affected patients shows accelerating growth<br>
