@@ -142,7 +142,7 @@ pophive_magma_colorscale <- local({
 cyclo_dir <- file.path(CACHE_DIR, "cyclo_resources")
 if (!dir.exists(cyclo_dir)) {
   system2("git", c("clone", "--depth", "1",
-                    "https://github.com/PopHIVE/cyclo_resources.git", shQuote(cyclo_dir)),
+                    "https://github.com/PopHIVE/cyclo-resources.git", shQuote(cyclo_dir)),
           stdout = FALSE, stderr = FALSE)
 } else {
   system2("git", c("-C", shQuote(cyclo_dir), "pull", "--ff-only"),
@@ -172,6 +172,7 @@ download_if_missing(
 
 ```{r}
 #| label: prep-data
+#| results: hide
 
 # FIPS + population lookups (state, and county for FL/MI/OH)
 all_fips <- vroom::vroom(file.path(CACHE_DIR, "all_fips.csv.gz"), show_col_types = FALSE)
@@ -271,15 +272,15 @@ county_map <- us_counties %>% left_join(county_data, by = c("GEOID" = "geography
 ```
 
 Cyclosporiasis is a diarrhea-causing infection from the parasite Cyclospira. It is spread through contaminated
-food and water. While we typically see cases spike during the summer months, the CDC's National Notifiable Diseases Surveillance System (NNDSS) 
-is reporting almost 2,000 cumulative cases this year, making it the largest outbreak in U.S. history, and cases continue to rise. 
+food and water. While we typically see cases spike during the summer months, the CDC's National Notifiable Diseases Surveillance System (NNDSS) is 
+reporting almost 2,000 cumulative cases this year, making it the largest outbreak of reported cases. 
 In comparison, the U.S typically saw about half as many cases by this time in previous years. 
 
 Cyclosporiasis is a nationally notifiable disease and is mandated to be 
 reported in 47 states, but the exact total number of cases is difficult to pin down for several reasons. 
-Local health departments are responsible for tracking and reporting case counts to states, which then report to the CDC. 
-Additionally, not everyone with diarrhea seeks medical care, and diarrhea has many causes beyond cyclosporiasis, which complicates 
-case tracking. This dashboard tracks reported cases, combining CDC's NNDSS data 
+Local health departments are responsible for tracking and reporting case counts to states, which then report to the CDC. Additionally, not everyone with 
+diarrhea seeks medical care, most people with diarrhea are not tested for cyclosporiasis, and diarrhea has many causes beyond cyclosporiasis, which complicates case tracking
+This dashboard tracks reported cases, combining CDC's NNDSS data 
 with additional data at the county level from three states: Florida,
 Michigan, and Ohio. Data reflected below are current as of `r as_of`.
 
@@ -298,6 +299,14 @@ nnds_national_weekly <- nnds %>%
   select(geography, mmwr_year, mmwr_week, cases = cyclosporiasis) %>%
   mutate(geography_name = "United States")
 
+# MMWR week 1 of a year is defined by CDC as the week (Sun-Sat) containing
+# January 4th; every subsequent week is 7 days on from that.
+mmwr_week_ending <- function(year, week) {
+  jan4 <- as.Date(paste0(year, "-01-04"))
+  week1_start <- jan4 - as.integer(format(jan4, "%w"))
+  week1_start + (week - 1) * 7 + 6
+}
+
 nnds_state_weekly <- nnds %>%
   filter(!is.na(geography), mmwr_year >= 2022) %>%
   select(geography, mmwr_year, mmwr_week, cases = cyclosporiasis) %>%
@@ -307,7 +316,8 @@ nnds_state_weekly <- nnds %>%
   # geography/year; plotly's "lines" mode draws points in row order (unlike
   # ggplot's geom_line, which auto-sorts by x), so an unsorted feed here
   # zig-zags into what looks like many lines instead of one clean line.
-  arrange(geography_name, mmwr_year, mmwr_week)
+  arrange(geography_name, mmwr_year, mmwr_week) %>%
+  mutate(week_ending_label = format(mmwr_week_ending(mmwr_year, mmwr_week), "%b %d"))
 
 states_sorted <- sort(unique(nnds_state_weekly$geography_name))
 years_sorted  <- sort(unique(nnds_state_weekly$mmwr_year))
@@ -342,7 +352,8 @@ for (st in states_sorted) {
       line = list(color = pophive_line_colors[i],
                   dash = ifelse(pophive_line_types[i] == "dashed", "dash", "solid")),
       marker = list(color = pophive_line_colors[i], size = 5),
-      hovertemplate = paste0(st, ", week %{x}: %{y} cases<extra>", yr, "</extra>")
+      customdata = ~week_ending_label,
+      hovertemplate = paste0(st, ", week %{x} (week ending %{customdata}): %{y} cases<extra>", yr, "</extra>")
     )
   }
 }
@@ -426,8 +437,8 @@ default_year <- YEAR
 map_title <- list(
   text = paste0(
     "<b>Cyclosporiasis Cases by State (NNDSS)</b><br>",
-    "<span style='font-size:12px;color:#767676'>Cases per 100,000 population by state. 2026 are ",
-    "through July 4. See county detail for FL, MI, OH below.</span>"
+    "<span style='font-size:12px;color:#767676'>Cases per 100,000 population by state. 2026 data are ",
+    "through July 4. See county-level detail for FL, MI, and OH below.</span>"
   ),
   font = plotly_title_font, x = 0, xanchor = "left"
 )
@@ -494,6 +505,29 @@ Standardized data can be found on our <a href="https://github.com/PopHIVE/Ingest
 </details>
 ```
 
+```{r}
+#| label: national-map-state-totals
+#| results: asis
+
+fips_to_abbr <- setNames(names(state_names), SCRAPER_STATE_FIPS)
+
+state_totals <- county_data %>%
+  mutate(abbr = fips_to_abbr[substr(geography, 1, 2)]) %>%
+  group_by(abbr) %>%
+  summarize(cases = sum(cases), popsize = sum(popsize), .groups = "drop") %>%
+  transmute(
+    State = paste0(state_names[abbr], ifelse(abbr == "MI", "*", "")),
+    `Number of cases` = scales::comma(cases),
+    `Cases per 100,000` = sprintf("%.1f", cases / popsize * 100000),
+    `Last updated` = state_asof[abbr]
+  ) %>%
+  arrange(State)
+
+cat("As noted above, data from NNDSS for this year may not be the most accurate. Below are totals reported by states for 2026:\n\n")
+cat(knitr::kable(state_totals, format = "pipe"), sep = "\n")
+cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026 (Southeast Michigan outbreak period), not a full-year total.\n")
+```
+
 ### FL, MI, and OH: county-level detail
 
 These three states display case counts at the county level collected from state health departments. 
@@ -529,9 +563,9 @@ state_sources <- c(
 # FL's feed is explicitly preliminary (subject to revision for 1-2 weeks per
 # its README); MI/OH are not flagged that way, hence the differing wording.
 state_subtitles <- c(
-  FL = paste0("Cumulative year-to-date preliminary cyclosporiasis  cases per 100,000 population as of ", state_asof[["FL"]], "."),
+  FL = paste0("Cumulative year-to-date preliminary cyclosporiasis cases per 100,000 population as of ", state_asof[["FL"]], "."),
   MI = paste0("Cumulative preliminary cyclosporiasis  cases per 100,000 population reported during<br>the outbreak investigation (as of ", state_asof[["MI"]], ", starting July 1, 2026)."),
-  OH = paste0("Cumulative year-to-date preliminary cyclosporiasis  cases per 100,000 population as of ", state_asof[["OH"]], ".")
+  OH = paste0("Cumulative year-to-date preliminary cyclosporiasis cases per 100,000 population as of ", state_asof[["OH"]], ".")
 )
 
 make_county_plot <- function(abbr) {
@@ -595,9 +629,33 @@ make_county_plot("OH")
 ```{=html}
 <details class="chart-info">
 <summary>About these charts</summary>
-<p>cyclosporiasis  cases are obtained from individual state health departments. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo_resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; and raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>.</p>
+<p>cyclosporiasis  cases are obtained from individual state health departments. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; and raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>.</p>
 </details>
 ```
+
+### Epic Health Alerts: elevated cyclosporiasis detected
+Epic Health Alerts has identified **Michigan** and **Ohio** as currently experiencing elevated rates of cyclosporiasis, with cases significantly above historical levels for this time of year.
+
+| State | Location | Estimated Onset | Cases per 100k (Latest Week) |
+|---|---|---|---|
+| Michigan | State-Wide | 6/22/2026 | 12.8* |
+| Ohio | State-Wide | 6/22/2026 | 18.8* |
+
+##### Stay Updated
+These numbers are preliminary and subject to change as more data arrive. Visit the Epic Health Alerts dashboard regularly for the latest information: https://www.epicresearch.org/health-alerts/
+
+```{=html}
+<details class="chart-info">
+<summary>How alerts are triggered</summary>
+<p>Epic Health Alerts flag conditions when three criteria are met:<br>
+1. Current rates exceed those from the same period last year<br>
+2. The proportion of affected patients shows accelerating growth<br>
+3. The increase is statistically significant compared to the prior three years<br>
+See more in Epic Health Alerts' <a href="https://www.epicresearch.org/health-alerts/#methodology">methodology section</a>.</p>
+</details>
+```
+
+
 
 ```{=html}
 <footer class="pophive-footer">
