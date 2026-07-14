@@ -5,23 +5,30 @@
     {
       "path": "ingest.R",
       "manual": false,
+      "last_run": "2026-07-14 18:22:14",
       "frequency": 0,
-      "last_run": "",
-      "run_time": "",
+      "run_time": 13.189,
       "last_status": {
-        "log": "",
+        "log": [],
         "success": true
       }
     }
   ],
-  "checked": "",
-  "check_results": [],
+  "checked": "2026-07-14 18:23:01",
+  "check_results": {
+    "data/fl_cyclo/raw/fl_cyclo_fetched_weeks.csv": {
+      "data": "not_compressed"
+    },
+    "data/fl_cyclo/standard/data.csv.gz": {
+      "measures": "type_changed: geography"
+    }
+  },
   "standalone": false,
   "raw_state": {
-    "hash": "852fa61e3588ae7b9108ad8afddda0a5"
+    "hash": "3ff2ffe9d4557971b66975ed3e13e8b0"
   },
   "standard_state": {
     "./data/fl_cyclo/measure_info.json": "cbf6884f94f1b9b5469955c4a260f793",
-    "./data/fl_cyclo/standard/data.csv.gz": "7d79074da3397658642b3a036d6caa11"
+    "./data/fl_cyclo/standard/data.csv.gz": "626e2c13c886d256bda2a24f160e2787"
   }
 }

@@ -7,5 +7,370 @@
     "version": "1.0",
     "id": "odc-pddl"
   },
-  "resources": []
+  "resources": [
+    {
+      "bytes": 1791,
+      "encoding": "windows-1252",
+      "md5": "28dbe0c0ac3495ce922152db45660c2a",
+      "format": "csv",
+      "name": "data.csv",
+      "filename": "data.csv.gz",
+      "versions": {
+        "hash": ["256c65b8d1b6cee9ffa9f84d04feaf46e2fc9555"],
+        "author": ["weinbergerlab <dweinber@gmail.com>"],
+        "date": ["Tue Jul 14 10:02:28 2026 -0400"],
+        "message": ["adds oregon scraper"]
+      },
+      "source": [],
+      "data_format": "wide",
+      "ids": [
+        {
+          "variable": "geography"
+        }
+      ],
+      "id_length": 0,
+      "time": "time",
+      "profile": "data-resource",
+      "created": "2026-07-14 18:18:27.22134",
+      "last_modified": "2026-07-14 18:18:27.22134",
+      "vintage": {},
+      "row_count": 676,
+      "entity_count": 37,
+      "schema": {
+        "fields": [
+          {
+            "name": "geography",
+            "duplicates": 639,
+            "info": [],
+            "time_range": [0, 63],
+            "type": "string",
+            "missing": 0,
+            "table": {
+              "41": 64,
+              "41001": 17,
+              "41003": 17,
+              "41005": 17,
+              "41007": 17,
+              "41009": 17,
+              "41011": 17,
+              "41013": 17,
+              "41015": 17,
+              "41017": 17,
+              "41019": 17,
+              "41021": 17,
+              "41023": 17,
+              "41025": 17,
+              "41027": 17,
+              "41029": 17,
+              "41031": 17,
+              "41033": 17,
+              "41035": 17,
+              "41037": 17,
+              "41039": 17,
+              "41041": 17,
+              "41043": 17,
+              "41045": 17,
+              "41047": 17,
+              "41049": 17,
+              "41051": 17,
+              "41053": 17,
+              "41055": 17,
+              "41057": 17,
+              "41059": 17,
+              "41061": 17,
+              "41063": 17,
+              "41065": 17,
+              "41067": 17,
+              "41069": 17,
+              "41071": 17
+            }
+          },
+          {
+            "name": "time",
+            "duplicates": 612,
+            "info": [],
+            "time_range": [0, 63],
+            "type": "string",
+            "missing": 0,
+            "table": {
+              "2021-03-01": 1,
+              "2021-04-01": 1,
+              "2021-05-01": 1,
+              "2021-06-01": 1,
+              "2021-07-01": 1,
+              "2021-08-01": 1,
+              "2021-09-01": 1,
+              "2021-10-01": 1,
+              "2021-11-01": 1,
+              "2021-12-01": 1,
+              "2022-01-01": 1,
+              "2022-02-01": 1,
+              "2022-03-01": 1,
+              "2022-04-01": 1,
+              "2022-05-01": 1,
+              "2022-06-01": 1,
+              "2022-07-01": 1,
+              "2022-08-01": 1,
+              "2022-09-01": 1,
+              "2022-10-01": 1,
+              "2022-11-01": 1,
+              "2022-12-01": 1,
+              "2023-01-01": 1,
+              "2023-02-01": 1,
+              "2023-03-01": 1,
+              "2023-04-01": 1,
+              "2023-05-01": 1,
+              "2023-06-01": 1,
+              "2023-07-01": 1,
+              "2023-08-01": 1,
+              "2023-09-01": 1,
+              "2023-10-01": 1,
+              "2023-11-01": 1,
+              "2023-12-01": 1,
+              "2024-01-01": 1,
+              "2024-02-01": 1,
+              "2024-03-01": 1,
+              "2024-04-01": 1,
+              "2024-05-01": 1,
+              "2024-06-01": 1,
+              "2024-07-01": 1,
+              "2024-08-01": 1,
+              "2024-09-01": 1,
+              "2024-10-01": 1,
+              "2024-11-01": 1,
+              "2024-12-01": 37,
+              "2025-01-01": 37,
+              "2025-02-01": 37,
+              "2025-03-01": 37,
+              "2025-04-01": 37,
+              "2025-05-01": 37,
+              "2025-06-01": 37,
+              "2025-07-01": 37,
+              "2025-08-01": 37,
+              "2025-09-01": 37,
+              "2025-10-01": 37,
+              "2025-11-01": 37,
+              "2025-12-01": 37,
+              "2026-01-01": 37,
+              "2026-02-01": 37,
+              "2026-03-01": 37,
+              "2026-04-01": 37,
+              "2026-05-01": 1,
+              "2026-06-01": 1
+            }
+          },
+          {
+            "name": "or_cyclo_cases",
+            "duplicates": 666,
+            "info": {
+              "id": "or_cyclo_cases",
+              "short_name": "Cyclosporiasis cases, statewide (OR)",
+              "long_name": "Statewide monthly cyclosporiasis case counts, Oregon",
+              "category": "infectious_disease",
+              "short_description": "Monthly count of cyclosporiasis cases reported statewide in Oregon.",
+              "long_description": "Monthly count of cyclosporiasis cases among Oregon residents, statewide (not broken down by county - see or_cyclo_cases_county for the separate county-level series), as published in the Oregon Health Authority's 'Monthly CD Surveillance Report' Tableau Public dashboard, 'Statewide' tab, 'Statewide Monthly' worksheet. Time reflects the report period end date (a Saturday) truncated to its month. Months with no reported cases are recorded as an explicit 0. Never observed to be suppressed by OHA, even at a value of 1, in contrast to the county-level series.",
+              "statement": "In Oregon, {value} cyclosporiasis cases were reported statewide for the month ending {time}.",
+              "measure_type": "Count",
+              "unit": "Count",
+              "time_resolution": "Month",
+              "restrictions": "Public domain / no restrictions noted.",
+              "sources": [
+                {
+                  "id": "oha_monthly_cd_dashboard"
+                }
+              ]
+            },
+            "time_range": [0, 63],
+            "type": "integer",
+            "missing": 612,
+            "mean": 1.609375,
+            "sd": 2.990021,
+            "min": 0,
+            "max": 12
+          },
+          {
+            "name": "suppressed_flag",
+            "duplicates": 674,
+            "info": {
+              "id": "suppressed_flag",
+              "short_name": "Statewide count suppressed flag",
+              "long_name": "Indicator for an OHA-masked statewide monthly case count",
+              "category": "infectious_disease",
+              "short_description": "1 if OHA masked the statewide monthly case count, 0 otherwise.",
+              "long_description": "Retained for schema consistency with county_suppressed_flag; always 0 in practice, since no statewide monthly Cyclosporiasis count was observed to be masked during development (values as low as 1 were shown unmasked).",
+              "measure_type": "Indicator",
+              "unit": "0/1",
+              "time_resolution": "Month",
+              "restrictions": "Public domain / no restrictions noted.",
+              "sources": [
+                {
+                  "id": "oha_monthly_cd_dashboard"
+                }
+              ]
+            },
+            "time_range": [0, 63],
+            "type": "integer",
+            "missing": 612,
+            "mean": 0,
+            "sd": 0,
+            "min": 0,
+            "max": 0
+          },
+          {
+            "name": "or_cyclo_cases_county",
+            "duplicates": 674,
+            "info": {
+              "id": "or_cyclo_cases_county",
+              "short_name": "Cyclosporiasis cases, by county (OR)",
+              "long_name": "County-level monthly cyclosporiasis case counts, Oregon",
+              "category": "infectious_disease",
+              "short_description": "Monthly count of cyclosporiasis cases reported by Oregon county, mostly suppressed due to small counts.",
+              "long_description": "Monthly count of cyclosporiasis cases by Oregon county of residence, as published in the Oregon Health Authority's 'Monthly CD Surveillance Report' Tableau Public dashboard, 'by County' tab, 'by County Count Table' worksheet. OHA masks any county-month cell with fewer than six cases as '<6'; because Oregon's statewide Cyclosporiasis total is itself usually in the single digits per month, county-level counts are suppressed for the overwhelming majority of county-months (332 of 333 checked during development were masked) - this is a real characteristic of the source, not a scraping gap. Masked values are recorded as NA with county_suppressed_flag = 1, not imputed. Months/counties with literally zero reported cases (a mark Tableau omits entirely, as opposed to masking) are recorded as an explicit 0. 'Unknown County' (case residence not attributable to a specific county) is excluded.",
+              "statement": "In {location}, {value} cyclosporiasis cases were reported for the month ending {time}.",
+              "measure_type": "Count",
+              "unit": "Count",
+              "time_resolution": "Month",
+              "restrictions": "Public domain / no restrictions noted.",
+              "sources": [
+                {
+                  "id": "oha_monthly_cd_dashboard"
+                }
+              ]
+            },
+            "time_range": [46, 60],
+            "type": "integer",
+            "missing": 136,
+            "mean": 0,
+            "sd": 0,
+            "min": 0,
+            "max": 0
+          },
+          {
+            "name": "county_suppressed_flag",
+            "duplicates": 673,
+            "info": {
+              "id": "county_suppressed_flag",
+              "short_name": "County count suppressed flag",
+              "long_name": "Indicator for an OHA-masked small county-month case count",
+              "category": "infectious_disease",
+              "short_description": "1 if OHA masked this county-month's case count as '<6' (small numbers), 0 otherwise.",
+              "long_description": "OHA masks ('<6') any county-month case count under six to prevent back-calculation of small cell counts. When county_suppressed_flag = 1, or_cyclo_cases_county is recorded as NA rather than imputed to zero or a placeholder value, since the true count (1-5) is confidentially masked. Given Oregon's low statewide Cyclosporiasis volume, this flag is 1 for the large majority of county-months.",
+              "measure_type": "Indicator",
+              "unit": "0/1",
+              "time_resolution": "Month",
+              "restrictions": "Public domain / no restrictions noted.",
+              "sources": [
+                {
+                  "id": "oha_monthly_cd_dashboard"
+                }
+              ]
+            },
+            "time_range": [45, 61],
+            "type": "integer",
+            "missing": 64,
+            "mean": 0.117647,
+            "sd": 0.322453,
+            "min": 0,
+            "max": 1
+          }
+        ]
+      },
+      "sha512": "29d53e5206a514178281a470e1cf32c29cda46135e023cb485efc669525f9a34d3424408042fbbc3e715632cd7a10674f02a7aa4efc2d3f8c06b914beba4d4b6"
+    }
+  ],
+  "measure_info": {
+    "or_cyclo_cases": {
+      "id": "or_cyclo_cases",
+      "short_name": "Cyclosporiasis cases, statewide (OR)",
+      "long_name": "Statewide monthly cyclosporiasis case counts, Oregon",
+      "category": "infectious_disease",
+      "short_description": "Monthly count of cyclosporiasis cases reported statewide in Oregon.",
+      "long_description": "Monthly count of cyclosporiasis cases among Oregon residents, statewide (not broken down by county - see or_cyclo_cases_county for the separate county-level series), as published in the Oregon Health Authority's 'Monthly CD Surveillance Report' Tableau Public dashboard, 'Statewide' tab, 'Statewide Monthly' worksheet. Time reflects the report period end date (a Saturday) truncated to its month. Months with no reported cases are recorded as an explicit 0. Never observed to be suppressed by OHA, even at a value of 1, in contrast to the county-level series.",
+      "statement": "In Oregon, {value} cyclosporiasis cases were reported statewide for the month ending {time}.",
+      "measure_type": "Count",
+      "unit": "Count",
+      "time_resolution": "Month",
+      "restrictions": "Public domain / no restrictions noted.",
+      "sources": [
+        {
+          "id": "oha_monthly_cd_dashboard"
+        }
+      ],
+      "citations": []
+    },
+    "or_cyclo_cases_county": {
+      "id": "or_cyclo_cases_county",
+      "short_name": "Cyclosporiasis cases, by county (OR)",
+      "long_name": "County-level monthly cyclosporiasis case counts, Oregon",
+      "category": "infectious_disease",
+      "short_description": "Monthly count of cyclosporiasis cases reported by Oregon county, mostly suppressed due to small counts.",
+      "long_description": "Monthly count of cyclosporiasis cases by Oregon county of residence, as published in the Oregon Health Authority's 'Monthly CD Surveillance Report' Tableau Public dashboard, 'by County' tab, 'by County Count Table' worksheet. OHA masks any county-month cell with fewer than six cases as '<6'; because Oregon's statewide Cyclosporiasis total is itself usually in the single digits per month, county-level counts are suppressed for the overwhelming majority of county-months (332 of 333 checked during development were masked) - this is a real characteristic of the source, not a scraping gap. Masked values are recorded as NA with county_suppressed_flag = 1, not imputed. Months/counties with literally zero reported cases (a mark Tableau omits entirely, as opposed to masking) are recorded as an explicit 0. 'Unknown County' (case residence not attributable to a specific county) is excluded.",
+      "statement": "In {location}, {value} cyclosporiasis cases were reported for the month ending {time}.",
+      "measure_type": "Count",
+      "unit": "Count",
+      "time_resolution": "Month",
+      "restrictions": "Public domain / no restrictions noted.",
+      "sources": [
+        {
+          "id": "oha_monthly_cd_dashboard"
+        }
+      ],
+      "citations": []
+    },
+    "county_suppressed_flag": {
+      "id": "county_suppressed_flag",
+      "short_name": "County count suppressed flag",
+      "long_name": "Indicator for an OHA-masked small county-month case count",
+      "category": "infectious_disease",
+      "short_description": "1 if OHA masked this county-month's case count as '<6' (small numbers), 0 otherwise.",
+      "long_description": "OHA masks ('<6') any county-month case count under six to prevent back-calculation of small cell counts. When county_suppressed_flag = 1, or_cyclo_cases_county is recorded as NA rather than imputed to zero or a placeholder value, since the true count (1-5) is confidentially masked. Given Oregon's low statewide Cyclosporiasis volume, this flag is 1 for the large majority of county-months.",
+      "measure_type": "Indicator",
+      "unit": "0/1",
+      "time_resolution": "Month",
+      "restrictions": "Public domain / no restrictions noted.",
+      "sources": [
+        {
+          "id": "oha_monthly_cd_dashboard"
+        }
+      ],
+      "citations": []
+    },
+    "suppressed_flag": {
+      "id": "suppressed_flag",
+      "short_name": "Statewide count suppressed flag",
+      "long_name": "Indicator for an OHA-masked statewide monthly case count",
+      "category": "infectious_disease",
+      "short_description": "1 if OHA masked the statewide monthly case count, 0 otherwise.",
+      "long_description": "Retained for schema consistency with county_suppressed_flag; always 0 in practice, since no statewide monthly Cyclosporiasis count was observed to be masked during development (values as low as 1 were shown unmasked).",
+      "measure_type": "Indicator",
+      "unit": "0/1",
+      "time_resolution": "Month",
+      "restrictions": "Public domain / no restrictions noted.",
+      "sources": [
+        {
+          "id": "oha_monthly_cd_dashboard"
+        }
+      ],
+      "citations": []
+    },
+    "_sources": {
+      "oha_monthly_cd_dashboard": {
+        "name": "Monthly CD Surveillance Report (Tableau Public)",
+        "url": "https://www.oregon.gov/oha/ph/diseasesconditions/communicabledisease/diseasesurveillancedata/weekly-monthlystatistics/pages/index.aspx",
+        "organization": "Oregon Health Authority (OHA), Acute and Communicable Disease Prevention Section",
+        "organization_url": "https://www.oregon.gov/oha/",
+        "location": "Tableau Public workbook 'MonthlyReportDashboard_EXTERNAL_AGGREGATED', view 'MonthlyReportDashboard' ('Statewide' and 'by County' tabs)",
+        "location_url": "https://public.tableau.com/views/MonthlyReportDashboard_EXTERNAL_AGGREGATED/MonthlyReportDashboard",
+        "description": "OHA publishes a monthly reportable-disease dashboard on Tableau Public, updated the second Wednesday of each month, covering ~51 diseases including Cyclosporiasis. The dashboard has separate tabs for statewide totals, by-county, by-age-group, by-sex, and by-race/ethnicity breakdowns, each lazily loaded as a distinct Tableau dashboard sheet within one workbook. This ingest scrapes the Statewide tab (exact monthly counts, full history since 2021) and the by-County tab (monthly county-level counts, masked as '<6' whenever a county-month has fewer than six cases - true for the large majority of Oregon's Cyclosporiasis county-months given its low overall volume). Oregon's separate weekly surveillance dashboard does not track Cyclosporiasis at all.",
+        "restrictions": "Public domain / no restrictions noted.",
+        "date_accessed": 2026
+      },
+      "id": "_sources"
+    }
+  },
+  "change_report": {
+    "data.csv.gz": {
+      "state": "new file"
+    }
+  }
 }

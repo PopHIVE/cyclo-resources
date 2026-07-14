@@ -5,21 +5,45 @@
     {
       "path": "ingest.R",
       "manual": false,
+      "last_run": "2026-07-14 18:22:01",
       "frequency": 0,
-      "last_run": "",
-      "run_time": "",
+      "run_time": 1.078,
       "last_status": {
-        "log": "",
+        "log": [
+          "",
+          "Attaching package: ‘dplyr’",
+          "",
+          "The following objects are masked from ‘package:stats’:",
+          "",
+          "    filter, lag",
+          "",
+          "The following objects are masked from ‘package:base’:",
+          "",
+          "    intersect, setdiff, setequal, union",
+          ""
+        ],
         "success": true
       }
     }
   ],
-  "checked": "",
-  "check_results": [],
+  "checked": "2026-07-14 18:23:01",
+  "check_results": {
+    "data/ca_cyclo/raw/ca_cyclo_cyclosporiasis_lhj_2026-03-31.csv": {
+      "data": "not_compressed"
+    },
+    "data/ca_cyclo/raw/ca_cyclo_lhj_snapshots.csv": {
+      "data": "not_compressed"
+    },
+    "data/ca_cyclo/standard/data.csv.gz": []
+  },
   "standalone": false,
   "raw_state": {
     "period": "January - March 2026 (As of May 01, 2026)",
     "report_last_updated": "June 18, 2026",
     "lhj_data": "Alameda:SC|Berkeley:SC|Alpine/Sierra:SC|Amador:SC|Butte:SC|Calaveras:SC|Colusa:SC|Contra Costa:SC|Del Norte:SC|El Dorado:SC|Fresno:SC|Glenn:SC|Humboldt:SC|Imperial:SC|Inyo:SC|Kern:SC|Kings:SC|Lake:SC|Lassen:SC|Los Angeles:SC|Long Beach:SC|Pasadena:SC|Madera:SC|Marin:SC|Mariposa:SC|Mendocino:SC|Merced:SC|Modoc:SC|Mono:SC|Monterey:SC|Napa:SC|Nevada:SC|Orange:SC|Placer:SC|Plumas:SC|Riverside:SC|Sacramento:SC|San Benito:SC|San Bernardino:SC|San Diego:SC|San Francisco:SC|San Joaquin:SC|San Luis Obispo:SC|San Mateo:SC|Santa Barbara:SC|Santa Clara:SC|Santa Cruz:SC|Shasta:SC|Siskiyou:SC|Solano:SC|Sonoma:SC|Stanislaus:SC|Sutter:SC|Tehama:SC|Trinity:SC|Tulare:SC|Tuolumne:SC|Ventura:SC|Yolo:SC|Yuba:SC"
+  },
+  "standard_state": {
+    "./data/ca_cyclo/measure_info.json": "60b87e014bda7f20c223f842f61153ad",
+    "./data/ca_cyclo/standard/data.csv.gz": "b01a3103bd286659f4b93d7844d03f17"
   }
 }

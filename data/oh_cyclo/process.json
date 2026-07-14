@@ -5,26 +5,33 @@
     {
       "path": "ingest.R",
       "manual": false,
+      "last_run": "2026-07-14 18:22:56",
       "frequency": 0,
-      "last_run": "",
-      "run_time": "",
+      "run_time": 41.516,
       "last_status": {
-        "log": "",
+        "log": [],
         "success": true
       }
     }
   ],
-  "checked": "",
-  "check_results": [],
+  "checked": "2026-07-14 18:23:01",
+  "check_results": {
+    "data/oh_cyclo/raw/oh_cyclo_fetched_weeks.csv": {
+      "data": "not_compressed"
+    },
+    "data/oh_cyclo/standard/data.csv.gz": {
+      "measures": "type_changed: geography"
+    }
+  },
   "standalone": false,
   "raw_state": {
-    "n_rows": 608,
-    "total_cases": 1073,
-    "last_week": "2026-07-04",
-    "hash": "91bd1a1c289039d9c2c8afa8d58e57ea"
+    "n_rows": 609,
+    "total_cases": 1074,
+    "last_week": "2026-07-11",
+    "hash": "bcbcd8707d9f8d6e9ea85fb7f24175cc"
   },
   "standard_state": {
     "./data/oh_cyclo/measure_info.json": "4a51df2084eb928ef1df99bb05fa31df",
-    "./data/oh_cyclo/standard/data.csv.gz": "64f90d181e7027417e6f787f543128d1"
+    "./data/oh_cyclo/standard/data.csv.gz": "e2fce73dfa3921c010e4fe055649bd4d"
   }
 }
