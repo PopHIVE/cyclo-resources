@@ -137,7 +137,7 @@ pophive_magma_colorscale <- local({
 #| label: fetch-data
 #| cache: true
 
-# cyclo_scraper is a private repo - clone/pull via git (uses cached GitHub
+# cyclo_resources is a private repo - clone/pull via git (uses cached GitHub
 # credentials); raw.githubusercontent.com download would 404 without a token.
 cyclo_dir <- file.path(CACHE_DIR, "cyclo_resources")
 if (!dir.exists(cyclo_dir)) {
