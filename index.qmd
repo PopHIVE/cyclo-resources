@@ -1,0 +1,608 @@
+---
+title: "PopHIVE cyclosporiasis  Resources"
+subtitle: "PopHIVE is a community-driven platform that empowers you with multiple sources of health data - so you can explore, understand, and act on what matters most."
+date: today
+from: markdown-smart
+format:
+  html:
+    embed-resources: true
+    title-block-banner: "#00356b"
+    title-block-banner-color: white
+    toc: true
+    toc-title: "On this page"
+    code-fold: true
+    fig-align: center
+    smart: false
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{=html}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Rubik', sans-serif; color: #26323d; background-color: #ffffff; padding-top: 2.75rem; }
+h1, h2, h3, h4, .title, .subtitle { font-family: 'Source Serif 4', serif; color: #00356b; font-weight: 600; }
+h2 { border-bottom: 2px solid #bedeff; padding-bottom: 0.3rem; margin-top: 2.5rem; }
+a { color: #00356b; }
+a:hover { color: #4e98e4; }
+.quarto-title-banner .title, .quarto-title-banner .subtitle, .quarto-title-banner .quarto-title-meta { color: #ffffff !important; }
+.quarto-title-banner { background-color: #00356b; }
+.figure-caption, figcaption { font-family: 'Rubik', sans-serif; color: #767676; font-size: 0.85rem; }
+::selection { background: #bedeff; }
+.source-note { font-size: 0.85rem; color: #767676; margin-top: -0.5rem; margin-bottom: 1.5rem; }
+.pophive-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: #00356b; padding: 0.7rem 1.5rem; display: flex; align-items: center;
+  justify-content: space-between; font-family: 'Rubik', sans-serif;
+}
+.pophive-nav a { color: #ffffff !important; text-decoration: none; font-size: 0.95rem; font-weight: 500; }
+.pophive-nav a:hover { color: #bedeff !important; }
+.pophive-brand {
+  font-family: 'Source Serif 4', serif !important; font-weight: 600 !important;
+  font-size: 1.15rem !important; letter-spacing: 0.02em;
+}
+.pophive-nav-links { display: flex; gap: 1.75rem; }
+.pophive-footer {
+  /* Breaks out of quarto's centered, max-width content column so the navy
+     band spans the full browser width, edge to edge, like the top nav. */
+  width: 100vw; position: relative; left: 50%; right: 50%;
+  margin-left: -50vw; margin-right: -50vw; margin-top: 3rem;
+  padding: 1.75rem 1.5rem; text-align: center;
+  background: #00356b; color: #dbe7f5; font-family: 'Rubik', sans-serif;
+  font-size: 0.85rem; line-height: 1.6;
+}
+.pophive-footer strong { font-family: 'Source Serif 4', serif; color: #ffffff; font-size: 1rem; }
+.pophive-footer a { color: #bedeff !important; }
+.pophive-footer a:hover { color: #ffffff !important; }
+.pophive-footer .disclaimer { color: #a9bdd4; font-size: 0.8rem; margin-top: 0.4rem; }
+.chart-info { margin: 0.5rem 0 2rem 0; }
+.chart-info summary {
+  display: inline-block; cursor: pointer; list-style: none;
+  font-family: 'Rubik', sans-serif; font-size: 0.85rem; font-weight: 500;
+  color: #00356b; background: #ffffff; border: 1px solid #00356b;
+  border-radius: 999px; padding: 0.35rem 0.9rem; user-select: none;
+}
+.chart-info summary::-webkit-details-marker { display: none; }
+.chart-info summary::before { content: "\24D8  "; }
+.chart-info summary:hover { background: #eaf2fc; }
+.chart-info[open] summary { background: #00356b; color: #ffffff; }
+.chart-info p {
+  margin: 0.75rem 0 0 0; font-size: 0.85rem; color: #444; max-width: 42rem;
+  background: #f7f9fc; border-left: 3px solid #bedeff; padding: 0.6rem 0.9rem;
+}
+/* Quarto's TOC nav links default to a single line and truncate; make nested
+   sub-section entries wrap onto multiple lines like normal body text. */
+#TOC a { white-space: normal; word-wrap: break-word; }
+</style>
+```
+
+```{=html}
+<nav class="pophive-nav">
+  <a href="https://www.pophive.org/" class="pophive-brand">PopHIVE</a>
+  <div class="pophive-nav-links">
+    <a href="https://www.pophive.org/">Home</a>
+    <a href="https://www.pophive.org/about">About</a>
+  </div>
+</nav>
+```
+
+```{r}
+#| label: setup
+#| include: false
+
+library(dplyr)
+library(sf)
+library(plotly)
+
+YEAR <- 2026
+MAP_YEARS <- 2022:YEAR
+SCRAPER_STATE_FIPS <- c("12", "26", "39") # FL, MI, OH
+state_names <- c(FL = "Florida", MI = "Michigan", OH = "Ohio")
+
+BASE_DIR  <- "C:/Users/as5325/Desktop"
+CACHE_DIR <- file.path(BASE_DIR, "cyclo_map_cache")
+dir.create(CACHE_DIR, showWarnings = FALSE, recursive = TRUE)
+as_of <- format(Sys.Date(), "%b %d, %Y")
+
+# -----------------------------------------------------------------------------
+# PopHIVE brand styling - colors and fonts matching
+# https://github.com/PopHIVE/PopHivePlots (navy #00356b, Source Serif 4 /
+# Rubik, viridis "magma" reversed for choropleths). All figures below are
+# plotly widgets, so fonts are picked up straight from the page's Google
+# Fonts <link> (no showtext/sysfonts needed - that's only for static ggplot
+# output).
+# -----------------------------------------------------------------------------
+pophive_navy <- "#00356b"
+pophive_line_colors <- c("#000004", "#29125a", "#6b1d80", "#ad347c", "#e95661", "#fe9e6d")
+pophive_line_types  <- c("solid", "dashed", "solid", "dashed", "solid", "dashed")
+
+# Shared font specs for the interactive (plotly) figures below.
+plotly_title_font   <- list(family = "Source Serif 4, serif", color = pophive_navy, size = 20)
+plotly_body_font    <- list(family = "Rubik, sans-serif", color = pophive_navy, size = 11)
+plotly_caption_font <- list(family = "Rubik, sans-serif", color = "gray50", size = 10)
+
+# viridis "magma" (reversed) colorscale, as a list of [fraction, hex] pairs
+# for plotly's `colorscale` argument - matches the ggplot maps' brand palette.
+pophive_magma_colorscale <- local({
+  hex <- viridisLite::magma(32, direction = -1)
+  Map(function(p, col) list(p, col), seq(0, 1, length.out = length(hex)), hex)
+})
+```
+
+```{r}
+#| label: fetch-data
+#| cache: true
+
+# cyclo_scraper is a private repo - clone/pull via git (uses cached GitHub
+# credentials); raw.githubusercontent.com download would 404 without a token.
+cyclo_dir <- file.path(CACHE_DIR, "cyclo_resources")
+if (!dir.exists(cyclo_dir)) {
+  system2("git", c("clone", "--depth", "1",
+                    "https://github.com/PopHIVE/cyclo_resources.git", shQuote(cyclo_dir)),
+          stdout = FALSE, stderr = FALSE)
+} else {
+  system2("git", c("-C", shQuote(cyclo_dir), "pull", "--ff-only"),
+          stdout = FALSE, stderr = FALSE)
+}
+
+download_if_missing <- function(url, dest) {
+  if (!file.exists(dest)) download.file(url, dest, mode = "wb", quiet = TRUE)
+}
+download_if_missing(
+  "https://raw.githubusercontent.com/PopHIVE/Ingest/main/data/nnds/standard/data.csv.gz",
+  file.path(CACHE_DIR, "nnds_data.csv.gz")
+)
+download_if_missing(
+  "https://raw.githubusercontent.com/PopHIVE/Ingest/main/resources/all_fips.csv.gz",
+  file.path(CACHE_DIR, "all_fips.csv.gz")
+)
+download_if_missing(
+  "https://raw.githubusercontent.com/PopHIVE/Ingest/main/resources/pop_state.csv.gz",
+  file.path(CACHE_DIR, "pop_state.csv.gz")
+)
+download_if_missing(
+  "https://raw.githubusercontent.com/PopHIVE/Ingest/main/resources/census_population_2021.csv.xz",
+  file.path(CACHE_DIR, "census_population_2021.csv.xz")
+)
+```
+
+```{r}
+#| label: prep-data
+
+# FIPS + population lookups (state, and county for FL/MI/OH)
+all_fips <- vroom::vroom(file.path(CACHE_DIR, "all_fips.csv.gz"), show_col_types = FALSE)
+state_fips <- all_fips %>%
+  filter(nchar(geography) == 2) %>%
+  select(geography, geography_name, state)
+
+pop_state_raw <- vroom::vroom(file.path(CACHE_DIR, "pop_state.csv.gz"), show_col_types = FALSE) %>%
+  filter(age_level == "Total") %>%
+  select(geography_name = geography, popsize)
+
+# All 50 states + DC, including FL/MI/OH
+all_state_pop <- state_fips %>%
+  inner_join(pop_state_raw, by = "geography_name") %>%
+  filter(geography_name != "United States")
+
+pop_county <- vroom::vroom(file.path(CACHE_DIR, "census_population_2021.csv.xz"), show_col_types = FALSE) %>%
+  filter(nchar(GEOID) == 5, substr(GEOID, 1, 2) %in% SCRAPER_STATE_FIPS) %>%
+  select(geography = GEOID, popsize = Total)
+
+# NNDS: state-level cumulative-YTD cyclosporiasis. cyclosporiasis is ALREADY
+# cumulative YTD per the source's measure_info.json, so take the latest
+# reported week rather than summing.
+nnds <- vroom::vroom(file.path(CACHE_DIR, "nnds_data.csv.gz"), show_col_types = FALSE)
+
+# One cumulative-YTD snapshot per state per year, back to MAP_YEARS[1] - the
+# national map's year dropdown lets users step through these.
+state_data_by_year <- bind_rows(lapply(MAP_YEARS, function(yr) {
+  ytd <- nnds %>%
+    filter(mmwr_year == yr, !is.na(geography)) %>%
+    group_by(geography) %>%
+    filter(mmwr_week == max(mmwr_week)) %>%
+    ungroup() %>%
+    select(geography, cases = cyclosporiasis)
+  all_state_pop %>%
+    left_join(ytd, by = "geography") %>%
+    mutate(cases = ifelse(is.na(cases), 0, cases),
+           cases_per_100k = cases / popsize * 100000,
+           mmwr_year = yr)
+}))
+
+# County-level feeds for FL / OH (weekly counts -> sum for YTD total) and MI
+# (already cumulative -> take latest snapshot per county). Left-join from the
+# full county population list so non-reporting counties show as 0.
+fl <- vroom::vroom(file.path(cyclo_dir, "data/fl_cyclo/standard/data.csv.gz"), show_col_types = FALSE)
+fl_county <- fl %>%
+  mutate(geography = sprintf("%05d", geography)) %>%
+  filter(format(time, "%Y") == as.character(YEAR)) %>%
+  group_by(geography) %>%
+  summarize(cases = sum(fl_cyclo_cases, na.rm = TRUE) + sum(fl_cyclo_cases_probable, na.rm = TRUE), .groups = "drop")
+
+oh <- vroom::vroom(file.path(cyclo_dir, "data/oh_cyclo/standard/data.csv.gz"), show_col_types = FALSE)
+oh_county <- oh %>%
+  mutate(geography = sprintf("%05d", geography)) %>%
+  filter(format(time, "%Y") == as.character(YEAR)) %>%
+  group_by(geography) %>%
+  summarize(cases = sum(oh_cyclo_cases, na.rm = TRUE), .groups = "drop")
+
+# Note: MI's cumulative count covers the Southeast Michigan outbreak period
+# (since 2026-06-22 per MDHHS), not full-calendar-year Jan-Jun baseline cases.
+mi <- vroom::vroom(file.path(cyclo_dir, "data/mi_cyclo/standard/data.csv.gz"), show_col_types = FALSE)
+mi_county <- mi %>%
+  mutate(geography = sprintf("%05d", geography)) %>%
+  filter(format(time, "%Y") == as.character(YEAR), time == max(time)) %>%
+  group_by(geography) %>%
+  summarize(cases = sum(mi_cyclo_cases_cumulative, na.rm = TRUE), .groups = "drop")
+
+county_cases <- bind_rows(fl_county, oh_county, mi_county)
+
+# Latest reported date within YEAR for each state's county feed - these can
+# differ from each other (and from `as_of`, which is just today's date).
+state_asof <- c(
+  FL = format(max(fl$time[format(fl$time, "%Y") == as.character(YEAR)]), "%b %d, %Y"),
+  MI = format(max(mi$time[format(mi$time, "%Y") == as.character(YEAR)]), "%b %d, %Y"),
+  OH = format(max(oh$time[format(oh$time, "%Y") == as.character(YEAR)]), "%b %d, %Y")
+)
+
+county_data <- pop_county %>%
+  left_join(county_cases, by = "geography") %>%
+  mutate(cases = ifelse(is.na(cases), 0, cases),
+         cases_per_100k = cases / popsize * 100000)
+
+# County shapefile for the FL/MI/OH panel map below (still a static ggplot
+# map, so it needs sf geometry; the national map is an interactive plotly
+# choropleth and only needs state abbreviations, not shapefiles).
+options(tigris_use_cache = TRUE)
+Sys.setenv(TIGRIS_CACHE_DIR = file.path(CACHE_DIR, "tigris_cache"))
+dir.create(Sys.getenv("TIGRIS_CACHE_DIR"), showWarnings = FALSE, recursive = TRUE)
+
+# WGS84 (not shift_geometry(), which reprojects to a non-geographic CRS for
+# repositioning AK/HI/PR - unneeded here, and plotly needs plain lon/lat).
+us_counties <- tigris::counties(state = names(state_names), cb = TRUE, resolution = "20m", year = 2022) %>%
+  sf::st_transform(4326) %>%
+  select(GEOID, NAMELSAD, STUSPS)
+
+county_map <- us_counties %>% left_join(county_data, by = c("GEOID" = "geography"))
+```
+
+Cyclosporiasis is a diarrhea-causing infection from the parasite Cyclospira. It is spread through contaminated
+food and water. While we typically see cases spike during the summer months, the CDC's National Notifiable Diseases Surveillance System (NNDSS) 
+is reporting almost 2,000 cumulative cases this year, making it the largest outbreak in U.S. history, and cases continue to rise. 
+In comparison, the U.S typically saw about half as many cases by this time in previous years. 
+
+Cyclosporiasis is a nationally notifiable disease and is mandated to be 
+reported in 47 states, but the exact total number of cases is difficult to pin down for several reasons. 
+Local health departments are responsible for tracking and reporting case counts to states, which then report to the CDC. 
+Additionally, not everyone with diarrhea seeks medical care, and diarrhea has many causes beyond cyclosporiasis, which complicates 
+case tracking. This dashboard tracks reported cases, combining CDC's NNDSS data 
+with additional data at the county level from three states: Florida,
+Michigan, and Ohio. Data reflected below are current as of `r as_of`.
+
+**Note**: State data are the authoritative source for case reporting; NNDSS data may lag or differ due to submission timing variations.
+
+## Trends over time
+National total shown by default; use the dropdown to switch to a specific state.
+
+```{r}
+#| label: trend-chart
+#| fig-width: 10
+#| fig-height: 9
+
+nnds_national_weekly <- nnds %>%
+  filter(geography == "00", mmwr_year >= 2022) %>%
+  select(geography, mmwr_year, mmwr_week, cases = cyclosporiasis) %>%
+  mutate(geography_name = "United States")
+
+nnds_state_weekly <- nnds %>%
+  filter(!is.na(geography), mmwr_year >= 2022) %>%
+  select(geography, mmwr_year, mmwr_week, cases = cyclosporiasis) %>%
+  inner_join(all_state_pop %>% select(geography, geography_name), by = "geography") %>%
+  bind_rows(nnds_national_weekly) %>%
+  # The source file is not guaranteed sorted by week within each
+  # geography/year; plotly's "lines" mode draws points in row order (unlike
+  # ggplot's geom_line, which auto-sorts by x), so an unsorted feed here
+  # zig-zags into what looks like many lines instead of one clean line.
+  arrange(geography_name, mmwr_year, mmwr_week)
+
+states_sorted <- sort(unique(nnds_state_weekly$geography_name))
+years_sorted  <- sort(unique(nnds_state_weekly$mmwr_year))
+n_states <- length(states_sorted)
+n_years  <- length(years_sorted)
+default_state <- "United States"
+
+# Kept to a single subtitle line, same reasoning as the national map's
+# title: multi-line subtitles via <br> render with plotly's loose default
+# line spacing ("double spaced"), and a longer text also risks overlapping
+# the plot below without a very tall top margin. One short line avoids both.
+make_trend_title <- function(st) list(
+  text = paste0(
+    "<b>Cumulative weekly cyclosporiasis cases</b><br>",
+    "<span style='font-size:12px;color:#767676'>", st,
+    ": cumulative NNDSS cases by calendar week, one line per year. Data from 2026 are preliminary.</span>"
+  ),
+  font = plotly_title_font, x = 0, xanchor = "left"
+)
+
+p_trend <- plot_ly()
+for (st in states_sorted) {
+  d_st <- nnds_state_weekly %>% filter(geography_name == st)
+  for (i in seq_along(years_sorted)) {
+    yr <- years_sorted[i]
+    d_yr <- d_st %>% filter(mmwr_year == yr)
+    is_default <- identical(st, default_state)
+    p_trend <- p_trend %>% add_trace(
+      data = d_yr, x = ~mmwr_week, y = ~cases, type = "scatter", mode = "lines+markers",
+      name = as.character(yr), legendgroup = as.character(yr),
+      showlegend = is_default, visible = is_default,
+      line = list(color = pophive_line_colors[i],
+                  dash = ifelse(pophive_line_types[i] == "dashed", "dash", "solid")),
+      marker = list(color = pophive_line_colors[i], size = 5),
+      hovertemplate = paste0(st, ", week %{x}: %{y} cases<extra>", yr, "</extra>")
+    )
+  }
+}
+
+# One dropdown button per state; toggles visible/showlegend for that state's
+# block of `n_years` traces and hides every other state's traces.
+state_buttons <- lapply(seq_along(states_sorted), function(si) {
+  vis <- rep(FALSE, n_states * n_years)
+  idx <- ((si - 1) * n_years + 1):(si * n_years)
+  vis[idx] <- TRUE
+  list(
+    method = "update",
+    args = list(list(visible = vis, showlegend = vis),
+                list(title = make_trend_title(states_sorted[si]))),
+    label = states_sorted[si]
+  )
+})
+
+default_idx <- which(states_sorted == default_state) - 1
+
+p_trend <- p_trend %>%
+  layout(
+    title = make_trend_title(default_state),
+    # Dropdown and legend now sit INSIDE the plot's own top corners (same
+    # coordinate space as the data, 0-1), not floating above it in the
+    # margin - that "paper" region uses a different coordinate reference
+    # than the title, which made them hard to align without overlapping.
+    # Living inside the axes area instead guarantees no title collision.
+    # Early calendar weeks are ~0 cases for every state/year, so the
+    # top-left corner is always safe from real data; top-right similarly
+    # only risks a thin sliver of a completed year's line.
+    updatemenus = list(list(
+      type = "dropdown", active = default_idx, x = 0.99, xanchor = "right", y = 0.99, yanchor = "top",
+      font = plotly_body_font, buttons = state_buttons
+    )),
+    xaxis = list(title = "Calendar week", dtick = 4, tickfont = plotly_body_font,
+                  titlefont = plotly_body_font, gridcolor = "white", zeroline = FALSE),
+    yaxis = list(title = "Cases (cumulative YTD)", tickfont = plotly_body_font,
+                  titlefont = plotly_body_font, gridcolor = "#e5e5e5", zeroline = FALSE,
+                  griddash = "dash"),
+    legend = list(orientation = "h", x = 0.01, y = 0.99, yanchor = "top", font = plotly_body_font),
+    plot_bgcolor = "white", paper_bgcolor = "white",
+    margin = list(t = 70, b = 70)
+  ) %>%
+  config(displayModeBar = FALSE)
+p_trend
+```
+
+```{=html}
+<details class="chart-info">
+<summary>About this chart</summary>
+<p>Map shows cumulative cyclosporiasis cases reported to NNDSS for selected year. 2026 data are preliminary and incomplete. Not all states mandate cyclosporiasis reporting; states with zero cases may lack reporting requirements rather than having no cases. Territories are excluded.
+Standardized data can be found on our <a href="https://github.com/PopHIVE/Ingest/tree/main/data/nnds/standard">GitHub</a>. The raw NNDSS data from CDC are found <a href="https://www.cdc.gov/nndss/what-is-case-surveillance/">here</a>.</p>
+</details>
+```
+
+## Geographic distribution
+
+### Cases by state
+2026 trends shown by default; use the slider to switch to an earlier year.
+
+```{r}
+#| label: national-map
+#| fig-width: 9
+#| fig-height: 6
+
+annual_brks <- c(0, 0.1, 0.25, 0.5, 1, 2, 3, 5)
+
+state_data_by_year <- state_data_by_year %>%
+  mutate(hover_text = paste0(geography_name, ": ", scales::comma(cases),
+                              " case", ifelse(cases == 1, "", "s"),
+                              " (", sprintf("%.1f", cases_per_100k), " per 100,000)"))
+
+z_max <- log1p(max(state_data_by_year$cases_per_100k, na.rm = TRUE))
+default_year <- YEAR
+
+# Title doesn't need the year - the year dropdown already makes that clear.
+# Kept to a single subtitle line on purpose: multi-line subtitles (via <br>)
+# render with plotly's fairly loose default line spacing, which reads as
+# "double spaced" - one line avoids that entirely instead of fighting it.
+map_title <- list(
+  text = paste0(
+    "<b>Cyclosporiasis Cases by State (NNDSS)</b><br>",
+    "<span style='font-size:12px;color:#767676'>Cases per 100,000 population by state. 2026 are ",
+    "through July 4. See county detail for FL, MI, OH below.</span>"
+  ),
+  font = plotly_title_font, x = 0, xanchor = "left"
+)
+
+p_national <- plot_ly()
+for (yr in MAP_YEARS) {
+  d <- state_data_by_year %>% filter(mmwr_year == yr)
+  is_default <- yr == default_year
+  p_national <- p_national %>% add_trace(
+    type = "choropleth", locationmode = "USA-states",
+    locations = d$state, z = log1p(d$cases_per_100k), zmin = 0, zmax = z_max,
+    colorscale = pophive_magma_colorscale, text = d$hover_text, hoverinfo = "text",
+    marker = list(line = list(color = "white", width = 0.5)), visible = is_default,
+    # showscale = FALSE on the hidden year-traces matters: plotly reserves/
+    # shrinks colorbar space accounting for EVERY trace that has a colorbar,
+    # even invisible ones, so with 5 traces all requesting one, none of them
+    # can ever reach the full len=1 height. Only the active trace claims it.
+    showscale = is_default,
+    colorbar = list(
+      title = list(text = "Cases per<br>100,000", font = plotly_body_font),
+      tickvals = log1p(annual_brks), ticktext = annual_brks,
+      tickfont = plotly_body_font, len = 1, thickness = 18
+    )
+  )
+}
+
+# One slider step per year; toggles which single choropleth trace is
+# visible, and moves showscale to that trace so the colorbar follows it.
+# The title no longer depends on year, so steps don't need to touch it.
+year_steps <- lapply(seq_along(MAP_YEARS), function(i) {
+  vis <- rep(FALSE, length(MAP_YEARS))
+  vis[i] <- TRUE
+  list(method = "restyle", args = list(list(visible = vis, showscale = vis)), label = as.character(MAP_YEARS[i]))
+})
+default_year_idx <- which(MAP_YEARS == default_year) - 1
+
+p_national <- p_national %>%
+  layout(
+    geo = list(scope = "usa", projection = list(type = "albers usa"), bgcolor = "transparent"),
+    title = map_title,
+    # Slider sits below the map (in the bottom margin) rather than a
+    # dropdown floating over it.
+    sliders = list(list(
+      active = default_year_idx, pad = list(t = 30, l = 10),
+      currentvalue = list(prefix = "Year: ", font = plotly_body_font, xanchor = "left"),
+      font = plotly_body_font, steps = year_steps
+    )),
+    # Title is now just 2 short lines, so a smaller top margin both closes
+    # the gap above it and - since colorbar len is a fraction of this plot
+    # area - gives the len=1 colorbar more actual vertical room to fill.
+    # margin.b is taller than the county maps' to leave the slider room.
+    margin = list(t = 80, b = 90),
+    paper_bgcolor = "white"
+  ) %>%
+  config(displayModeBar = FALSE)
+p_national
+```
+
+```{=html}
+<details class="chart-info">
+<summary>About this chart</summary>
+<p>Map shows cumulative cyclosporiasis cases reported to NNDSS by state for selected year. 2026 data are preliminary and incomplete. Not all states mandate cyclosporiasis reporting; states with zero cases may lack reporting requirements rather than having no cases. Territories are excluded.
+Standardized data can be found on our <a href="https://github.com/PopHIVE/Ingest/tree/main/data/nnds/standard">GitHub</a>. The CDC presents its NNDSS data <a href="https://www.cdc.gov/nndss/what-is-case-surveillance/">here</a>.</p>
+</details>
+```
+
+### FL, MI, and OH: county-level detail
+
+These three states display case counts at the county level collected from state health departments. 
+Hover over a county to see its case count. Most states only report cases at the state level. 
+Oregon also reports at the county level, but its data are suppressed due to small sample sizes because Oregon is not currently experiencing a large outbreak.
+
+
+```{r}
+#| label: county-maps-setup
+#| include: false
+
+# plotly has no built-in US-counties location mode, so build a small GeoJSON
+# from the tigris county shapes (FL/MI/OH only) and use it directly.
+counties_geojson_file <- tempfile(fileext = ".geojson")
+sf::st_write(county_map %>% select(GEOID), counties_geojson_file, driver = "GeoJSON", quiet = TRUE)
+counties_geojson <- jsonlite::fromJSON(counties_geojson_file, simplifyVector = FALSE)
+
+county_hover <- county_map %>%
+  sf::st_drop_geometry() %>%
+  mutate(hover_text = paste0(NAMELSAD, ": ", scales::comma(cases),
+                              " case", ifelse(cases == 1, "", "s"),
+                              " (", sprintf("%.1f", cases_per_100k), " per 100,000)"))
+
+brks <- c(0, 1, 5, 25, 100)
+z_max_county <- log1p(max(county_hover$cases_per_100k, na.rm = TRUE))
+
+state_sources <- c(
+  FL = paste0("Source: Florida Dept. of Health."),
+  MI = paste0("Source: Michigan Dept. of Health & Human Services."),
+  OH = paste0("Source: Ohio Dept. of Health.")
+)
+
+# FL's feed is explicitly preliminary (subject to revision for 1-2 weeks per
+# its README); MI/OH are not flagged that way, hence the differing wording.
+state_subtitles <- c(
+  FL = paste0("Cumulative year-to-date preliminary cyclosporiasis  cases per 100,000 population as of ", state_asof[["FL"]], "."),
+  MI = paste0("Cumulative preliminary cyclosporiasis  cases per 100,000 population reported during<br>the outbreak investigation (as of ", state_asof[["MI"]], ", starting July 1, 2026)."),
+  OH = paste0("Cumulative year-to-date preliminary cyclosporiasis  cases per 100,000 population as of ", state_asof[["OH"]], ".")
+)
+
+make_county_plot <- function(abbr) {
+  d <- county_hover %>% filter(STUSPS == abbr)
+  plot_ly() %>%
+    add_trace(
+      type = "choropleth", geojson = counties_geojson, featureidkey = "properties.GEOID",
+      locations = d$GEOID, z = log1p(d$cases_per_100k), zmin = 0, zmax = z_max_county,
+      colorscale = pophive_magma_colorscale, text = d$hover_text, hoverinfo = "text",
+      marker = list(line = list(color = "white", width = 0.4)),
+      colorbar = list(
+        title = list(text = "Cases per<br>100,000", font = plotly_body_font),
+        tickvals = log1p(brks), ticktext = brks, tickfont = plotly_body_font,
+        len = 0.8, thickness = 18
+      )
+    ) %>%
+    layout(
+      geo = list(scope = "usa", fitbounds = "locations", visible = FALSE),
+      title = list(
+        text = paste0(
+          "<b>", state_names[[abbr]], "</b><br>",
+          "<span style='font-size:12px;color:#767676'>", state_subtitles[[abbr]], "</span>"
+        ),
+        font = plotly_title_font, x = 0, xanchor = "left"
+      ),
+      annotations = list(list(
+        text = state_sources[[abbr]], xref = "paper", yref = "paper",
+        x = 0, y = -0.06, xanchor = "left", showarrow = FALSE, font = plotly_caption_font
+      )),
+      margin = list(t = 100, b = 40),
+      paper_bgcolor = "white"
+    ) %>%
+    config(displayModeBar = FALSE)
+}
+```
+
+
+```{r}
+#| label: county-fl
+#| fig-width: 9
+#| fig-height: 7
+make_county_plot("FL")
+```
+
+
+```{r}
+#| label: county-mi
+#| fig-width: 9
+#| fig-height: 7
+make_county_plot("MI")
+```
+
+
+```{r}
+#| label: county-oh
+#| fig-width: 9
+#| fig-height: 7
+make_county_plot("OH")
+```
+
+```{=html}
+<details class="chart-info">
+<summary>About these charts</summary>
+<p>cyclosporiasis  cases are obtained from individual state health departments. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo_resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; and raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>.</p>
+</details>
+```
+
+```{=html}
+<footer class="pophive-footer">
+  <p><strong>PopHIVE</strong> - Population Health Integrated Visualization Engine</p>
+  <p>Yale School of Public Health &amp; Yale DISSC - Learn more at <a href="https://www.pophive.org/">pophive.org</a></p>
+  <p class="disclaimer">Research tool for public health professionals. Not intended for clinical decision-making.</p>
+</footer>
+```
