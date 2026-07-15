@@ -1,0 +1,25 @@
+{
+  "name": "epic_health_alerts",
+  "type": "source",
+  "scripts": [
+    {
+      "path": "ingest.R",
+      "manual": false,
+      "frequency": 0,
+      "last_run": "",
+      "run_time": "",
+      "last_status": {
+        "log": "",
+        "success": true
+      }
+    }
+  ],
+  "checked": "2026-07-15 09:35:58",
+  "check_results": {
+    "data/epic_health_alerts/standard/data.csv.gz": []
+  },
+  "standalone": false,
+  "raw_state": {
+    "hash": "22463f76094fcfe1374a2479fd9d17be"
+  }
+}
