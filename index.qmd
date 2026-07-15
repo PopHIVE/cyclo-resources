@@ -667,13 +667,90 @@ make_county_plot("FL")
 </details>
 ```
 
-### Epic Health Alerts: elevated cyclosporiasis detected
-Epic Health Alerts has identified **Michigan** and **Ohio** as currently experiencing elevated rates of cyclosporiasis, with cases significantly above historical levels for this time of year. Data are current through July 14, 2026.
+```{r}
+#| label: epic-alerts-data
 
-| State | Location | Estimated Onset | Cases per 100k (Latest Week) |
-|---|---|---|---|
-| Michigan | State-Wide | 6/22/2026 | 12.8* |
-| Ohio | State-Wide | 6/22/2026 | 18.8* |
+epic_alerts <- vroom::vroom(
+  file.path(cyclo_dir, "data/epic_health_alerts/standard/data.csv.gz"),
+  col_types = vroom::cols(geography = vroom::col_character(), .default = vroom::col_guess())
+)
+
+# State rows (2-digit FIPS) are labeled "State-Wide"; county rows (5-digit
+# FIPS) are labeled with the county's full name (e.g. "Wayne County"), joined
+# back to its state's full name via `state` (abbreviation) - `state_fips` and
+# `all_fips` are already loaded above (prep-data chunk).
+epic_state_lookup <- state_fips %>%
+  transmute(geography, State = geography_name, Location = "State-Wide")
+
+epic_county_lookup <- all_fips %>%
+  filter(nchar(geography) == 5) %>%
+  select(geography, Location = geography_name, state) %>%
+  left_join(state_fips %>% select(state, State = geography_name), by = "state") %>%
+  select(geography, State, Location)
+
+epic_geo_lookup <- bind_rows(epic_state_lookup, epic_county_lookup)
+
+# Matches the source page's own "M/D/YYYY" (no leading zeros) date style.
+fmt_epic_date <- function(d) {
+  d <- as.Date(d)
+  paste(as.integer(format(d, "%m")), as.integer(format(d, "%d")), format(d, "%Y"), sep = "/")
+}
+
+# The source page only ever shows currently active alerts, so the most
+# recent scrape's rows (time == max(time)) are what's live on the page now;
+# older rows are retained in the data for history but excluded here.
+epic_current <- epic_alerts %>%
+  filter(time == max(time)) %>%
+  left_join(epic_geo_lookup, by = "geography") %>%
+  transmute(
+    State, Location,
+    `Estimated Onset` = fmt_epic_date(estimated_onset),
+    `Cases per 100k (Latest Week)` = paste0(
+      sprintf("%.1f", epicalert_cyclosporiasis_cases_per_100k),
+      ifelse(partial_week_flag == 1, "*", "")
+    )
+  ) %>%
+  arrange(State, Location)
+
+# `page_last_updated` records the Health Alerts page's own page-wide "Last
+# updated" banner as of each scrape (see epic_health_alerts/ingest.R).
+epic_last_updated <- {
+  d <- max(as.Date(epic_alerts$page_last_updated))
+  paste0(format(d, "%B"), " ", as.integer(format(d, "%d")), ", ", format(d, "%Y"))
+}
+
+epic_states <- unique(epic_current$State)
+epic_states_text <- if (length(epic_states) <= 1) {
+  paste0("**", epic_states, "**")
+} else {
+  paste0(
+    paste0("**", epic_states[-length(epic_states)], "**", collapse = ", "),
+    " and **", epic_states[length(epic_states)], "**"
+  )
+}
+
+epic_intro_text <- if (nrow(epic_current) > 0) {
+  paste0(
+    "Epic Health Alerts has identified ", epic_states_text,
+    " as currently experiencing elevated rates of cyclosporiasis, with cases significantly ",
+    "above historical levels for this time of year. Data are current through ", epic_last_updated, "."
+  )
+} else {
+  paste0(
+    "Epic Health Alerts is not currently flagging any locations for elevated cyclosporiasis rates. ",
+    "Data are current through ", epic_last_updated, "."
+  )
+}
+```
+
+### Epic Health Alerts: elevated cyclosporiasis detected
+`r epic_intro_text`
+
+```{r}
+#| label: epic-alerts-table
+#| results: asis
+if (nrow(epic_current) > 0) cat(knitr::kable(epic_current, format = "pipe"), sep = "\n")
+```
 
 ##### Stay Updated
 These numbers are preliminary and subject to change as more data arrive. Visit the [Epic Health Alerts dashboard](https://www.epicresearch.org/health-alerts/) regularly for the latest information.

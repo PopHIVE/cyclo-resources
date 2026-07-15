@@ -1,0 +1,77 @@
+{
+  "epicalert_cyclosporiasis_cases_per_100k": {
+    "id": "epicalert_cyclosporiasis_cases_per_100k",
+    "short_name": "Cyclosporiasis rate (Epic Health Alerts)",
+    "long_name": "Cyclosporiasis cases per 100,000 patients, latest week (Epic Research Health Alerts)",
+    "category": "infectious_disease",
+    "short_description": "Cyclosporiasis cases per 100,000 patients with a clinical encounter during the latest reporting week, in geographies with an active Epic Research health alert.",
+    "long_description": "The number of patients diagnosed with cyclosporiasis (an intestinal illness caused by the parasite Cyclospora cayetanensis) per 100,000 total patients with an encounter in the state or county during the latest reporting week, as published on Epic Research's Health Alerts page. Values are only published for geographies where Epic Research's surveillance model has flagged a statistically significant, accelerating year-over-year increase in cyclosporiasis diagnoses (via a Farrington improved algorithm on ICD-10-CM diagnosis rates), reviewed by Epic Research clinicians and data scientists before publication. Because the source page shows only currently active alerts (a live snapshot, not a historical archive), this dataset accumulates one new observation per ingest run rather than a fixed historical series; a geography drops out of new snapshots once its alert is no longer active, but prior observations already collected are retained.",
+    "statement": "In {location}, the cyclosporiasis rate was {value} cases per 100,000 patients as of {time}.",
+    "measure_type": "Rate",
+    "unit": "Cases per 100,000",
+    "time_resolution": "Week",
+    "restrictions": "",
+    "sources": [{ "id": "epic_health_alerts_cyclosporiasis" }],
+    "citations": []
+  },
+  "estimated_onset": {
+    "id": "estimated_onset",
+    "short_name": "Estimated alert onset date",
+    "long_name": "Estimated onset date of the cyclosporiasis alert",
+    "category": "infectious_disease",
+    "short_description": "The date the elevated cyclosporiasis rate was first detected by Epic Research's surveillance model.",
+    "long_description": "The date the elevated rate first occurred as detected by Epic Research's alerting model, prior to statistical confirmation and clinical review. Distinct from `time`, which records the date this observation was ingested (scraped) rather than the date the alert began.",
+    "statement": "The cyclosporiasis alert in {location} had an estimated onset of {value}.",
+    "measure_type": "Date",
+    "unit": "Date",
+    "time_resolution": "Week",
+    "restrictions": "",
+    "sources": [{ "id": "epic_health_alerts_cyclosporiasis" }],
+    "citations": []
+  },
+  "partial_week_flag": {
+    "id": "partial_week_flag",
+    "short_name": "Partial week flag",
+    "long_name": "Partial reporting week flag",
+    "category": "infectious_disease",
+    "short_description": "Indicates the rate is based on a partial (incomplete) reporting week.",
+    "long_description": "1 if the source page marked the cases-per-100k value with an asterisk, meaning the rate is calculated from a partial week of data and may be revised as more encounters are recorded; 0 otherwise.",
+    "statement": "The rate for {location} at {time} was calculated from a partial reporting week.",
+    "measure_type": "Count",
+    "unit": "0/1 flag",
+    "time_resolution": "Week",
+    "restrictions": "",
+    "sources": [{ "id": "epic_health_alerts_cyclosporiasis" }],
+    "citations": []
+  },
+
+  "page_last_updated": {
+    "id": "page_last_updated",
+    "short_name": "Health Alerts page last-updated date",
+    "long_name": "Date the Health Alerts page's \"Last updated\" banner reported",
+    "category": "infectious_disease",
+    "short_description": "The date shown in the Health Alerts page's page-wide \"Last updated\" banner at the time of this scrape.",
+    "long_description": "Epic Research's Health Alerts page displays a single page-wide \"Last updated: <date>\" banner above all condition tables (not specific to Cyclosporiasis). This column records that date at the time of each ingest run, so downstream reports can state how current the data are without hardcoding a date.",
+    "statement": "The Health Alerts page reported data current through {value} as of this observation.",
+    "measure_type": "Date",
+    "unit": "Date",
+    "time_resolution": "Week",
+    "restrictions": "",
+    "sources": [{ "id": "epic_health_alerts_cyclosporiasis" }],
+    "citations": []
+  },
+
+  "_sources": {
+    "epic_health_alerts_cyclosporiasis": {
+      "name": "Epic Research Health Alerts - Cyclosporiasis",
+      "url": "https://www.epicresearch.org/health-alerts/",
+      "organization": "Epic Research",
+      "organization_url": "https://www.epicresearch.org/",
+      "location": "Cyclosporiasis condition table on the Health Alerts page",
+      "location_url": "https://www.epicresearch.org/health-alerts/",
+      "description": "Epic Research Health Alerts surface geographies with statistically significant, accelerating increases in diagnosis rates for select conditions, detected from Epic Cosmos encounter data (a de-identified, aggregated EHR dataset spanning participating health systems). Alerts are generated using a Farrington improved surveillance algorithm on diagnosis (ICD-10-CM) rates, requiring a year-over-year increase, accelerating growth, and statistical significance, then manually reviewed by Epic Research clinicians and data scientists before publication. Alerts are issued at the county level where possible; a statewide alert is issued instead when county-level counts are small (to preserve patient privacy) or when the signal only appears when aggregated statewide. The source page shows only currently active alerts (a live snapshot, not a historical archive) with no fixed publication schedule; this dataset is built by re-scraping the page on each ingest run and accumulating observations over time, so it will only ever contain what was captured on the dates this source was actually ingested.",
+      "restrictions": "The data can be re-used with appropriate attribution. A suggested citation relating to this data is 'Results of research performed with Epic Cosmos were obtained from the PopHIVE platform (https://github.com/PopHIVE/Ingest).'",
+      "date_accessed": 2026
+    }
+  }
+}
