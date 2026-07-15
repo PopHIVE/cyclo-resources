@@ -42,16 +42,29 @@ order on the page is not guaranteed to stay fixed.
    `(geography, time)` pair.
 5. Writes `standard/data.csv.gz` with columns `geography`, `time`,
    `estimated_onset`, `partial_week_flag`,
-   `epicalert_cyclosporiasis_cases_per_100k`, and `page_last_updated` (the
-   date shown in the page's page-wide "Last updated" banner as of this
-   scrape).
+   `epicalert_cyclosporiasis_cases_per_100k`, `page_last_updated` (the date
+   shown in the page's page-wide "Last updated" banner as of this scrape),
+   and `status`.
+6. Compares this run's active geographies against the most recent recorded
+   row for every geography seen before. Any geography whose last recorded
+   `status` was `"active"` but that isn't in this run's active set gets an
+   explicit `"inactive"` row written for it (dated this run), so a location
+   being taken off the page is a recorded event rather than a silent gap in
+   the series.
 
 ## Caveats for future maintainers
 
-- **Snapshot, not archive**: a geography stops appearing in new scrapes once
-  Epic Research's alert for it is no longer active. Historical rows already
-  collected by this script are preserved, but there is no way to backfill
-  alerts that existed before this source was first ingested.
+- **Snapshot, not archive**: the source page itself only ever shows
+  currently active alerts. `ingest.R` compensates by writing an explicit
+  `status = "inactive"` row the first run a geography is no longer active
+  (see Method), so removals are recorded rather than left as a gap - but
+  there is still no way to backfill alerts that existed before this source
+  was first ingested, and a gap in `time` for a geography before that first
+  ingest run carries no meaning.
+- **Missed runs look like late removals**: if a scheduled run is skipped,
+  a geography that dropped off the page during the gap will have its
+  `"inactive"` row dated to the next run that actually executes, not to
+  when it truly stopped being active.
 - **Partial weeks**: the source page marks some rates with a trailing `*`,
   meaning the rate is based on a partial reporting week and may still be
   revised upward; this is captured in `partial_week_flag` rather than

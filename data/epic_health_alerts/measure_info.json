@@ -61,6 +61,22 @@
     "citations": []
   },
 
+  "status": {
+    "id": "status",
+    "short_name": "Alert status",
+    "long_name": "Cyclosporiasis alert status (active/inactive)",
+    "category": "infectious_disease",
+    "short_description": "Whether the geography had an active Epic Research cyclosporiasis alert as of this observation.",
+    "long_description": "\"active\" if the geography appeared on the Health Alerts page's Cyclosporiasis table as of this scrape. \"inactive\" marks the first ingest run on which a previously active geography no longer appeared on the page - a recorded removal event rather than a gap in the series; rate-related columns (`estimated_onset`, `partial_week_flag`, `epicalert_cyclosporiasis_cases_per_100k`) are not applicable and left blank on inactive rows.",
+    "statement": "The cyclosporiasis alert for {location} was {value} as of {time}.",
+    "measure_type": "Categorical",
+    "unit": "active/inactive",
+    "time_resolution": "Week",
+    "restrictions": "",
+    "sources": [{ "id": "epic_health_alerts_cyclosporiasis" }],
+    "citations": []
+  },
+
   "_sources": {
     "epic_health_alerts_cyclosporiasis": {
       "name": "Epic Research Health Alerts - Cyclosporiasis",
