@@ -45,6 +45,22 @@
     "citations": []
   },
 
+  "page_last_updated": {
+    "id": "page_last_updated",
+    "short_name": "Health Alerts page last-updated date",
+    "long_name": "Date the Health Alerts page's \"Last updated\" banner reported",
+    "category": "infectious_disease",
+    "short_description": "The date shown in the Health Alerts page's page-wide \"Last updated\" banner at the time of this scrape.",
+    "long_description": "Epic Research's Health Alerts page displays a single page-wide \"Last updated: <date>\" banner above all condition tables (not specific to Cyclosporiasis). This column records that date at the time of each ingest run, so downstream reports can state how current the data are without hardcoding a date.",
+    "statement": "The Health Alerts page reported data current through {value} as of this observation.",
+    "measure_type": "Date",
+    "unit": "Date",
+    "time_resolution": "Week",
+    "restrictions": "",
+    "sources": [{ "id": "epic_health_alerts_cyclosporiasis" }],
+    "citations": []
+  },
+
   "_sources": {
     "epic_health_alerts_cyclosporiasis": {
       "name": "Epic Research Health Alerts - Cyclosporiasis",

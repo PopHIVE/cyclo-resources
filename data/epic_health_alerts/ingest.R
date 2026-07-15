@@ -81,6 +81,16 @@ if (!identical(process$raw_state, raw_state)) {
     fill = TRUE
   )
 
+  # The page's own "Last updated: <Month DD, YYYY>" banner - a single,
+  # page-wide value (applies to every condition, not just Cyclosporiasis).
+  # Captured per-row below so downstream reports can show an accurate
+  # "data current through" date without hardcoding it.
+  last_updated_node <- rvest::html_element(page, xpath = "//p[contains(text(), 'Last updated')]")
+  page_last_updated <- format(
+    as.Date(sub("Last updated:\\s*", "", rvest::html_text2(last_updated_node)), "%B %d, %Y"),
+    "%Y-%m-%d"
+  )
+
   # ---------------------------------------------------------------------------
   # 4. Transform to standard wide format
   # ---------------------------------------------------------------------------
@@ -108,11 +118,13 @@ if (!identical(process$raw_state, raw_state)) {
     left_join(county_fips_lookup, by = c("state" = "state", "county_clean" = "county_name")) %>%
     mutate(
       geography = if_else(is_statewide, state_geo, geography),
-      time = format(week_ending_saturday, "%Y-%m-%d")
+      time = format(week_ending_saturday, "%Y-%m-%d"),
+      page_last_updated = page_last_updated
     ) %>%
     select(
       geography, time,
-      estimated_onset, partial_week_flag, epicalert_cyclosporiasis_cases_per_100k
+      estimated_onset, partial_week_flag, epicalert_cyclosporiasis_cases_per_100k,
+      page_last_updated
     )
 
   if (any(is.na(data_new$geography))) {
@@ -140,6 +152,7 @@ if (!identical(process$raw_state, raw_state)) {
         geography = vroom::col_character(),
         time = vroom::col_character(),
         estimated_onset = vroom::col_character(),
+        page_last_updated = vroom::col_character(),
         .default = vroom::col_guess()
       )
     )

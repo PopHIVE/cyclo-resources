@@ -40,9 +40,11 @@ order on the page is not guaranteed to stay fixed.
    real time series to accumulate across successive scheduled runs. A row is
    only replaced if a later run produces a value for the exact same
    `(geography, time)` pair.
-5. Writes `standard/data.csv.gz` with columns `geography`, `time`, `age`,
-   `sex`, `race_ethnicity`, `estimated_onset`, `partial_week_flag`, and
-   `epicalert_cyclosporiasis_cases_per_100k`.
+5. Writes `standard/data.csv.gz` with columns `geography`, `time`,
+   `estimated_onset`, `partial_week_flag`,
+   `epicalert_cyclosporiasis_cases_per_100k`, and `page_last_updated` (the
+   date shown in the page's page-wide "Last updated" banner as of this
+   scrape).
 
 ## Caveats for future maintainers
 
