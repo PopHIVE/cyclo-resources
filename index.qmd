@@ -674,6 +674,10 @@ epic_alerts <- vroom::vroom(
   file.path(cyclo_dir, "data/epic_health_alerts/standard/data.csv.gz"),
   col_types = vroom::cols(geography = vroom::col_character(), .default = vroom::col_guess())
 )
+# `status` distinguishes real alert rows from explicit "inactive" removal
+# events written by ingest.R (see epic_health_alerts/ingest.R); a removal
+# event can share the same `time` as this week's active rows, so it must be
+# filtered out below rather than relying on time == max(time) alone.
 
 # State rows (2-digit FIPS) are labeled "State-Wide"; county rows (5-digit
 # FIPS) are labeled with the county's full name (e.g. "Wayne County"), joined
@@ -697,10 +701,11 @@ fmt_epic_date <- function(d) {
 }
 
 # The source page only ever shows currently active alerts, so the most
-# recent scrape's rows (time == max(time)) are what's live on the page now;
-# older rows are retained in the data for history but excluded here.
+# recent scrape's active rows (time == max(time) & status == "active") are
+# what's live on the page now; older rows and "inactive" removal events are
+# retained in the data for history but excluded here.
 epic_current <- epic_alerts %>%
-  filter(time == max(time)) %>%
+  filter(time == max(time), status == "active") %>%
   left_join(epic_geo_lookup, by = "geography") %>%
   transmute(
     State, Location,

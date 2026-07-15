@@ -11,10 +11,13 @@
 #     This script downloads the full page and extracts only the Cyclosporiasis
 #     table by matching its <h3> heading text.
 #   - The page shows only CURRENTLY ACTIVE alerts (a live snapshot), not a
-#     historical archive - rows disappear once an alert is no longer active.
-#     To build a real time series, this script appends one observation per
-#     ingest run directly into standard/data.csv.gz (keyed on geography + the
-#     as-of scrape date), rather than overwriting it.
+#     historical archive. To build a real time series, this script appends
+#     one observation per ingest run directly into standard/data.csv.gz
+#     (keyed on geography + the as-of scrape date), rather than overwriting
+#     it. Each row carries a `status` of "active" or "inactive"; when a
+#     geography drops off the page, an explicit "inactive" row is written
+#     for it (once, on the run that first observes the drop), so removal is
+#     a recorded event rather than something inferred from a gap.
 #   - Rows are State-Wide or county-level depending on what Epic Research
 #     issues; "State-Wide" rows use the 2-digit state FIPS, county rows are
 #     matched to 5-digit county FIPS via resources/all_fips.csv.gz.
@@ -136,8 +139,12 @@ if (!identical(process$raw_state, raw_state)) {
 
   # ---------------------------------------------------------------------------
   # 5. Append to standardized output (accumulate weekly snapshots over time,
-  #    since the source page only ever shows the current active alerts)
+  #    since the source page only ever shows the current active alerts).
+  #    Every row carries an explicit `status` so a geography coming off the
+  #    page is a recorded transition, not just a gap in the series.
   # ---------------------------------------------------------------------------
+  data_new <- data_new %>% mutate(status = "active")
+
   out_file <- "standard/data.csv.gz"
   if (file.exists(out_file)) {
     # Force geography to stay character (leading zeros in state/county FIPS,
@@ -153,10 +160,37 @@ if (!identical(process$raw_state, raw_state)) {
         time = vroom::col_character(),
         estimated_onset = vroom::col_character(),
         page_last_updated = vroom::col_character(),
+        status = vroom::col_character(),
         .default = vroom::col_guess()
       )
     )
-    data_standard <- bind_rows(data_new, data_prior) %>%
+
+    # A geography whose most recently recorded row was "active" but that did
+    # not appear in this week's scrape has just come off the page - record
+    # that transition explicitly (a single "inactive" row dated this week)
+    # rather than leaving it to be inferred from a gap in later runs. Once
+    # recorded, it stays "inactive" and is not re-emitted on later runs
+    # unless it reactivates (in which case data_new naturally supplies a new
+    # "active" row for it).
+    last_status <- data_prior %>%
+      arrange(geography, time) %>%
+      group_by(geography) %>%
+      slice_tail(n = 1) %>%
+      ungroup()
+
+    newly_inactive <- last_status %>%
+      filter(status == "active", !(geography %in% data_new$geography)) %>%
+      transmute(
+        geography,
+        time = format(week_ending_saturday, "%Y-%m-%d"),
+        estimated_onset = NA_character_,
+        partial_week_flag = NA_integer_,
+        epicalert_cyclosporiasis_cases_per_100k = NA_real_,
+        page_last_updated = page_last_updated,
+        status = "inactive"
+      )
+
+    data_standard <- bind_rows(data_new, newly_inactive, data_prior) %>%
       distinct(geography, time, .keep_all = TRUE) %>%
       arrange(geography, time)
   } else {
