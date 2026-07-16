@@ -34,11 +34,21 @@ jobs:
             any::tigris
             any::vroom
             any::arrow
+            any::jsonlite
+            any::knitr
+            any::rmarkdown
+            any::plotly
+            any::scales
+            any::viridisLite
             github::dissc-yale/dcf
           cache-version: 1
+      - uses: quarto-dev/quarto-actions/setup@v2
       - run: Rscript -e "dcf::dcf_process('fl_cyclo')"
       - run: Rscript -e "dcf::dcf_process('mi_cyclo')"
       - run: Rscript -e "dcf::dcf_process('oh_cyclo')"
+
+      - name: Render index.qmd
+        run: quarto render index.qmd
 
       - id: diff
         run: |
@@ -47,9 +57,6 @@ jobs:
           else
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
-      - if: ${{ steps.diff.outputs.changed == 'true' }}
-        name: Rebuild documentation and manifest
-        run: Rscript scripts/build_docs.R
 
       - if: ${{ steps.diff.outputs.changed == 'true' }}
         name: Commit and push
