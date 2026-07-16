@@ -5,11 +5,11 @@
     {
       "path": "ingest.R",
       "manual": false,
+      "last_run": "2026-07-16 04:59:23",
       "frequency": 0,
-      "last_run": "",
-      "run_time": "",
+      "run_time": 1.39,
       "last_status": {
-        "log": "",
+        "log": [],
         "success": true
       }
     }
@@ -20,6 +20,10 @@
   },
   "standalone": false,
   "raw_state": {
-    "hash": "8469666dfbb2b610390c3dda6ae783dd"
+    "hash": "03daf0219e82be3016eb3c302011b827"
+  },
+  "standard_state": {
+    "./data/epic_health_alerts/measure_info.json": "425a69a70a9601494a58b3f7681b47cf",
+    "./data/epic_health_alerts/standard/data.csv.gz": "14e96842f993c49a52c2f8db6bf64a71"
   }
 }
