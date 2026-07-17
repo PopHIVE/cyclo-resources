@@ -142,7 +142,6 @@ pophive_magma_colorscale <- local({
 
 ```{r}
 #| label: fetch-data
-#| cache: true
 
 # cyclo_resources is a private repo - clone/pull via git (uses cached GitHub
 # credentials); raw.githubusercontent.com download would 404 without a token.
@@ -159,9 +158,21 @@ if (!dir.exists(cyclo_dir)) {
 download_if_missing <- function(url, dest) {
   if (!file.exists(dest)) download.file(url, dest, mode = "wb", quiet = TRUE)
 }
-download_if_missing(
+
+# NNDSS and Epic Health Alerts are live surveillance feeds that update weekly,
+# so (unlike the static reference files below) they must be re-fetched on
+# every render rather than reused once cached - otherwise CACHE_DIR silently
+# pins the page to whatever snapshot happened to exist on disk.
+download.file(
   "https://raw.githubusercontent.com/PopHIVE/Ingest/main/data/nnds/standard/data.csv.gz",
-  file.path(CACHE_DIR, "nnds_data.csv.gz")
+  file.path(CACHE_DIR, "nnds_data.csv.gz"), mode = "wb", quiet = TRUE
+)
+# Epic Research Health Alerts now live in the Ingest repo
+# (data/epic_health_alerts, scraped there from epicresearch.org); read the
+# standardized feed from Ingest like the other Ingest sources above.
+download.file(
+  "https://raw.githubusercontent.com/PopHIVE/Ingest/main/data/epic_health_alerts/standard/data.csv.gz",
+  file.path(CACHE_DIR, "epic_health_alerts.csv.gz"), mode = "wb", quiet = TRUE
 )
 download_if_missing(
   "https://raw.githubusercontent.com/PopHIVE/Ingest/main/resources/all_fips.csv.gz",
@@ -296,157 +307,249 @@ us_counties <- tigris::counties(state = names(state_names), cb = TRUE, resolutio
 county_map <- us_counties %>% left_join(county_data, by = c("GEOID" = "geography"))
 ```
 
-Cyclosporiasis is a diarrhea-causing infection from the parasite Cyclospira. It is spread through contaminated
-food and water. While we typically see cases spike during the summer months, the CDC's National Notifiable Diseases Surveillance System (NNDSS) is 
-reporting almost 2,000 cumulative cases this year, making it the largest outbreak of reported cases. 
-In comparison, the U.S typically saw about half as many cases by this time in previous years. 
-
-Cyclosporiasis is a nationally notifiable disease and is mandated to be 
-reported in 47 states, but the exact total number of cases is difficult to pin down for several reasons. 
-Local health departments are responsible for tracking and reporting case counts to states, which then report to the CDC. Additionally, not everyone with 
-diarrhea seeks medical care, most people with diarrhea are not tested for cyclosporiasis, and diarrhea has many causes beyond cyclosporiasis, which complicates case tracking
-This dashboard tracks reported cases, combining CDC's NNDSS data 
-with additional data at the county level from three states: Florida,
-Michigan, and Ohio. Data reflected below are current as of `r as_of`.
-
-**Note**: State data are the authoritative source for case reporting. NNDSS data may lag or differ due to submission timing variations.
-
-## Trends over time
-National total shown by default; use the dropdown to switch to a specific state.
-
 ```{r}
-#| label: trend-chart
-#| fig-width: 10
-#| fig-height: 9
+#| label: epic-prep
+#| results: hide
 
-nnds_national_weekly <- nnds %>%
-  filter(geography == "00", mmwr_year >= 2022) %>%
-  select(geography, mmwr_year, mmwr_week, cases = cyclosporiasis) %>%
-  mutate(geography_name = "United States")
+# -----------------------------------------------------------------------------
+# Epic Cosmos diarrhea data. This now lives in cyclo-resources itself as the
+# `cosmos-diarrhea` data source (pulled from PopHIVE/epic_preprocessing), so we
+# read it from the freshly-cloned repo like the other cyclo sources. Fall back
+# to this repo's own working tree so the doc still renders before the source is
+# pushed to origin/main.
+# All Epic values whose suppression flag == 1 are blanked to NA (per project
+# convention: suppressed counts are imputed as 5 and must not be shown).
+# -----------------------------------------------------------------------------
+epic_std <- file.path(cyclo_dir, "data/cosmos-diarrhea/standard")
+if (!file.exists(file.path(epic_std, "weekly.csv.gz"))) {
+  epic_std <- "data/cosmos-diarrhea/standard"
+}
 
-# MMWR week 1 of a year is defined by CDC as the week (Sun-Sat) containing
-# January 4th; every subsequent week is 7 days on from that.
+# geography -> population, including national ("00") and DC. state_fips already
+# carries the national row ("00" / United States), so no separate bind needed.
+geo_pop <- state_fips %>%
+  inner_join(pop_state_raw, by = "geography_name") %>%
+  select(geography, geography_name, state, popsize)
+
+# geography -> display name, used for the state dropdowns below.
+geo_name <- setNames(geo_pop$geography_name, geo_pop$geography)
+
+# weekly.csv.gz now carries BOTH an ED-based and an all-encounters-based
+# diarrhea percentage, each by age. Blank each where its own counts were
+# suppressed. (`epic_n_ed_encounters_weekly` is the total ED encounter count,
+# formerly `epic_n_all_encounters_weekly`; used for the coverage share below.)
+epic_weekly <- vroom::vroom(file.path(epic_std, "weekly.csv.gz"), show_col_types = FALSE) %>%
+  mutate(
+    pct_ed_diarrhea = ifelse(
+      epic_suppressed_flag_ed_diarrhea == 1 | epic_suppressed_flag_ed_encounters_weekly == 1,
+      NA_real_, epic_pct_ed_diarrhea),
+    pct_all_diarrhea = ifelse(
+      epic_suppressed_flag_all_diarrhea == 1 | epic_suppressed_flag_encounters_total_weekly == 1,
+      NA_real_, epic_pct_all_diarrhea))
+
+# Weekly cyclospora testing (replaces the monthly cyclospora feed). % tested is
+# defined against all-cause diarrhea encounters: cyclospora tests / all
+# diarrhea encounters. % positive is positive / tested (already in the file).
+# Both are blanked where either underlying count was suppressed.
+epic_wtests <- vroom::vroom(file.path(epic_std, "weekly_tests.csv.gz"), show_col_types = FALSE) %>%
+  mutate(
+    pct_tested = ifelse(
+      epic_suppressed_flag_cyclospora_tested == 1 | epic_suppressed_flag_all_diarrhea == 1,
+      NA_real_, 100 * epic_n_cyclospora_tested / epic_n_all_diarrhea),
+    pct_positive = ifelse(
+      epic_suppressed_flag_cyclospora_positive == 1 | epic_suppressed_flag_cyclospora_tested == 1,
+      NA_real_, epic_pct_cyclospora_positive))
+
+# Earliest date in the Epic data - the weekly time series below start here.
+epic_start <- min(epic_weekly$time)
+
+# MMWR week -> Saturday ending that week (same definition as the trend chart).
 mmwr_week_ending <- function(year, week) {
   jan4 <- as.Date(paste0(year, "-01-04"))
   week1_start <- jan4 - as.integer(format(jan4, "%w"))
   week1_start + (week - 1) * 7 + 6
 }
 
+# NNDSS weekly INCIDENT cyclosporiasis cases per 100k. The source stores
+# cyclosporiasis as cumulative year-to-date, so de-cumulate within each MMWR
+# year (first reported week of a year is its own increment); floor at 0 so
+# occasional downward data revisions don't render as negative incidence.
+nnds_weekly_incident <- nnds %>%
+  filter(mmwr_year >= 2022, !is.na(geography)) %>%
+  select(geography, mmwr_year, mmwr_week, cum = cyclosporiasis) %>%
+  inner_join(geo_pop %>% select(geography, geography_name, popsize), by = "geography") %>%
+  arrange(geography, mmwr_year, mmwr_week) %>%
+  group_by(geography, mmwr_year) %>%
+  mutate(
+    incident = pmax(cum - lag(cum, default = 0), 0),
+    value_per100k = incident / popsize * 100000,
+    date = mmwr_week_ending(mmwr_year, mmwr_week)
+  ) %>%
+  ungroup() %>%
+  # States reporting zero cyclosporiasis cases in every year since 2022 are
+  # shown as missing (blank) rather than a flat zero line, matching the
+  # national map and the cumulative-YTD trend chart.
+  mutate(value_per100k = ifelse(geography_name %in% NO_REPORT_STATES, NA_real_, value_per100k))
+```
+
+Cyclosporiasis is a diarrhea-causing infection from the parasite Cyclospira, spread through contaminated food and water. While cases typically spike during the summer months, the CDC's National Notifiable Diseases Surveillance System (NNDSS) is reporting almost 2,000 cumulative cases this year, making it the largest outbreak on record. In comparison, the U.S. typically saw about half as many by this time in previous years. Although reporting is mandated in 47 states, the exact total number of cyclosporiasis cases is difficult to pin down. Local health departments track and submit case counts to states, which then notify the CDC. Additionally, not everyone with
+diarrhea seeks medical care, most people with diarrhea are not tested for cyclosporiasis, and diarrhea has many causes beyond cyclosporiasis, which complicates case tracking.
+
+This dashboard tracks reported cases, combining CDC's NNDSS data and additional data at the county level from Florida,
+Michigan, and Ohio with clinical insights from Epic Cosmos. Data reflected below are current as of `r as_of`.
+
+**Note**: State data are the authoritative source for case reporting. NNDSS data may lag or differ due to submission timing variations.
+
+## Trends over time
+National total shown by default; start typing a state name to switch to a specific state.
+
+```{r}
+#| label: trend-chart
+#| results: asis
+
+library(jsonlite)
+
+nnds_national_weekly <- nnds %>%
+  filter(geography == "00", mmwr_year >= 2022) %>%
+  select(geography, mmwr_year, mmwr_week, cases = cyclosporiasis) %>%
+  mutate(geography_name = "United States")
+
 nnds_state_weekly <- nnds %>%
   filter(!is.na(geography), mmwr_year >= 2022) %>%
   select(geography, mmwr_year, mmwr_week, cases = cyclosporiasis) %>%
   inner_join(all_state_pop %>% select(geography, geography_name), by = "geography") %>%
   bind_rows(nnds_national_weekly) %>%
-  # The source file is not guaranteed sorted by week within each
-  # geography/year; plotly's "lines" mode draws points in row order (unlike
-  # ggplot's geom_line, which auto-sorts by x), so an unsorted feed here
-  # zig-zags into what looks like many lines instead of one clean line.
   arrange(geography_name, mmwr_year, mmwr_week) %>%
-  mutate(week_ending_label = format(mmwr_week_ending(mmwr_year, mmwr_week), "%b %d"))
+  mutate(
+    week_ending_label = format(mmwr_week_ending(mmwr_year, mmwr_week), "%b %d"),
+    # States reporting zero cyclosporiasis cases in every year since 2022 are
+    # shown as missing (blank lines) rather than a flat zero, since a persistent
+    # zero more likely reflects no reporting than truly no cases (matches the
+    # national map's treatment).
+    cases = ifelse(geography_name %in% NO_REPORT_STATES, NA_real_, cases)
+  )
 
 states_sorted <- sort(unique(nnds_state_weekly$geography_name))
 years_sorted  <- sort(unique(nnds_state_weekly$mmwr_year))
-n_states <- length(states_sorted)
-n_years  <- length(years_sorted)
-default_state <- "United States"
 
-# Kept to a single subtitle line, same reasoning as the national map's
-# title: multi-line subtitles via <br> render with plotly's loose default
-# line spacing ("double spaced"), and a longer text also risks overlapping
-# the plot below without a very tall top margin. One short line avoids both.
-make_trend_title <- function(st) list(
-  text = paste0(
-    "<b>Cumulative weekly cyclosporiasis cases</b><br>",
-    "<span style='font-size:12px;color:#767676'>", st,
-    ": cumulative NNDSS cases by calendar week, one line per year. Data from 2026 are preliminary.</span>"
-  ),
-  font = plotly_title_font, x = 0, xanchor = "left"
+# per-year (week -> "Mon DD") label map. It depends only on year + week, so it
+# is stored once rather than repeated in every state's hover data.
+trend_labels <- lapply(years_sorted, function(yr) {
+  d <- nnds_state_weekly %>% filter(mmwr_year == yr) %>% distinct(mmwr_week, week_ending_label)
+  setNames(as.list(d$week_ending_label), as.character(d$mmwr_week))
+})
+names(trend_labels) <- as.character(years_sorted)
+
+# One compact record per state (drawn on demand in the browser) rather than
+# ~260 pre-built, mostly-hidden plotly traces (n_states x n_years).
+trend_series <- lapply(states_sorted, function(st) {
+  per_year <- lapply(years_sorted, function(yr) {
+    d <- nnds_state_weekly %>% filter(geography_name == st, mmwr_year == yr) %>% arrange(mmwr_week)
+    list(x = d$mmwr_week, y = d$cases)
+  })
+  names(per_year) <- as.character(years_sorted)
+  per_year
+})
+names(trend_series) <- states_sorted
+
+trend_payload <- list(
+  states = states_sorted,
+  default = "United States",
+  years = as.character(years_sorted),
+  colors = pophive_line_colors[seq_along(years_sorted)],
+  dashes = ifelse(pophive_line_types[seq_along(years_sorted)] == "dashed", "dash", "solid"),
+  labels = trend_labels,
+  series = trend_series
 )
 
-p_trend <- plot_ly()
-for (st in states_sorted) {
-  d_st <- nnds_state_weekly %>% filter(geography_name == st)
-  for (i in seq_along(years_sorted)) {
-    yr <- years_sorted[i]
-    d_yr <- d_st %>% filter(mmwr_year == yr)
-    is_default <- identical(st, default_state)
-    p_trend <- p_trend %>% add_trace(
-      data = d_yr, x = ~mmwr_week, y = ~cases, type = "scatter", mode = "lines+markers",
-      name = as.character(yr), legendgroup = as.character(yr),
-      showlegend = is_default, visible = is_default,
-      line = list(color = pophive_line_colors[i],
-                  dash = ifelse(pophive_line_types[i] == "dashed", "dash", "solid")),
-      marker = list(color = pophive_line_colors[i], size = 5),
-      customdata = ~week_ending_label,
-      hovertemplate = paste0(st, ", week %{x} (week ending %{customdata}): %{y} cases<extra>", yr, "</extra>")
-    )
+cat(sprintf('<script>window.TREND_DATA = %s;</script>\n',
+            toJSON(trend_payload, auto_unbox = TRUE, na = "null", digits = 4)))
+```
+
+```{=html}
+<div class="cyclo-map-controls">
+  <label class="cyclo-age">State:
+    <input list="trend-state-list" id="trend-state" class="cyclo-state-input" placeholder="Type a state…" autocomplete="off">
+    <datalist id="trend-state-list"></datalist>
+  </label>
+</div>
+<p class="cyclo-map-title" id="trend-title">Cumulative weekly cyclosporiasis cases</p>
+<p class="cyclo-map-sub" id="trend-sub"></p>
+<div id="trend-chart-div" style="width:100%;height:460px;"></div>
+
+<script>
+(function () {
+  function ready() {
+    if (!window.Plotly || !window.TREND_DATA) { return setTimeout(ready, 120); }
+    var D = window.TREND_DATA;
+    var input = document.getElementById('trend-state');
+    var list = document.getElementById('trend-state-list');
+    var chart = document.getElementById('trend-chart-div');
+    var subEl = document.getElementById('trend-sub');
+    var known = {};
+    D.states.forEach(function (s) {
+      var o = document.createElement('option'); o.value = s; list.appendChild(o);
+      known[s.toLowerCase()] = s;
+    });
+    input.value = D.default;
+    var last = D.default;
+
+    function render(st) {
+      var byYear = D.series[st] || {};
+      var t = D.years.map(function (yr, i) {
+        var s = byYear[yr] || { x: [], y: [] };
+        var labs = D.labels[yr] || {};
+        var cd = s.x.map(function (w) { return labs[String(w)] || ''; });
+        return { x: s.x, y: s.y, customdata: cd, type: 'scatter', mode: 'lines+markers',
+          name: yr, line: { color: D.colors[i], dash: D.dashes[i] }, marker: { color: D.colors[i], size: 5 },
+          hovertemplate: st + ', week %{x} (week ending %{customdata}): %{y} cases<extra>' + yr + '</extra>' };
+      });
+      var layout = {
+        margin: { t: 10, b: 45, l: 55, r: 20 }, paper_bgcolor: 'white', plot_bgcolor: 'white',
+        font: { family: 'Rubik, sans-serif', color: '#00356b', size: 11 }, hovermode: 'closest',
+        xaxis: { title: 'Calendar week', dtick: 4, gridcolor: 'white', zeroline: false },
+        yaxis: { title: 'Cases (cumulative YTD)', gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' },
+        legend: { orientation: 'h', x: 0.01, y: 0.99, yanchor: 'top' }
+      };
+      subEl.textContent = st + ': cumulative NNDSS cases by calendar week, one line per year. Data from 2026 are preliminary.';
+      Plotly.react(chart, t, layout, { displayModeBar: false, responsive: true });
+    }
+    function pick() { var c = known[input.value.trim().toLowerCase()]; if (c) { last = c; render(c); } }
+    input.addEventListener('input', pick);
+    input.addEventListener('focus', function () { input.select(); });
+    input.addEventListener('change', function () {
+      var c = known[input.value.trim().toLowerCase()];
+      if (c) { last = c; render(c); } else { input.value = last; }
+    });
+    render(D.default);
   }
-}
-
-# One dropdown button per state; toggles visible/showlegend for that state's
-# block of `n_years` traces and hides every other state's traces.
-state_buttons <- lapply(seq_along(states_sorted), function(si) {
-  vis <- rep(FALSE, n_states * n_years)
-  idx <- ((si - 1) * n_years + 1):(si * n_years)
-  vis[idx] <- TRUE
-  list(
-    method = "update",
-    args = list(list(visible = vis, showlegend = vis),
-                list(title = make_trend_title(states_sorted[si]))),
-    label = states_sorted[si]
-  )
-})
-
-default_idx <- which(states_sorted == default_state) - 1
-
-p_trend <- p_trend %>%
-  layout(
-    title = make_trend_title(default_state),
-    # Dropdown and legend now sit INSIDE the plot's own top corners (same
-    # coordinate space as the data, 0-1), not floating above it in the
-    # margin - that "paper" region uses a different coordinate reference
-    # than the title, which made them hard to align without overlapping.
-    # Living inside the axes area instead guarantees no title collision.
-    # Early calendar weeks are ~0 cases for every state/year, so the
-    # top-left corner is always safe from real data; top-right similarly
-    # only risks a thin sliver of a completed year's line.
-    updatemenus = list(list(
-      type = "dropdown", active = default_idx, x = 0.99, xanchor = "right", y = 0.99, yanchor = "top",
-      font = plotly_body_font, buttons = state_buttons
-    )),
-    xaxis = list(title = "Calendar week", dtick = 4, tickfont = plotly_body_font,
-                  titlefont = plotly_body_font, gridcolor = "white", zeroline = FALSE),
-    yaxis = list(title = "Cases (cumulative YTD)", tickfont = plotly_body_font,
-                  titlefont = plotly_body_font, gridcolor = "#e5e5e5", zeroline = FALSE,
-                  griddash = "dash"),
-    legend = list(orientation = "h", x = 0.01, y = 0.99, yanchor = "top", font = plotly_body_font),
-    plot_bgcolor = "white", paper_bgcolor = "white",
-    margin = list(t = 70, b = 70)
-  ) %>%
-  config(displayModeBar = FALSE)
-p_trend
+  ready();
+})();
+</script>
 ```
 
 ```{=html}
 <details class="chart-info">
 <summary>About this chart</summary>
-<p>Map shows cumulative cyclosporiasis cases reported to NNDSS for selected year. 2026 data are preliminary and incomplete. Not all states mandate cyclosporiasis reporting; states with zero cases may lack reporting requirements rather than having no cases. Territories are excluded.
+<p>Chart shows cumulative cyclosporiasis cases reported to NNDSS by calendar week, one line per year, for the selected state (national total by default). 2026 data are preliminary and incomplete. States that have reported zero cyclosporiasis cases in every year from 2022 onward are considered 'missing' and not plotted. Not all states mandate cyclosporiasis reporting; states with zero cases may lack reporting requirements rather than having no cases. Territories are excluded.
 Standardized data can be found on our <a href="https://github.com/PopHIVE/Ingest/tree/main/data/nnds/standard">GitHub</a>. The raw NNDSS data from CDC are found <a href="https://www.cdc.gov/nndss/what-is-case-surveillance/">here</a>.</p>
 </details>
 ```
 
 ## Geographic distribution
+Use the toggle to switch between cumulative cases of cyclosporiasis from CDC/NNDSS,  percent of emergency-department (ED) visits due to diarrhea from any cause from Epic Cosmos, and percent of all healthcare encounters due to diarrhea of any cause.
 
 ### Cases by state
-2026 trends shown by default; use the slider to switch to an earlier year.
 
 ```{r}
 #| label: national-map
-#| fig-width: 9
-#| fig-height: 6
+#| results: asis
+
+library(jsonlite)
 
 annual_brks <- c(0, 0.1, 0.25, 0.5, 1, 2, 3, 5)
 
+# --- NNDSS: one slice per year (state abbr, z = log1p(cases per 100k), hover)
 state_data_by_year <- state_data_by_year %>%
   mutate(hover_text = ifelse(
     is.na(cases),
@@ -455,84 +558,241 @@ state_data_by_year <- state_data_by_year %>%
            " case", ifelse(cases == 1, "", "s"),
            " (", sprintf("%.1f", cases_per_100k), " per 100,000)")
   ))
+z_max_nnds <- log1p(max(state_data_by_year$cases_per_100k, na.rm = TRUE))
 
-z_max <- log1p(max(state_data_by_year$cases_per_100k, na.rm = TRUE))
-default_year <- YEAR
-
-# Title doesn't need the year - the year dropdown already makes that clear.
-# Kept to a single subtitle line on purpose: multi-line subtitles (via <br>)
-# render with plotly's fairly loose default line spacing, which reads as
-# "double spaced" - one line avoids that entirely instead of fighting it.
-map_title <- list(
-  text = paste0(
-    "<b>Cyclosporiasis Cases by State (NNDSS)</b><br>",
-    "<span style='font-size:12px;color:#767676'>Cases per 100,000 population by state. 2026 data are ",
-    "through July 4. See county-level detail for MI, OH, and FL below.</span>"
-  ),
-  font = plotly_title_font, x = 0, xanchor = "left"
-)
-
-p_national <- plot_ly()
-for (yr in MAP_YEARS) {
+nnds_slices <- lapply(MAP_YEARS, function(yr) {
   d <- state_data_by_year %>% filter(mmwr_year == yr)
-  is_default <- yr == default_year
-  p_national <- p_national %>% add_trace(
-    type = "choropleth", locationmode = "USA-states",
-    locations = d$state, z = log1p(d$cases_per_100k), zmin = 0, zmax = z_max,
-    colorscale = pophive_magma_colorscale, text = d$hover_text, hoverinfo = "text",
-    marker = list(line = list(color = "white", width = 0.5)), visible = is_default,
-    # showscale = FALSE on the hidden year-traces matters: plotly reserves/
-    # shrinks colorbar space accounting for EVERY trace that has a colorbar,
-    # even invisible ones, so with 5 traces all requesting one, none of them
-    # can ever reach the full len=1 height. Only the active trace claims it.
-    showscale = is_default,
-    colorbar = list(
-      title = list(text = "Cases per<br>100,000", font = plotly_body_font),
-      tickvals = log1p(annual_brks), ticktext = annual_brks,
-      tickfont = plotly_body_font, len = 1, thickness = 18
-    )
+  list(locations = d$state,
+       z    = ifelse(is.na(d$cases_per_100k), NA_real_, log1p(d$cases_per_100k)),
+       text = d$hover_text)
+})
+names(nnds_slices) <- as.character(MAP_YEARS)
+
+# --- Epic diarrhea: monthly by (state, age), aggregated from the weekly feed so
+# BOTH an ED-based and an all-encounters-based percentage are available
+# (monthly.csv.gz is ED-only). State-level only (drop "00"). Non-suppressed
+# weekly counts are summed within each calendar month, then divided.
+epic_map_src <- epic_weekly %>%
+  filter(geography != "00") %>%
+  mutate(month = as.Date(cut(time, "month"))) %>%
+  group_by(geography, age, month) %>%
+  summarize(
+    ed_num  = sum(ifelse(epic_suppressed_flag_ed_diarrhea == 1 | epic_suppressed_flag_ed_encounters_weekly == 1, NA, epic_n_ed_diarrhea), na.rm = TRUE),
+    ed_den  = sum(ifelse(epic_suppressed_flag_ed_diarrhea == 1 | epic_suppressed_flag_ed_encounters_weekly == 1, NA, epic_n_ed_encounters_weekly), na.rm = TRUE),
+    all_num = sum(ifelse(epic_suppressed_flag_all_diarrhea == 1 | epic_suppressed_flag_encounters_total_weekly == 1, NA, epic_n_all_diarrhea), na.rm = TRUE),
+    all_den = sum(ifelse(epic_suppressed_flag_all_diarrhea == 1 | epic_suppressed_flag_encounters_total_weekly == 1, NA, epic_n_encounters_total_weekly), na.rm = TRUE),
+    .groups = "drop") %>%
+  inner_join(geo_pop %>% select(geography, state, geography_name), by = "geography") %>%
+  mutate(
+    month_key = format(month, "%Y-%m-%d"),
+    ed_pct  = ifelse(ed_den  > 0, 100 * ed_num  / ed_den,  NA_real_),
+    all_pct = ifelse(all_den > 0, 100 * all_num / all_den, NA_real_)
   )
+
+epic_ages <- intersect(
+  c("Total", "<1 Years", "1-4 Years", "5-17 Years", "18-49 Years", "50-64 Years", "65+ Years"),
+  unique(epic_map_src$age))
+epic_months <- sort(unique(epic_map_src$month_key))
+
+# One slice per (age, month) for a given measure ("ed"/"all").
+build_epic_slices <- function(measure, label) {
+  pct_col <- paste0(measure, "_pct")
+  sl <- lapply(epic_ages, function(a) {
+    per_month <- lapply(epic_months, function(m) {
+      d <- epic_map_src %>% filter(age == a, month_key == m)
+      z <- d[[pct_col]]
+      hov <- ifelse(is.na(z),
+        paste0(d$geography_name, ": suppressed (not shown)"),
+        paste0(d$geography_name, ": ", sprintf("%.2f", z), "% of ", label, " due to diarrhea"))
+      list(locations = d$state, z = ifelse(is.na(z), NA_real_, z), text = hov)
+    })
+    names(per_month) <- epic_months
+    per_month
+  })
+  names(sl) <- epic_ages
+  sl
 }
 
-# One slider step per year; toggles which single choropleth trace is
-# visible, and moves showscale to that trace so the colorbar follows it.
-# The title no longer depends on year, so steps don't need to touch it.
-year_steps <- lapply(seq_along(MAP_YEARS), function(i) {
-  vis <- rep(FALSE, length(MAP_YEARS))
-  vis[i] <- TRUE
-  list(method = "restyle", args = list(list(visible = vis, showscale = vis)), label = as.character(MAP_YEARS[i]))
-})
-default_year_idx <- which(MAP_YEARS == default_year) - 1
+map_payload <- list(
+  colorscale = pophive_magma_colorscale,
+  nnds = list(years = as.character(MAP_YEARS), slices = nnds_slices,
+              zmax = z_max_nnds, tickvals = log1p(annual_brks), ticktext = annual_brks),
+  epic = list(
+    ages = epic_ages, months = epic_months,
+    monthLabels = format(as.Date(epic_months), "%b %Y"), defaultAge = "Total",
+    ed  = list(slices = build_epic_slices("ed",  "ED encounters"),
+               zmax = max(epic_map_src$ed_pct,  na.rm = TRUE)),
+    all = list(slices = build_epic_slices("all", "all encounters"),
+               zmax = max(epic_map_src$all_pct, na.rm = TRUE))
+  )
+)
 
-p_national <- p_national %>%
-  layout(
-    geo = list(scope = "usa", projection = list(type = "albers usa"), bgcolor = "transparent"),
-    title = map_title,
-    # Slider sits below the map (in the bottom margin) rather than a
-    # dropdown floating over it.
-    sliders = list(list(
-      active = default_year_idx, pad = list(t = 30, l = 10),
-      currentvalue = list(prefix = "Year: ", font = plotly_body_font, xanchor = "left"),
-      font = plotly_body_font, steps = year_steps
-    )),
-    # Title is now just 2 short lines, so a smaller top margin both closes
-    # the gap above it and - since colorbar len is a fraction of this plot
-    # area - gives the len=1 colorbar more actual vertical room to fill.
-    # margin.b is taller than the county maps' to leave the slider room.
-    margin = list(t = 80, b = 90),
-    paper_bgcolor = "white"
-  ) %>%
-  config(displayModeBar = FALSE)
-p_national
+cat(sprintf('<script>window.CYCLO_MAP = %s;</script>\n',
+            toJSON(map_payload, auto_unbox = TRUE, na = "null", digits = 6)))
 ```
 
-<p class="source-note" style="margin-top: 1.5rem;">States shown as missing (unfilled) have reported zero cyclosporiasis cases to NNDSS in every year from 2022 onward.</p>
+```{=html}
+<style>
+.cyclo-map-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; margin: 0.25rem 0 0.5rem; font-family: 'Rubik', sans-serif; }
+.cyclo-toggle { display: inline-flex; border: 1px solid #00356b; border-radius: 999px; overflow: hidden; }
+.cyclo-toggle button { border: 0; background: #ffffff; color: #00356b; font-family: 'Rubik', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 0.4rem 1rem; cursor: pointer; }
+.cyclo-toggle button.active { background: #00356b; color: #ffffff; }
+.cyclo-age { font-size: 0.85rem; color: #00356b; font-weight: 500; }
+.cyclo-age select { font-family: 'Rubik', sans-serif; font-size: 0.85rem; color: #26323d; border: 1px solid #bedeff; border-radius: 6px; padding: 0.25rem 0.4rem; margin-left: 0.35rem; }
+.cyclo-age input.cyclo-state-input { font-family: 'Rubik', sans-serif; font-size: 0.85rem; color: #26323d; border: 1px solid #bedeff; border-radius: 6px; padding: 0.3rem 0.5rem; margin-left: 0.35rem; min-width: 13rem; }
+.cyclo-age input.cyclo-state-input:focus { outline: none; border-color: #4e98e4; box-shadow: 0 0 0 2px #bedeff; }
+.cyclo-map-title { font-family: 'Source Serif 4', serif; color: #00356b; font-weight: 600; font-size: 1.15rem; margin: 0.5rem 0 0; }
+.cyclo-map-sub { font-family: 'Rubik', sans-serif; color: #767676; font-size: 0.82rem; margin: 0.15rem 0 0.25rem; }
+.cyclo-slider-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.25rem 0 0; font-family: 'Rubik', sans-serif; font-size: 0.82rem; color: #00356b; }
+.cyclo-slider-row input[type=range] { flex: 1; accent-color: #00356b; }
+#cyclo-period-label { min-width: 6.5rem; font-weight: 500; }
+</style>
+
+<div class="cyclo-map-wrap">
+  <div class="cyclo-map-controls">
+    <div class="cyclo-toggle">
+      <button data-mode="nnds" class="active" type="button">NNDSS cyclosporiasis cases</button>
+      <button data-mode="epic_ed" type="button">Epic Cosmos ED visits</button>
+      <button data-mode="epic_all" type="button">Epic Cosmos all encounters</button>
+    </div>
+    <label class="cyclo-age" id="cyclo-age-wrap" style="display:none;">Age group:
+      <select id="cyclo-age-select"></select>
+    </label>
+  </div>
+  <p class="cyclo-map-title" id="cyclo-map-title"></p>
+  <p class="cyclo-map-sub" id="cyclo-map-sub"></p>
+  <div id="cyclo-map" style="width:100%;height:460px;"></div>
+  <div class="cyclo-slider-row">
+    <span id="cyclo-period-label"></span>
+    <input type="range" id="cyclo-period" min="0" max="1" value="0" step="1" aria-label="time period">
+  </div>
+</div>
+
+<script>
+(function () {
+  function ready() {
+    if (!window.Plotly || !window.CYCLO_MAP) { return setTimeout(ready, 120); }
+    var M = window.CYCLO_MAP;
+    var mapDiv = document.getElementById('cyclo-map');
+    var titleEl = document.getElementById('cyclo-map-title');
+    var subEl = document.getElementById('cyclo-map-sub');
+    var slider = document.getElementById('cyclo-period');
+    var periodLabel = document.getElementById('cyclo-period-label');
+    var ageWrap = document.getElementById('cyclo-age-wrap');
+    var ageSelect = document.getElementById('cyclo-age-select');
+    var buttons = document.querySelectorAll('.cyclo-toggle button');
+
+    // populate age dropdown (Epic mode)
+    M.epic.ages.forEach(function (a) {
+      var o = document.createElement('option');
+      o.value = a; o.textContent = a; ageSelect.appendChild(o);
+    });
+    ageSelect.value = M.epic.defaultAge;
+
+    var state = { mode: 'nnds', age: M.epic.defaultAge, idx: M.nnds.years.length - 1 };
+
+    // Drop entries whose z is null so those states render unfilled (missing /
+    // suppressed) rather than being colored as a real low value.
+    function clean(slice) {
+      var loc = [], z = [], txt = [];
+      for (var i = 0; i < slice.locations.length; i++) {
+        if (slice.z[i] === null || slice.z[i] === undefined) continue;
+        loc.push(slice.locations[i]); z.push(slice.z[i]); txt.push(slice.text[i]);
+      }
+      return { locations: loc, z: z, text: txt };
+    }
+
+    function current() {
+      if (state.mode === 'nnds') {
+        var yr = M.nnds.years[state.idx];
+        return {
+          slice: clean(M.nnds.slices[yr]),
+          zmax: M.nnds.zmax,
+          colorbar: { title: { text: 'Cases per<br>100,000' }, tickvals: M.nnds.tickvals, ticktext: M.nnds.ticktext, len: 1, thickness: 18 },
+          title: 'Cyclosporiasis cases by state (NNDSS)',
+          sub: 'Cumulative cases per 100,000 &middot; ' + yr,
+          periodLabel: 'Year: ' + yr
+        };
+      }
+      var measure = (state.mode === 'epic_all') ? 'all' : 'ed';
+      var em = M.epic[measure];
+      var mo = M.epic.months[state.idx];
+      var isAll = measure === 'all';
+      return {
+        slice: clean(em.slices[state.age][mo]),
+        zmax: em.zmax,
+        colorbar: { title: { text: isAll ? '% of all<br>encounters' : '% of ED<br>encounters' }, len: 1, thickness: 18 },
+        title: isAll ? 'Diarrhea across all encounters by state (Epic Cosmos)' : 'Diarrhea in ED encounters by state (Epic Cosmos)',
+        sub: '% of ' + (isAll ? 'all healthcare encounters' : 'emergency-department encounters') + ' due to diarrhea &middot; Age ' + state.age + ' &middot; ' + M.epic.monthLabels[state.idx],
+        periodLabel: M.epic.monthLabels[state.idx]
+      };
+    }
+
+    function render(redraw) {
+      var c = current();
+      var trace = {
+        type: 'choropleth', locationmode: 'USA-states',
+        locations: c.slice.locations, z: c.slice.z, text: c.slice.text,
+        hoverinfo: 'text', zmin: 0, zmax: c.zmax,
+        colorscale: M.colorscale, showscale: true,
+        marker: { line: { color: 'white', width: 0.5 } },
+        colorbar: c.colorbar
+      };
+      var layout = {
+        geo: { scope: 'usa', projection: { type: 'albers usa' }, bgcolor: 'transparent' },
+        margin: { t: 6, b: 6, l: 0, r: 0 }, paper_bgcolor: 'white',
+        font: { family: 'Rubik, sans-serif', color: '#00356b', size: 11 }
+      };
+      titleEl.textContent = c.title;
+      subEl.innerHTML = c.sub;
+      periodLabel.textContent = c.periodLabel;
+      if (redraw) {
+        Plotly.newPlot(mapDiv, [trace], layout, { displayModeBar: false, responsive: true });
+      } else {
+        Plotly.react(mapDiv, [trace], layout, { displayModeBar: false, responsive: true });
+      }
+    }
+
+    function setSlider() {
+      var n = (state.mode === 'nnds') ? M.nnds.years.length : M.epic.months.length;
+      slider.max = n - 1;
+      state.idx = n - 1;      // default to the most recent period
+      slider.value = state.idx;
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.dataset.mode === state.mode) return;
+        var wasNnds = state.mode === 'nnds';
+        buttons.forEach(function (x) { x.classList.remove('active'); });
+        b.classList.add('active');
+        state.mode = b.dataset.mode;
+        var isNnds = state.mode === 'nnds';
+        ageWrap.style.display = isNnds ? 'none' : 'inline-block';
+        // Only reset the time slider when the period domain changes (annual
+        // NNDSS <-> monthly Epic); switching between the two Epic modes keeps
+        // the selected month.
+        if (wasNnds !== isNnds) setSlider();
+        render(false);
+      });
+    });
+    ageSelect.addEventListener('change', function () { state.age = ageSelect.value; render(false); });
+    slider.addEventListener('input', function () { state.idx = parseInt(slider.value, 10); render(false); });
+
+    setSlider();
+    render(true);
+  }
+  ready();
+})();
+</script>
+```
 
 ```{=html}
 <details class="chart-info">
 <summary>About this chart</summary>
-<p>Map shows cumulative cyclosporiasis cases reported to NNDSS by state for selected year. 2026 data are preliminary and incomplete. Not all states mandate cyclosporiasis reporting; states with zero cases may lack reporting requirements rather than having no cases. Territories are excluded.
-Standardized data can be found on our <a href="https://github.com/PopHIVE/Ingest/tree/main/data/nnds/standard">GitHub</a>. The CDC presents its NNDSS data <a href="https://www.cdc.gov/nndss/what-is-case-surveillance/">here</a>.</p>
+<p><b>NNDSS view:</b> cumulative cyclosporiasis cases reported to NNDSS by state for the selected year (cases per 100,000). 2026 data are preliminary and incomplete. States that have reported zero cyclosporiasis cases in every year from 2022 onward are considered 'missing' and not plotted. Not all states mandate cyclosporiasis reporting; states with zero cases may lack reporting requirements rather than having no cases. Territories are excluded.
+Standardized data are on our <a href="https://github.com/PopHIVE/Ingest/tree/main/data/nnds/standard">GitHub</a>; the CDC presents its NNDSS data <a href="https://www.cdc.gov/nndss/what-is-case-surveillance/">here</a>.<br><br>
+<b>Epic diarrhea view:</b> percent of ED visits and all healthcare encounters attributable to all-cause diarrhea (ICD-10-CM A00-A09, R19.7). Insights are drawn from clinical electronic health records (EHR)from facilities using the Epic EHR and participating in Epic Cosmos. Epic Cosmos captures varying amounts of the population in different regions, so the data may be mroe representative of diarrhea in the community in some areas than others. This is a measure of diarrhea activity in the ED, not a cyclosporiasis case count. Counts fewer than 10 are suppressed and excluded (shown unfilled). Standardized data are on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/cosmos-diarrhea">GitHub</a>.</p>
 </details>
 ```
 
@@ -598,13 +858,15 @@ state_sources <- c(
 # its README); MI/OH are not flagged that way, hence the differing wording.
 state_subtitles <- c(
   FL = paste0("Cumulative year-to-date preliminary cyclosporiasis cases per 100,000 population as of ", state_asof[["FL"]], "."),
-  MI = paste0("Cumulative preliminary cyclosporiasis  cases per 100,000 population reported during<br>the outbreak investigation (as of ", state_asof[["MI"]], ", starting July 1, 2026)."),
+  MI = paste0("Cumulative preliminary cyclosporiasis cases per 100,000 population reported during the outbreak investigation (as of ", mi_last_update, ", starting July 1, 2026)."),
   OH = paste0("Cumulative year-to-date preliminary cyclosporiasis cases per 100,000 population as of ", state_asof[["OH"]], ".")
 )
 
 make_county_plot <- function(abbr) {
   d <- county_hover %>% filter(STUSPS == abbr)
-  plot_ly() %>%
+  # Explicit height: inside the tagList wrapper the chunk's fig-height no longer
+  # sizes the widget, so set it here to keep the maps their previous size.
+  plot_ly(height = 500) %>%
     add_trace(
       type = "choropleth", geojson = counties_geojson, featureidkey = "properties.GEOID",
       locations = d$GEOID, z = log1p(d$cases_per_100k), zmin = 0, zmax = z_max_county,
@@ -618,21 +880,25 @@ make_county_plot <- function(abbr) {
     ) %>%
     layout(
       geo = list(scope = "usa", fitbounds = "locations", visible = FALSE),
-      title = list(
-        text = paste0(
-          "<b>", state_names[[abbr]], "</b><br>",
-          "<span style='font-size:12px;color:#767676'>", state_subtitles[[abbr]], "</span>"
-        ),
-        font = plotly_title_font, x = 0, xanchor = "left"
-      ),
       annotations = list(list(
         text = state_sources[[abbr]], xref = "paper", yref = "paper",
         x = 0, y = -0.06, xanchor = "left", showarrow = FALSE, font = plotly_caption_font
       )),
-      margin = list(t = 100, b = 40),
+      margin = list(t = 10, b = 40),
       paper_bgcolor = "white"
     ) %>%
     config(displayModeBar = FALSE)
+}
+
+# Title + subtitle are rendered as HTML above the map (not in the plotly title)
+# so the longer Michigan subtitle wraps naturally with tight line spacing,
+# matching the other charts' subtitles, instead of being clipped.
+county_block <- function(abbr) {
+  header <- sprintf(
+    '<p class="cyclo-map-title" style="margin-top:1rem;">%s</p><p class="cyclo-map-sub">%s</p>',
+    state_names[[abbr]], state_subtitles[[abbr]]
+  )
+  htmltools::tagList(htmltools::HTML(header), make_county_plot(abbr))
 }
 ```
 
@@ -641,7 +907,7 @@ make_county_plot <- function(abbr) {
 #| label: county-mi
 #| fig-width: 9
 #| fig-height: 7
-make_county_plot("MI")
+county_block("MI")
 ```
 
 
@@ -649,7 +915,7 @@ make_county_plot("MI")
 #| label: county-oh
 #| fig-width: 9
 #| fig-height: 7
-make_county_plot("OH")
+county_block("OH")
 ```
 
 
@@ -657,7 +923,7 @@ make_county_plot("OH")
 #| label: county-fl
 #| fig-width: 9
 #| fig-height: 7
-make_county_plot("FL")
+county_block("FL")
 ```
 
 ```{=html}
@@ -667,17 +933,373 @@ make_county_plot("FL")
 </details>
 ```
 
+## Epic Cosmos Trends
+
+Epic Cosmos captures broader diarrhea activity in health care facilities and how often clinicians order a cyclospora lab test. These are population-level signals of disease activity, not case counts. National total is shown by default. Start typing a state name to switch to a specific state.
+
+### Epic diarrhea and Cyclospora testing trends
+Start typing a state name to filter (national total by default). Hover any point for the underlying value. Epic diarrhea points also report the share of the population Epic covered that week.
+
+```{r}
+#| label: epic-nnds-compare
+#| results: asis
+
+library(jsonlite)
+
+# Geographies in the Epic weekly feed (national + states). Dropdown lists them
+# alphabetically but defaults to the United States (sorted first).
+compare_geos <- epic_weekly %>%
+  distinct(geography) %>%
+  mutate(geography_name = unname(geo_name[geography])) %>%
+  filter(!is.na(geography_name)) %>%
+  arrange(geography_name != "United States", geography_name)
+
+# Epic weekly diarrhea percentages (Total age): ED-based and all-encounters
+# based, plus the Epic population-coverage share (ED encounters / population).
+epic_wk_total <- epic_weekly %>%
+  filter(age == "Total") %>%
+  left_join(geo_pop %>% select(geography, popsize), by = "geography") %>%
+  mutate(share_covered = 100 * epic_n_ed_encounters_weekly / popsize)
+
+cmp_xmax <- max(c(max(epic_wk_total$time), max(nnds_weekly_incident$date)))
+r4 <- function(v) round(v, 4)
+
+# Emit one compact record per geography and let the browser draw only the
+# selected geography's handful of traces on demand, rather than shipping ~160
+# mostly-hidden plotly traces. Keeps full interactivity at a fraction of the
+# page weight. The bottom-panel testing measures are now weekly.
+cmp_series <- lapply(compare_geos$geography, function(g) {
+  dn <- nnds_weekly_incident %>% filter(geography == g) %>% arrange(date)
+  de <- epic_wk_total %>% filter(geography == g) %>% arrange(time)
+  dt <- epic_wtests %>% filter(geography == g) %>% arrange(time)
+  out <- list(
+    nnds     = list(x = format(dn$date), y = r4(dn$value_per100k)),
+    diar     = list(x = format(de$time), y = r4(de$pct_ed_diarrhea), share = r4(de$share_covered)),
+    diar_all = list(x = format(de$time), y = r4(de$pct_all_diarrhea)),
+    tested   = list(x = format(dt$time), y = r4(dt$pct_tested)),
+    # Positive counts are suppressed in most state-weeks; plot every
+    # non-suppressed point (gaps where suppressed) rather than gating on a
+    # minimum number of weeks.
+    positive = list(x = format(dt$time), y = r4(dt$pct_positive))
+  )
+  out
+})
+names(cmp_series) <- compare_geos$geography
+
+cmp_payload <- list(
+  geos = lapply(seq_len(nrow(compare_geos)), function(i)
+    list(code = compare_geos$geography[i], name = compare_geos$geography_name[i])),
+  default = "00",
+  xrange = c(format(epic_start), format(cmp_xmax)),
+  colors = list(nnds = pophive_navy, diar = "#ad347c", diar_all = "#fe9e6d",
+                tested = "#2a7f62", positive = "#6b1d80"),
+  series = cmp_series
+)
+
+cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
+            toJSON(cmp_payload, auto_unbox = TRUE, na = "null", digits = 4)))
+```
+
+```{=html}
+<div class="cyclo-map-controls">
+  <label class="cyclo-age">State:
+    <input list="cmp-state-list" id="cmp-state" class="cyclo-state-input" placeholder="Type a state…" autocomplete="off">
+    <datalist id="cmp-state-list"></datalist>
+  </label>
+</div>
+<p class="cyclo-map-title">Epic diarrhea trends compared to cyclosporiasis cases (NNDSS)</p>
+<p class="cyclo-map-sub">Five panels share the same time range; each has its own y-axis scale.</p>
+<p class="cyclo-map-title" style="font-size:1rem;margin-top:0.75rem;">Epic Cosmos: % of ED encounters due to diarrhea</p>
+<div id="cmp-chart-ed" style="width:100%;height:190px;"></div>
+<p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Epic Cosmos: % of all encounters due to diarrhea</p>
+<div id="cmp-chart-all" style="width:100%;height:190px;"></div>
+<p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Cyclosporiasis cases (NNDSS)</p>
+<div id="cmp-chart-nnds" style="width:100%;height:190px;"></div>
+<p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Stool and cyclospora testing: % of diarrhea encounters tested for cyclospora</p>
+<div id="cmp-chart-tested" style="width:100%;height:190px;"></div>
+<p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Stool and cyclospora testing: % of cyclospora tests positive</p>
+<p class="cyclo-map-sub">Positive Cyclospora test counts are suppressed in a large majority of the states and are not plotted if suppressed.</p>
+<div id="cmp-chart-positive" style="width:100%;height:190px;"></div>
+
+<script>
+(function () {
+  function ready() {
+    if (!window.Plotly || !window.CMP_DATA) { return setTimeout(ready, 120); }
+    var D = window.CMP_DATA;
+    var input = document.getElementById('cmp-state');
+    var list = document.getElementById('cmp-state-list');
+    var edDiv = document.getElementById('cmp-chart-ed');
+    var allDiv = document.getElementById('cmp-chart-all');
+    var nndsDiv = document.getElementById('cmp-chart-nnds');
+    var testedDiv = document.getElementById('cmp-chart-tested');
+    var positiveDiv = document.getElementById('cmp-chart-positive');
+    var nameByCode = {}, codeByName = {};
+    D.geos.forEach(function (g) {
+      var o = document.createElement('option'); o.value = g.name; list.appendChild(o);
+      nameByCode[g.code] = g.name; codeByName[g.name.toLowerCase()] = g.code;
+    });
+    input.value = nameByCode[D.default];
+    var last = D.default;
+
+    var baseFont = { family: 'Rubik, sans-serif', color: '#00356b', size: 11 };
+    var headFont = { family: 'Source Serif 4, serif', color: '#00356b', size: 13 };
+    var cfg = { displayModeBar: false, responsive: true };
+    // Matched l/r margins on all four panels so their plot areas line up
+    // horizontally even though they are separate charts. All four panels use
+    // the same D.xrange for their x-axis, so the time axes stay aligned
+    // (matching x-axes) while each panel keeps its own independent y-axis.
+    var LR = { l: 66, r: 66 };
+
+    function render(code) {
+      var s = D.series[code], nm = nameByCode[code];
+
+      // ---- Panel 1: Epic % of ED encounters due to diarrhea ----
+      var ed = [];
+      if (s.diar) ed.push({ x: s.diar.x, y: s.diar.y, customdata: s.diar.share, type: 'scatter', mode: 'lines',
+        name: '% of ED encounters due to diarrhea', line: { color: D.colors.diar, width: 2 }, connectgaps: false,
+        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of ED encounters were diarrhea<br>Epic covered %{customdata:.2f}% of the population<extra></extra>' });
+      var edLayout = {
+        margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
+        font: baseFont, hovermode: 'closest', showlegend: false,
+        // Every panel shows its own time axis, all sharing D.xrange (same range,
+        // same plot width/margins), so tick positions line up across panels
+        // even though NNDSS's data (panel 3) extends further than Epic's.
+        xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
+        yaxis: { title: 'Percent due to diarrhea', color: D.colors.diar, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' }
+      };
+
+      // ---- Panel 2: Epic % of all encounters due to diarrhea ----
+      var all = [];
+      if (s.diar_all) all.push({ x: s.diar_all.x, y: s.diar_all.y, type: 'scatter', mode: 'lines',
+        name: '% of all encounters due to diarrhea', line: { color: D.colors.diar_all, width: 2 }, connectgaps: false,
+        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of all encounters were diarrhea-related<extra></extra>' });
+      var allLayout = {
+        margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
+        font: baseFont, hovermode: 'closest', showlegend: false,
+        xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
+        yaxis: { title: 'Percent due to diarrhea', color: D.colors.diar_all, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' }
+      };
+
+      // ---- Panel 3: NNDSS cyclosporiasis cases ----
+      var nnds = [];
+      if (s.nnds) nnds.push({ x: s.nnds.x, y: s.nnds.y, type: 'scatter', mode: 'lines',
+        name: 'NNDSS cases per 100k', line: { color: D.colors.nnds, width: 2 },
+        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.3f}</b> NNDSS incident cases per 100,000<extra></extra>' });
+      var nndsLayout = {
+        margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
+        font: baseFont, hovermode: 'closest', showlegend: false,
+        xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
+        yaxis: { title: 'NNDSS cases per 100k', color: D.colors.nnds, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false }
+      };
+
+      // ---- Panel 4a: % of diarrhea encounters tested for cyclospora ----
+      var tested = [];
+      if (s.tested) tested.push({ x: s.tested.x, y: s.tested.y, type: 'scatter', mode: 'lines+markers',
+        name: '% of diarrhea encounters tested for cyclospora', line: { color: D.colors.tested, width: 1.8 },
+        marker: { color: D.colors.tested, size: 4 }, connectgaps: false,
+        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of diarrhea encounters had a cyclospora test<extra></extra>' });
+      var testedLayout = {
+        margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
+        font: baseFont, hovermode: 'closest', showlegend: false,
+        xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
+        yaxis: { title: '% tested', color: D.colors.tested, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' }
+      };
+
+      // ---- Panel 4b: % of cyclospora tests positive ----
+      var positive = [];
+      if (s.positive) positive.push({ x: s.positive.x, y: s.positive.y, type: 'scatter', mode: 'lines+markers',
+        name: '% cyclospora positive', line: { color: D.colors.positive, width: 1.5, dash: 'dash' },
+        marker: { color: D.colors.positive, size: 4 }, connectgaps: false,
+        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of cyclospora tests positive<extra></extra>' });
+      var positiveLayout = {
+        margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
+        font: baseFont, hovermode: 'closest', showlegend: false,
+        xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
+        yaxis: { title: '% positive', color: D.colors.positive, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' }
+      };
+
+      Plotly.react(edDiv, ed, edLayout, cfg);
+      Plotly.react(allDiv, all, allLayout, cfg);
+      Plotly.react(nndsDiv, nnds, nndsLayout, cfg);
+      Plotly.react(testedDiv, tested, testedLayout, cfg);
+      Plotly.react(positiveDiv, positive, positiveLayout, cfg);
+    }
+    function pick() { var c = codeByName[input.value.trim().toLowerCase()]; if (c) { last = c; render(c); } }
+    input.addEventListener('input', pick);
+    input.addEventListener('focus', function () { input.select(); });
+    input.addEventListener('change', function () {
+      var c = codeByName[input.value.trim().toLowerCase()];
+      if (c) { last = c; render(c); } else { input.value = nameByCode[last]; }
+    });
+    render(D.default);
+  }
+  ready();
+})();
+</script>
+```
+
+```{=html}
+<details class="chart-info">
+<summary>About these charts</summary>
+<p>
+<b>NNDSS data:</b> cumulative cyclosporiasis cases reported to NNDSS by state for the selected year (cases per 100,000). NNDSS cyclosporiasis is reported as a cumulative year-to-date count, so it is de-cumulated into weekly incident cases. 2026 data are preliminary and incomplete. Not all states mandate cyclosporiasis reporting; states with zero cases may lack reporting requirements rather than having no cases. States that have reported zero cyclosporiasis cases in every year from 2022 onward are considered 'missing' and not plotted. Territories are excluded. Standardized data are on our <a href="https://github.com/PopHIVE/Ingest/tree/main/data/nnds/standard">GitHub</a>; the CDC presents its NNDSS data <a href="https://www.cdc.gov/nndss/what-is-case-surveillance/">here</a>.<br><br>
+<b>Epic insights:</b> percent of ED visits and all healthcare encounters attributable to all-cause diarrhea (ICD-10-CM A00-A09, R19.7). Insights are drawn from clinical electronic health records (EHR)from facilities using the Epic EHR and participating in Epic Cosmos. Epic Cosmos captures varying amounts of the population in different regions, so the data may be more representative of diarrhea in the community in some areas than others. This is a measure of diarrhea activity, not a cyclosporiasis case count. Counts fewer than 10 are suppressed and excluded (shown unfilled). Standardized data are on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/cosmos-diarrhea">GitHub</a>; the weekly file is <a href="https://github.com/PopHIVE/cyclo-resources/blob/main/data/cosmos-diarrhea/standard/weekly.csv.gz">weekly.csv.gz</a>.<br><br>
+Cyclospora testing insights are also drawn from Epic Cosmos by searching for the following tests: Cyclospora SP AG in stool by immunoassay 38403-2, acid fast stain 10659-1, safranin stain 50313-6, cayetanensis presence 10850-6, cayetanensis DNA presence by NAA with non-probe detection 82206-4, and cayetanensis DNA presence by NAA with non-probe detection 41436-7. The two weekly cyclospora testing measures have different denominators: <b>% of diarrhea encounters tested</b> for cyclospora (cyclospora tests ÷ all-cause diarrhea encounters that week) and <b>% of cyclospora tests</b> that are positive (positive results ÷ tests). All Epic values with a suppressed count (fewer than 10) are excluded.
+</p>
+</details>
+```
+
+### Epic diarrhea by age group
+Weekly share of emergency-department and all healthcare encounters attributable to all-cause diarrhea. National total shown by default; start typing a state name to switch to a specific state.
+
+```{r}
+#| label: epic-age-trend
+#| results: asis
+
+age_levels <- intersect(
+  c("<1 Years", "1-4 Years", "5-17 Years", "18-49 Years", "50-64 Years", "65+ Years", "Total"),
+  unique(epic_weekly$age))
+# magma ramp for the age bands; "Total" overridden to navy + drawn thicker so
+# it reads as the reference line rather than just another band.
+age_pal <- setNames(viridisLite::magma(length(age_levels) + 1, direction = -1)[-1], age_levels)
+age_pal["Total"] <- pophive_navy
+
+epic_wk_age <- epic_weekly %>%
+  left_join(geo_pop %>% select(geography, popsize), by = "geography") %>%
+  mutate(share_covered = 100 * epic_n_ed_encounters_weekly / popsize)
+
+# Shared weekly x-grid: store the dates once, then per geography x age two
+# aligned y arrays - the ED-based and all-encounters-based diarrhea percentages
+# - plus the coverage share (NA where suppressed/missing). A browser toggle
+# switches which metric is drawn.
+age_x <- sort(unique(epic_wk_age$time))
+age_series <- lapply(compare_geos$geography, function(g) {
+  per_age <- lapply(age_levels, function(a) {
+    d <- epic_wk_age %>% filter(geography == g, age == a)
+    ed <- rep(NA_real_, length(age_x)); all <- rep(NA_real_, length(age_x)); sh <- rep(NA_real_, length(age_x))
+    idx <- match(d$time, age_x)
+    ed[idx] <- d$pct_ed_diarrhea; all[idx] <- d$pct_all_diarrhea; sh[idx] <- d$share_covered
+    list(ed = round(ed, 4), all = round(all, 4), share = round(sh, 4))
+  })
+  names(per_age) <- age_levels
+  per_age
+})
+names(age_series) <- compare_geos$geography
+
+age_payload <- list(
+  geos = lapply(seq_len(nrow(compare_geos)), function(i)
+    list(code = compare_geos$geography[i], name = compare_geos$geography_name[i])),
+  default = "00",
+  defaultMetric = "ed",
+  ages = age_levels,
+  colors = as.list(setNames(unname(age_pal[age_levels]), age_levels)),
+  widths = as.list(setNames(ifelse(age_levels == "Total", 3, 1.6), age_levels)),
+  x = format(age_x),
+  xrange = c(format(epic_start), format(max(age_x))),
+  series = age_series
+)
+
+cat(sprintf('<script>window.AGE_DATA = %s;</script>\n',
+            toJSON(age_payload, auto_unbox = TRUE, na = "null", digits = 4)))
+```
+
+```{=html}
+<div class="cyclo-map-controls">
+  <div class="cyclo-toggle" id="age-metric-toggle">
+    <button data-metric="ed" class="active" type="button">% of ED visits</button>
+    <button data-metric="all" type="button">% of all encounters</button>
+  </div>
+  <label class="cyclo-age">State:
+    <input list="age-state-list" id="age-state" class="cyclo-state-input" placeholder="Type a state…" autocomplete="off">
+    <datalist id="age-state-list"></datalist>
+  </label>
+</div>
+<p class="cyclo-map-title" id="age-title">Epic diarrhea by age group</p>
+<p class="cyclo-map-sub" id="age-sub"></p>
+<div id="age-chart" style="width:100%;height:480px;"></div>
+
+<script>
+(function () {
+  function ready() {
+    if (!window.Plotly || !window.AGE_DATA) { return setTimeout(ready, 120); }
+    var D = window.AGE_DATA;
+    var input = document.getElementById('age-state');
+    var list = document.getElementById('age-state-list');
+    var chart = document.getElementById('age-chart');
+    var subEl = document.getElementById('age-sub');
+    var buttons = document.querySelectorAll('#age-metric-toggle button');
+    var nameByCode = {}, codeByName = {};
+    D.geos.forEach(function (g) {
+      var o = document.createElement('option'); o.value = g.name; list.appendChild(o);
+      nameByCode[g.code] = g.name; codeByName[g.name.toLowerCase()] = g.code;
+    });
+    input.value = nameByCode[D.default];
+    var state = { code: D.default, metric: D.defaultMetric };
+
+    function render() {
+      var s = D.series[state.code], nm = nameByCode[state.code];
+      var isEd = state.metric === 'ed';
+      var pop = isEd ? 'ED encounters' : 'all encounters';
+      var t = D.ages.map(function (a) {
+        return { x: D.x, y: s[a][state.metric], customdata: s[a].share, type: 'scatter', mode: 'lines',
+          name: a, line: { color: D.colors[a], width: D.widths[a] }, connectgaps: false,
+          hovertemplate: nm + ' — ' + a + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of ' + pop + ' were diarrhea<br>Epic covered %{customdata:.2f}% of the population<extra></extra>' };
+      });
+      var layout = {
+        margin: { t: 10, b: 40, l: 55, r: 20 }, paper_bgcolor: 'white', plot_bgcolor: 'white',
+        font: { family: 'Rubik, sans-serif', color: '#00356b', size: 11 }, hovermode: 'closest',
+        xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
+        yaxis: { title: '% of ' + pop + ' (diarrhea)', gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' },
+        legend: { orientation: 'h', x: 0, y: -0.16 }
+      };
+      subEl.textContent = nm + ' — % of ' + pop + ' that were all-cause diarrhea, by age, weekly.';
+      Plotly.react(chart, t, layout, { displayModeBar: false, responsive: true });
+    }
+    function pickState() { var c = codeByName[input.value.trim().toLowerCase()]; if (c) { state.code = c; render(); } }
+    input.addEventListener('input', pickState);
+    input.addEventListener('focus', function () { input.select(); });
+    input.addEventListener('change', function () {
+      var c = codeByName[input.value.trim().toLowerCase()];
+      if (c) { state.code = c; render(); } else { input.value = nameByCode[state.code]; }
+    });
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.dataset.metric === state.metric) return;
+        buttons.forEach(function (x) { x.classList.remove('active'); });
+        b.classList.add('active');
+        state.metric = b.dataset.metric;
+        render();
+      });
+    });
+    render();
+  }
+  ready();
+})();
+</script>
+```
+
+```{=html}
+<details class="chart-info">
+<summary>About this chart</summary>
+<p>The percent of ED visits and all healthcare encounters attributable to all-cause diarrhea (ICD-10-CM A00-A09, R19.7) are obtained from facilities using the Epic electronic health records platform and participating in Epic Cosmos. Use the toggle to switch the denominator between ED visits and all healthcare encounters. Epic Cosmos captures varying amounts of the population in different regions, so the data may be more representative of diarrhea in the community in some areas than others. This is a measure of diarrhea activity, not a cyclosporiasis case count. "Total" (navy) is the all-ages line. Counts fewer than 10 are suppressed and excluded, which is why some state/age lines have gaps. Standardized data are on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/cosmos-diarrhea">GitHub</a>; the weekly file is <a href="https://github.com/PopHIVE/cyclo-resources/blob/main/data/cosmos-diarrhea/standard/weekly.csv.gz">weekly.csv.gz</a>.</p>
+</details>
+```
+
 ```{r}
 #| label: epic-alerts-data
 
+# Epic Research Health Alerts now live in the Ingest repo (moved there from
+# epic_preprocessing); the standardized feed is downloaded from Ingest in the
+# fetch-data chunk above, alongside the NNDSS data.
 epic_alerts <- vroom::vroom(
-  file.path(cyclo_dir, "data/epic_health_alerts/standard/data.csv.gz"),
+  file.path(CACHE_DIR, "epic_health_alerts.csv.gz"),
   col_types = vroom::cols(geography = vroom::col_character(), .default = vroom::col_guess())
 )
-# `status` distinguishes real alert rows from explicit "inactive" removal
-# events written by ingest.R (see epic_health_alerts/ingest.R); a removal
-# event can share the same `time` as this week's active rows, so it must be
-# filtered out below rather than relying on time == max(time) alone.
+
+# The feed carries every alerted condition (see the `condition` column); keep
+# only Cyclosporiasis. It accumulates one weekly snapshot per upstream run, so
+# the currently-active alerts are the rows at the latest `time`.
+epic_cyclo_alerts <- epic_alerts %>% filter(condition == "Cyclosporiasis")
 
 # State rows (2-digit FIPS) are labeled "State-Wide"; county rows (5-digit
 # FIPS) are labeled with the county's full name (e.g. "Wayne County"), joined
@@ -694,33 +1316,34 @@ epic_county_lookup <- all_fips %>%
 
 epic_geo_lookup <- bind_rows(epic_state_lookup, epic_county_lookup)
 
-# Matches the source page's own "M/D/YYYY" (no leading zeros) date style.
+# Source dates are MM-DD-YYYY; display onset in the page's own "M/D/YYYY" style.
 fmt_epic_date <- function(d) {
-  d <- as.Date(d)
+  d <- as.Date(d, "%m-%d-%Y")
   paste(as.integer(format(d, "%m")), as.integer(format(d, "%d")), format(d, "%Y"), sep = "/")
 }
 
-# The source page only ever shows currently active alerts, so the most
-# recent scrape's active rows (time == max(time) & status == "active") are
-# what's live on the page now; older rows and "inactive" removal events are
-# retained in the data for history but excluded here.
-epic_current <- epic_alerts %>%
-  filter(time == max(time), status == "active") %>%
+latest_alert_time <- if (nrow(epic_cyclo_alerts) > 0) {
+  max(as.Date(epic_cyclo_alerts$time, "%m-%d-%Y"))
+} else {
+  as.Date(NA)
+}
+epic_current <- epic_cyclo_alerts %>%
+  filter(as.Date(time, "%m-%d-%Y") == latest_alert_time) %>%
   left_join(epic_geo_lookup, by = "geography") %>%
   transmute(
     State, Location,
     `Estimated Onset` = fmt_epic_date(estimated_onset),
     `Cases per 100k (Latest Week)` = paste0(
-      sprintf("%.1f", epicalert_cyclosporiasis_cases_per_100k),
+      sprintf("%.1f", value),
       ifelse(partial_week_flag == 1, "*", "")
     )
   ) %>%
   arrange(State, Location)
 
-# `page_last_updated` records the Health Alerts page's own page-wide "Last
-# updated" banner as of each scrape (see epic_health_alerts/ingest.R).
+# `date_epic_updated` is the Health Alerts page's own page-wide "Last updated"
+# date as of the latest scrape (MM-DD-YYYY, applies to every condition).
 epic_last_updated <- {
-  d <- max(as.Date(epic_alerts$page_last_updated))
+  d <- max(as.Date(epic_alerts$date_epic_updated, "%m-%d-%Y"))
   paste0(format(d, "%B"), " ", as.integer(format(d, "%d")), ", ", format(d, "%Y"))
 }
 

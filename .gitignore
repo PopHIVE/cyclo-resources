@@ -1,0 +1,6 @@
+# Quarto/knitr chunk-cache and rendering artifacts - must never be committed,
+# since a committed cache makes cached chunks replay stale data forever
+# instead of re-executing (this is what froze NNDSS on old data before).
+index_cache/
+index_files/
+/.quarto/
