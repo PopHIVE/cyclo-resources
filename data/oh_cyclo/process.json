@@ -5,11 +5,11 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-07-14 18:22:56",
+      "last_run": "2026-07-17 17:54:31",
       "frequency": 0,
-      "run_time": 41.516,
+      "run_time": 39.324,
       "last_status": {
-        "log": [],
+        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
         "success": true
       }
     }
@@ -25,13 +25,13 @@
   },
   "standalone": false,
   "raw_state": {
-    "n_rows": 609,
-    "total_cases": 1074,
+    "n_rows": 709,
+    "total_cases": 1937,
     "last_week": "2026-07-11",
-    "hash": "bcbcd8707d9f8d6e9ea85fb7f24175cc"
+    "hash": "446f870d5ccbc8c07c0773bc426ef681"
   },
   "standard_state": {
     "./data/oh_cyclo/measure_info.json": "4a51df2084eb928ef1df99bb05fa31df",
-    "./data/oh_cyclo/standard/data.csv.gz": "e2fce73dfa3921c010e4fe055649bd4d"
+    "./data/oh_cyclo/standard/data.csv.gz": "a23a90d594b9b75581bae2f856c65c8f"
   }
 }
