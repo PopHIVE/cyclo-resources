@@ -7,3 +7,10 @@ renv/
 *.Rdata
 .DS_Store
 .github/pkg.lock
+
+# Quarto/knitr chunk-cache and rendering artifacts - must never be committed,
+# since a committed cache makes cached chunks replay stale data forever
+# instead of re-executing (this is what broke the scheduled render in CI).
+index_cache/
+index_files/
+/.quarto/
