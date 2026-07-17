@@ -20,13 +20,16 @@
       "data": "not_compressed"
     },
     "data/mi_cyclo/standard/data.csv.gz": {
-      "measures": ["type_changed: geography", "type_changed: mi_cyclo_cases_new"]
+      "measures": [
+        "type_changed: geography",
+        "type_changed: mi_cyclo_cases_new"
+      ]
     }
   },
   "standalone": false,
   "raw_state": {
-    "last_update_date": "2026-07-13",
-    "county_data": "Allegan:9|Alpena:1|Barry:2|Benzie:2|Berrien:4|Branch:4|Calhoun:32|Cass:4|Charlevoix:4|Clare:1|Clinton:71|Crawford:7|Delta:1|Detroit City:24|Eaton:59|Emmet:1|Genesee:85|Grand Traverse:2|Gratiot:22|Hillsdale:15|Houghton:1|Huron:35|Ingham:219|Ionia:54|Isabella:3|Jackson:82|Kalamazoo:28|Kent:20|Lapeer:10|Leelanau:1|Lenawee:161|Livingston:105|Macomb:42|Manistee:1|Mason:3|Mecosta:1|Midland:3|Monroe:258|Montcalm:19|Muskegon:63|Newaygo:4|Oakland:192|Oceana:1|Osceola:1|Otsego:1|Ottawa:38|Roscommon:3|Saginaw:25|Sanilac:29|Shiawassee:208|St. Clair:10|St Joseph:6|Tuscola:12|Van Buren:12|Washtenaw:290|Wayne:339"
+    "last_update_date": "2026-07-16",
+    "county_data": "Alcona:1|Allegan:22|Alpena:4|Arenac:1|Barry:4|Bay:1|Benzie:2|Berrien:9|Branch:5|Calhoun:87|Cass:7|Charlevoix:4|Cheboygan:1|Clare:3|Clinton:112|Crawford:17|Delta:1|Detroit City:51|Eaton:130|Emmet:1|Genesee:169|Grand Traverse:4|Gratiot:31|Hillsdale:29|Houghton:3|Huron:36|Ingham:393|Ionia:89|Iosco:3|Isabella:4|Jackson:112|Kalamazoo:63|Kalkaska:1|Kent:39|Lapeer:13|Leelanau:1|Lenawee:205|Livingston:180|Macomb:75|Manistee:1|Mason:3|Mecosta:2|Midland:5|Monroe:286|Montcalm:25|Muskegon:111|Newaygo:7|Oakland:396|Oceana:2|Ogemaw:1|Osceola:3|Oscoda:1|Otsego:1|Ottawa:55|Presque Isle:3|Roscommon:6|Saginaw:38|Sanilac:34|Shiawassee:278|St. Clair:14|St Joseph:10|Tuscola:14|Van Buren:24|Washtenaw:474|Wayne:582"
   },
   "standard_state": {
     "./data/mi_cyclo/measure_info.json": "a637e2964c370746c7621070efc7844b",
