@@ -5,16 +5,16 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-07-14 18:22:15",
+      "last_run": "2026-07-17 17:53:51",
       "frequency": 0,
-      "run_time": 0.201,
+      "run_time": 0.767,
       "last_status": {
-        "log": [],
+        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
         "success": true
       }
     }
   ],
-  "checked": "2026-07-15 04:52:09",
+  "checked": "2026-07-16 05:00:26",
   "check_results": {
     "data/mi_cyclo/raw/mi_cyclo_county_snapshots.csv": {
       "data": "not_compressed"
@@ -33,6 +33,6 @@
   },
   "standard_state": {
     "./data/mi_cyclo/measure_info.json": "a637e2964c370746c7621070efc7844b",
-    "./data/mi_cyclo/standard/data.csv.gz": "e94dc0bb86c491f9e7024206114297ba"
+    "./data/mi_cyclo/standard/data.csv.gz": "b6bccdb69902d22c1497ef52325b177b"
   }
 }

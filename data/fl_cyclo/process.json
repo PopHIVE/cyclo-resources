@@ -5,30 +5,28 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-07-14 18:22:14",
+      "last_run": "2026-07-17 17:53:50",
       "frequency": 0,
-      "run_time": 13.189,
+      "run_time": 12.498,
       "last_status": {
-        "log": [],
+        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
         "success": true
       }
     }
   ],
-  "checked": "2026-07-14 18:23:01",
+  "checked": "2026-07-16 05:00:25",
   "check_results": {
     "data/fl_cyclo/raw/fl_cyclo_fetched_weeks.csv": {
       "data": "not_compressed"
     },
-    "data/fl_cyclo/standard/data.csv.gz": {
-      "measures": "type_changed: geography"
-    }
+    "data/fl_cyclo/standard/data.csv.gz": []
   },
   "standalone": false,
   "raw_state": {
-    "hash": "3ff2ffe9d4557971b66975ed3e13e8b0"
+    "hash": "f4eaf71726e919a2b3672eea00e09189"
   },
   "standard_state": {
     "./data/fl_cyclo/measure_info.json": "cbf6884f94f1b9b5469955c4a260f793",
-    "./data/fl_cyclo/standard/data.csv.gz": "626e2c13c886d256bda2a24f160e2787"
+    "./data/fl_cyclo/standard/data.csv.gz": "940e0f92ae6b0754aad335545c315b84"
   }
 }

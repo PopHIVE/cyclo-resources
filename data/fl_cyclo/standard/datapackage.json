@@ -9,17 +9,33 @@
   },
   "resources": [
     {
-      "bytes": 18529,
+      "bytes": 18628,
       "encoding": "windows-1252",
-      "md5": "626e2c13c886d256bda2a24f160e2787",
+      "md5": "940e0f92ae6b0754aad335545c315b84",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
-        "hash": ["d85a5e2ce223b3148d7912bdb4251aac1cb4a974"],
-        "author": ["weinbergerlab <dweinber@gmail.com>"],
-        "date": ["Fri Jul 10 23:35:15 2026 -0400"],
-        "message": ["init"]
+        "hash": [
+          "6458d21b8114e618da5c7cf9ee09968a49e5d00d",
+          "06639b8181bc9680e45fac86219f7970093b0dd7",
+          "d85a5e2ce223b3148d7912bdb4251aac1cb4a974"
+        ],
+        "author": [
+          "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
+          "weinbergerlab <dweinber@gmail.com>"
+        ],
+        "date": [
+          "Thu Jul 16 05:00:27 2026 +0000",
+          "Tue Jul 14 18:23:01 2026 +0000",
+          "Fri Jul 10 23:35:15 2026 -0400"
+        ],
+        "message": [
+          "scheduled data build",
+          "scheduled data build",
+          "init"
+        ]
       },
       "source": [],
       "data_format": "wide",
@@ -31,8 +47,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-07-14 18:22:14.98328",
-      "last_modified": "2026-07-14 18:22:14.98328",
+      "created": "2026-07-17 17:53:50.009362",
+      "last_modified": "2026-07-17 17:53:50.009362",
       "vintage": {},
       "row_count": 6968,
       "entity_count": 67,
@@ -123,7 +139,6 @@
             "type": "string",
             "missing": 0,
             "table": {
-              "2024-07-13": 67,
               "2024-07-20": 67,
               "2024-07-27": 67,
               "2024-08-03": 67,
@@ -226,12 +241,13 @@
               "2026-06-13": 67,
               "2026-06-20": 67,
               "2026-06-27": 67,
-              "2026-07-04": 67
+              "2026-07-04": 67,
+              "2026-07-11": 67
             }
           },
           {
             "name": "fl_cyclo_cases",
-            "duplicates": 6960,
+            "duplicates": 6959,
             "info": {
               "id": "fl_cyclo_cases",
               "short_name": "Cyclosporiasis cases (confirmed)",
@@ -253,10 +269,10 @@
             "time_range": [0, 103],
             "type": "integer",
             "missing": 0,
-            "mean": 0.059414,
-            "sd": 0.349168,
+            "mean": 0.063146,
+            "sd": 0.37662,
             "min": 0,
-            "max": 8
+            "max": 11
           },
           {
             "name": "fl_cyclo_cases_probable",
@@ -282,14 +298,14 @@
             "time_range": [0, 103],
             "type": "integer",
             "missing": 0,
-            "mean": 0.003875,
-            "sd": 0.066592,
+            "mean": 0.004018,
+            "sd": 0.067653,
             "min": 0,
             "max": 2
           }
         ]
       },
-      "sha512": "27abab5451c2f8ac6b5ae57b1e57fcad614452723d4a7a41f70a3c198d60f68c52f3c7ecfc5180cf9890038d257eab83efb2fdc848e9f4c760a8d61d54340488"
+      "sha512": "c4cb8d1b175120ab75e8ea0877b62996d04127fac4df6ebd8a4ed871e191b3e9311f3912cc8f1a5fdb1664ce9fc5fc3908d86edf59102906be91257223838498"
     }
   ],
   "measure_info": {
@@ -350,8 +366,9 @@
       "variables": {
         "geography": {
           "status": "present",
-          "same_type": false,
-          "added_levels": ["12001", "12003", "12005", "12007", "12009", "12011", "12013", "12015", "12017", "12019", "12021", "12023", "12027", "12029", "12031", "12033", "12035", "12037", "12039", "12041", "12043", "12045", "12047", "12049", "12051", "12053", "12055", "12057", "12059", "12061", "12063", "12065", "12067", "12069", "12071", "12073", "12075", "12077", "12079", "12081", "12083", "12085", "12086", "12087", "12089", "12091", "12093", "12095", "12097", "12099", "12101", "12103", "12105", "12107", "12109", "12111", "12113", "12115", "12117", "12119", "12121", "12123", "12125", "12127", "12129", "12131", "12133"]
+          "same_type": true,
+          "added_levels": [],
+          "dropped_levels": []
         },
         "time": {
           "status": "present",

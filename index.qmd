@@ -110,8 +110,7 @@ state_names <- c(FL = "Florida", MI = "Michigan", OH = "Ohio")
 # no cases.
 NO_REPORT_STATES <- c("Idaho", "Minnesota", "Mississippi", "Pennsylvania")
 
-BASE_DIR  <- "C:/Users/as5325/Desktop"
-CACHE_DIR <- file.path(BASE_DIR, "cyclo_map_cache")
+CACHE_DIR <- file.path(tempdir(), "cyclo_map_cache")
 dir.create(CACHE_DIR, showWarnings = FALSE, recursive = TRUE)
 as_of <- format(Sys.Date(), "%b %d, %Y")
 

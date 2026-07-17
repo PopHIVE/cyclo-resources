@@ -9,23 +9,27 @@
   },
   "resources": [
     {
-      "bytes": 163763,
+      "bytes": 163967,
       "encoding": "KOI8-R",
-      "md5": "e2fce73dfa3921c010e4fe055649bd4d",
+      "md5": "a23a90d594b9b75581bae2f856c65c8f",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "06639b8181bc9680e45fac86219f7970093b0dd7",
           "d85a5e2ce223b3148d7912bdb4251aac1cb4a974"
         ],
         "author": [
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Tue Jul 14 18:23:01 2026 +0000",
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "init"
         ]
       },
@@ -39,8 +43,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-07-14 18:22:56.843248",
-      "last_modified": "2026-07-14 18:22:56.843248",
+      "created": "2026-07-17 17:54:31.175992",
+      "last_modified": "2026-07-17 17:54:31.175992",
       "vintage": {},
       "row_count": 62128,
       "entity_count": 88,
@@ -862,7 +866,7 @@
           },
           {
             "name": "oh_cyclo_cases",
-            "duplicates": 62111,
+            "duplicates": 62097,
             "info": {
               "id": "oh_cyclo_cases",
               "short_name": "Cyclosporiasis cases (OH)",
@@ -884,10 +888,10 @@
             "time_range": [0, 705],
             "type": "integer",
             "missing": 0,
-            "mean": 0.017287,
-            "sd": 0.389874,
+            "mean": 0.031178,
+            "sd": 0.879007,
             "min": 0,
-            "max": 64
+            "max": 140
           },
           {
             "name": "suppressed_flag",
@@ -919,7 +923,7 @@
           }
         ]
       },
-      "sha512": "93a9a88c2713c9ad9bcd49ec674999d9f154c30583b42499d8e7c5332e1f91851387b638937ee1a7657eb5e8439285f2fc22eb4713b5facc4fbeb23ccfbd93b3"
+      "sha512": "47931ec372d7c0b40b8e5a67d1670ff8468dbbfe22d63c7004c0d67c37230a2dce7f086785ce87dfb009a22564ca1e1ef68bc0752138a28393c7ff0cf7126000"
     }
   ],
   "measure_info": {
@@ -981,13 +985,14 @@
       "variables": {
         "geography": {
           "status": "present",
-          "same_type": false,
-          "added_levels": ["39001", "39003", "39005", "39007", "39009", "39011", "39013", "39015", "39017", "39019", "39021", "39023", "39025", "39027", "39029", "39031", "39033", "39035", "39037", "39039", "39041", "39043", "39045", "39047", "39049", "39051", "39053", "39055", "39057", "39059", "39061", "39063", "39065", "39067", "39069", "39071", "39073", "39075", "39077", "39079", "39081", "39083", "39085", "39087", "39089", "39091", "39093", "39095", "39097", "39099", "39101", "39103", "39105", "39107", "39109", "39111", "39113", "39115", "39117", "39119", "39121", "39123", "39125", "39127", "39129", "39131", "39133", "39135", "39137", "39139", "39141", "39143", "39145", "39147", "39149", "39151", "39153", "39155", "39157", "39159", "39161", "39163", "39165", "39167", "39169", "39171", "39173", "39175"]
+          "same_type": true,
+          "added_levels": [],
+          "dropped_levels": []
         },
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-07-11",
+          "added_levels": [],
           "dropped_levels": []
         },
         "oh_cyclo_cases": {
