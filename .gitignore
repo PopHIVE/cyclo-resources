@@ -6,3 +6,4 @@ renv/
 *.Rhistory
 *.Rdata
 .DS_Store
+.github/pkg.lock
