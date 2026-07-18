@@ -339,7 +339,14 @@ epic_weekly <- vroom::vroom(file.path(epic_base, "data_weekly.csv.gz"), show_col
       NA_real_, epic_pct_ed_diarrhea),
     pct_all_diarrhea = ifelse(
       epic_suppressed_flag_all_diarrhea == 1 | epic_suppressed_flag_encounters_total_weekly == 1,
-      NA_real_, epic_pct_all_diarrhea))
+      NA_real_, epic_pct_all_diarrhea),
+    # Raw numerator/denominator counts backing each percentage, for display in
+    # chart tooltips. Masked to NA in lockstep with the percentage itself so a
+    # suppressed count (imputed as 5 upstream) is never surfaced.
+    n_ed_diarrhea = ifelse(is.na(pct_ed_diarrhea), NA_real_, epic_n_ed_diarrhea),
+    n_ed_encounters = ifelse(is.na(pct_ed_diarrhea), NA_real_, epic_n_ed_encounters_weekly),
+    n_all_diarrhea = ifelse(is.na(pct_all_diarrhea), NA_real_, epic_n_all_diarrhea),
+    n_encounters_total = ifelse(is.na(pct_all_diarrhea), NA_real_, epic_n_encounters_total_weekly))
 
 # Weekly cyclospora testing (replaces the monthly cyclospora feed). % tested is
 # defined against all-cause diarrhea encounters: cyclospora tests / all
@@ -352,7 +359,15 @@ epic_wtests <- vroom::vroom(file.path(epic_base, "weekly_tests.csv.gz"), show_co
       NA_real_, 100 * epic_n_cyclospora_tested / epic_n_all_diarrhea),
     pct_positive = ifelse(
       epic_suppressed_flag_cyclospora_positive == 1 | epic_suppressed_flag_cyclospora_tested == 1,
-      NA_real_, epic_pct_cyclospora_positive))
+      NA_real_, epic_pct_cyclospora_positive),
+    # Masked raw counts backing each percentage, for tooltip display. The two
+    # measures have different suppression conditions, so epic_n_cyclospora_tested
+    # needs masking twice: once as % tested's numerator, once as % positive's
+    # denominator.
+    n_tested = ifelse(is.na(pct_tested), NA_real_, epic_n_cyclospora_tested),
+    n_diarrhea_encounters = ifelse(is.na(pct_tested), NA_real_, epic_n_all_diarrhea),
+    n_positive = ifelse(is.na(pct_positive), NA_real_, epic_n_cyclospora_positive),
+    n_tests_denom = ifelse(is.na(pct_positive), NA_real_, epic_n_cyclospora_tested))
 
 # Earliest date in the Epic data - the weekly time series below start here.
 epic_start <- min(epic_weekly$time)
@@ -931,7 +946,7 @@ county_block("FL")
 ## Epic Cosmos Trends
 
 ::: {.callout-warning}
-The latest available week from Epic Cosmos (shown with a grayed bar) is based on incomplete data and should be interpreted with caution.
+The latest available week from Epic Cosmos (shown with a grayed bar) is incompletedata based on small numbers and should be interpreted with caution.
 :::
 
 Epic Cosmos captures broader diarrhea activity in health care facilities and how often clinicians order a cyclospora lab test. These are population-level signals of disease activity, not case counts. National total is shown by default. The last week of data, denoted with a gray box, is incomplete and likely to change. Start typing a state name to switch to a specific state.
@@ -973,13 +988,17 @@ cmp_series <- lapply(compare_geos$geography, function(g) {
   dt <- epic_wtests %>% filter(geography == g) %>% arrange(time)
   out <- list(
     nnds     = list(x = format(dn$date), y = r4(dn$value_per100k)),
-    diar     = list(x = format(de$time), y = r4(de$pct_ed_diarrhea), share = r4(de$share_covered)),
-    diar_all = list(x = format(de$time), y = r4(de$pct_all_diarrhea)),
-    tested   = list(x = format(dt$time), y = r4(dt$pct_tested)),
+    diar     = list(x = format(de$time), y = r4(de$pct_ed_diarrhea), share = r4(de$share_covered),
+                     num = de$n_ed_diarrhea, den = de$n_ed_encounters),
+    diar_all = list(x = format(de$time), y = r4(de$pct_all_diarrhea),
+                     num = de$n_all_diarrhea, den = de$n_encounters_total),
+    tested   = list(x = format(dt$time), y = r4(dt$pct_tested),
+                     num = dt$n_tested, den = dt$n_diarrhea_encounters),
     # Positive counts are suppressed in most state-weeks; plot every
     # non-suppressed point (gaps where suppressed) rather than gating on a
     # minimum number of weeks.
-    positive = list(x = format(dt$time), y = r4(dt$pct_positive))
+    positive = list(x = format(dt$time), y = r4(dt$pct_positive),
+                     num = dt$n_positive, den = dt$n_tests_denom)
   )
   out
 })
@@ -1054,9 +1073,20 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
     // than let it read as a real dip/rise.
     function lastWeekShapes(xArr) {
       if (!xArr || xArr.length < 2) return [];
+      var lastMs = new Date(xArr[xArr.length - 1]).getTime();
+      var prevMs = new Date(xArr[xArr.length - 2]).getTime();
+      var pad = (lastMs - prevMs) * 0.35;
       return [{ type: 'rect', xref: 'x', yref: 'paper', y0: 0, y1: 1,
-        x0: xArr[xArr.length - 2], x1: xArr[xArr.length - 1],
-        fillcolor: 'rgba(120,120,120,0.18)', line: { width: 0 }, layer: 'below' }];
+        x0: new Date(prevMs - pad).toISOString().slice(0, 10),
+        x1: new Date(lastMs + pad).toISOString().slice(0, 10),
+        fillcolor: 'rgba(90,90,90,0.32)', line: { width: 0 }, layer: 'below' }];
+    }
+
+    // Pairs numerator/denominator arrays into per-point [num, den] tuples for
+    // use as Plotly customdata, so tooltips can show the counts behind a %.
+    function zip(a, b) {
+      if (!a || !b) return [];
+      return a.map(function (v, i) { return [v, b[i]]; });
     }
 
     function render(code) {
@@ -1064,9 +1094,10 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
 
       // ---- Panel 1: Epic % of ED encounters due to diarrhea ----
       var ed = [];
-      if (s.diar) ed.push({ x: s.diar.x, y: s.diar.y, customdata: s.diar.share, type: 'scatter', mode: 'lines',
+      if (s.diar) ed.push({ x: s.diar.x, y: s.diar.y, customdata: zip(s.diar.num, s.diar.den), type: 'scatter', mode: 'lines',
         name: '% of ED encounters due to diarrhea', line: { color: D.colors.diar, width: 2 }, connectgaps: false,
-        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of ED encounters were diarrhea<extra></extra>' });
+        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of ED encounters were diarrhea' +
+          '<br>%{customdata[0]:,.0f} of %{customdata[1]:,.0f} ED encounters<extra></extra>' });
       var edLayout = {
         margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
         font: baseFont, hovermode: 'closest', showlegend: false,
@@ -1080,9 +1111,10 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
 
       // ---- Panel 2: Epic % of all encounters due to diarrhea ----
       var all = [];
-      if (s.diar_all) all.push({ x: s.diar_all.x, y: s.diar_all.y, type: 'scatter', mode: 'lines',
+      if (s.diar_all) all.push({ x: s.diar_all.x, y: s.diar_all.y, customdata: zip(s.diar_all.num, s.diar_all.den), type: 'scatter', mode: 'lines',
         name: '% of all encounters due to diarrhea', line: { color: D.colors.diar_all, width: 2 }, connectgaps: false,
-        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of all encounters were diarrhea-related<extra></extra>' });
+        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of all encounters were diarrhea-related' +
+          '<br>%{customdata[0]:,.0f} of %{customdata[1]:,.0f} encounters<extra></extra>' });
       var allLayout = {
         margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
         font: baseFont, hovermode: 'closest', showlegend: false,
@@ -1105,10 +1137,11 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
 
       // ---- Panel 4a: % of diarrhea encounters tested for cyclospora ----
       var tested = [];
-      if (s.tested) tested.push({ x: s.tested.x, y: s.tested.y, type: 'scatter', mode: 'lines+markers',
+      if (s.tested) tested.push({ x: s.tested.x, y: s.tested.y, customdata: zip(s.tested.num, s.tested.den), type: 'scatter', mode: 'lines+markers',
         name: '% of diarrhea encounters tested for cyclospora', line: { color: D.colors.tested, width: 1.8 },
         marker: { color: D.colors.tested, size: 4 }, connectgaps: false,
-        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of diarrhea encounters had a cyclospora test<extra></extra>' });
+        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of diarrhea encounters had a cyclospora test' +
+          '<br>%{customdata[0]:,.0f} of %{customdata[1]:,.0f} diarrhea encounters<extra></extra>' });
       var testedLayout = {
         margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
         font: baseFont, hovermode: 'closest', showlegend: false,
@@ -1119,10 +1152,11 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
 
       // ---- Panel 4b: % of cyclospora tests positive ----
       var positive = [];
-      if (s.positive) positive.push({ x: s.positive.x, y: s.positive.y, type: 'scatter', mode: 'lines+markers',
+      if (s.positive) positive.push({ x: s.positive.x, y: s.positive.y, customdata: zip(s.positive.num, s.positive.den), type: 'scatter', mode: 'lines+markers',
         name: '% cyclospora positive', line: { color: D.colors.positive, width: 1.5, dash: 'dash' },
         marker: { color: D.colors.positive, size: 4 }, connectgaps: false,
-        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of cyclospora tests positive<extra></extra>' });
+        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of cyclospora tests positive' +
+          '<br>%{customdata[0]:,.0f} of %{customdata[1]:,.0f} tests<extra></extra>' });
       var positiveLayout = {
         margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
         font: baseFont, hovermode: 'closest', showlegend: false,
@@ -1190,9 +1224,14 @@ age_series <- lapply(compare_geos$geography, function(g) {
   per_age <- lapply(age_levels, function(a) {
     d <- epic_wk_age %>% filter(geography == g, age == a)
     ed <- rep(NA_real_, length(age_x)); all <- rep(NA_real_, length(age_x)); sh <- rep(NA_real_, length(age_x))
+    ed_num <- rep(NA_real_, length(age_x)); ed_den <- rep(NA_real_, length(age_x))
+    all_num <- rep(NA_real_, length(age_x)); all_den <- rep(NA_real_, length(age_x))
     idx <- match(d$time, age_x)
     ed[idx] <- d$pct_ed_diarrhea; all[idx] <- d$pct_all_diarrhea; sh[idx] <- d$share_covered
-    list(ed = round(ed, 4), all = round(all, 4), share = round(sh, 4))
+    ed_num[idx] <- d$n_ed_diarrhea; ed_den[idx] <- d$n_ed_encounters
+    all_num[idx] <- d$n_all_diarrhea; all_den[idx] <- d$n_encounters_total
+    list(ed = round(ed, 4), all = round(all, 4), share = round(sh, 4),
+         ed_num = ed_num, ed_den = ed_den, all_num = all_num, all_den = all_den)
   })
   names(per_age) <- age_levels
   per_age
@@ -1253,10 +1292,14 @@ cat(sprintf('<script>window.AGE_DATA = %s;</script>\n',
       var s = D.series[state.code], nm = nameByCode[state.code];
       var isEd = state.metric === 'ed';
       var pop = isEd ? 'ED encounters' : 'all encounters';
+      var numKey = isEd ? 'ed_num' : 'all_num';
+      var denKey = isEd ? 'ed_den' : 'all_den';
       var t = D.ages.map(function (a) {
-        return { x: D.x, y: s[a][state.metric], customdata: s[a].share, type: 'scatter', mode: 'lines',
+        var cd = s[a][numKey].map(function (v, i) { return [v, s[a][denKey][i]]; });
+        return { x: D.x, y: s[a][state.metric], customdata: cd, type: 'scatter', mode: 'lines',
           name: a, line: { color: D.colors[a], width: D.widths[a] }, connectgaps: false,
-          hovertemplate: nm + ' — ' + a + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of ' + pop + ' were diarrhea<extra></extra>' };
+          hovertemplate: nm + ' — ' + a + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of ' + pop + ' were diarrhea' +
+            '<br>%{customdata[0]:,.0f} of %{customdata[1]:,.0f} ' + pop + '<extra></extra>' };
       });
       var layout = {
         margin: { t: 10, b: 40, l: 55, r: 20 }, paper_bgcolor: 'white', plot_bgcolor: 'white',
@@ -1266,9 +1309,16 @@ cat(sprintf('<script>window.AGE_DATA = %s;</script>\n',
         legend: { orientation: 'h', x: 0, y: -0.16 },
         // Epic Cosmos' most recent week is still accruing data at rebuild
         // time, so shade the last interval to flag it as incomplete.
-        shapes: (D.x && D.x.length > 1) ? [{ type: 'rect', xref: 'x', yref: 'paper', y0: 0, y1: 1,
-          x0: D.x[D.x.length - 2], x1: D.x[D.x.length - 1],
-          fillcolor: 'rgba(120,120,120,0.18)', line: { width: 0 }, layer: 'below' }] : []
+        shapes: (function () {
+          if (!D.x || D.x.length < 2) return [];
+          var lastMs = new Date(D.x[D.x.length - 1]).getTime();
+          var prevMs = new Date(D.x[D.x.length - 2]).getTime();
+          var pad = (lastMs - prevMs) * 0.35;
+          return [{ type: 'rect', xref: 'x', yref: 'paper', y0: 0, y1: 1,
+            x0: new Date(prevMs - pad).toISOString().slice(0, 10),
+            x1: new Date(lastMs + pad).toISOString().slice(0, 10),
+            fillcolor: 'rgba(90,90,90,0.32)', line: { width: 0 }, layer: 'below' }];
+        })()
       };
       subEl.textContent = nm + ' — % of ' + pop + ' that were all-cause diarrhea, by age, weekly.';
       Plotly.react(chart, t, layout, { displayModeBar: false, responsive: true });
