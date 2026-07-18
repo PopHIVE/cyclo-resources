@@ -1149,7 +1149,7 @@ Cyclospora testing insights are also drawn from Epic Cosmos by searching for the
 ```
 
 ### Epic diarrhea by age group
-Weekly share of emergency-department and all healthcare encounters attributable to all-cause diarrhea. National total shown by default; start typing a state name to switch to a specific state.
+Weekly share of emergency-department and all healthcare encounters attributable to all-cause diarrhea. National total shown by default; start typing a state name to switch to a specific state. The last week of data, denoted with a gray box, is incomplete and likely to change.
 
 ```{r}
 #| label: epic-age-trend
