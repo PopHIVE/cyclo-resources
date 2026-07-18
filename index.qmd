@@ -934,10 +934,10 @@ county_block("FL")
 
 ## Epic Cosmos Trends
 
-Epic Cosmos captures broader diarrhea activity in health care facilities and how often clinicians order a cyclospora lab test. These are population-level signals of disease activity, not case counts. National total is shown by default. Start typing a state name to switch to a specific state.
+Epic Cosmos captures broader diarrhea activity in health care facilities and how often clinicians order a cyclospora lab test. These are population-level signals of disease activity, not case counts. National total is shown by default. The last week of data, denoted with a gray box, is incomplete and likely to change. Start typing a state name to switch to a specific state.
 
-### Epic diarrhea and Cyclospora testing trends
-Start typing a state name to filter (national total by default). Hover any point for the underlying value. Epic diarrhea points also report the share of the population Epic covered that week.
+### Epic Cosmos diarrhea and Cyclospora testing trends
+Start typing a state name to filter (national total by default). Hover any point for the underlying value. The last week of data, denoted with a gray box, is incomplete and likely to change.
 
 ```{r}
 #| label: epic-nnds-compare
@@ -1049,6 +1049,16 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
     // (matching x-axes) while each panel keeps its own independent y-axis.
     var LR = { l: 66, r: 66 };
 
+    // Epic Cosmos' most recent week is still accruing data when the site
+    // rebuilds, so shade the last interval to flag it as incomplete rather
+    // than let it read as a real dip/rise.
+    function lastWeekShapes(xArr) {
+      if (!xArr || xArr.length < 2) return [];
+      return [{ type: 'rect', xref: 'x', yref: 'paper', y0: 0, y1: 1,
+        x0: xArr[xArr.length - 2], x1: xArr[xArr.length - 1],
+        fillcolor: 'rgba(120,120,120,0.18)', line: { width: 0 }, layer: 'below' }];
+    }
+
     function render(code) {
       var s = D.series[code], nm = nameByCode[code];
 
@@ -1056,7 +1066,7 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
       var ed = [];
       if (s.diar) ed.push({ x: s.diar.x, y: s.diar.y, customdata: s.diar.share, type: 'scatter', mode: 'lines',
         name: '% of ED encounters due to diarrhea', line: { color: D.colors.diar, width: 2 }, connectgaps: false,
-        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of ED encounters were diarrhea<br>Epic covered %{customdata:.2f}% of the population<extra></extra>' });
+        hovertemplate: nm + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of ED encounters were diarrhea<extra></extra>' });
       var edLayout = {
         margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
         font: baseFont, hovermode: 'closest', showlegend: false,
@@ -1064,7 +1074,8 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
         // same plot width/margins), so tick positions line up across panels
         // even though NNDSS's data (panel 3) extends further than Epic's.
         xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
-        yaxis: { title: 'Percent due to diarrhea', color: D.colors.diar, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' }
+        yaxis: { title: 'Percent due to diarrhea', color: D.colors.diar, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' },
+        shapes: lastWeekShapes(s.diar && s.diar.x)
       };
 
       // ---- Panel 2: Epic % of all encounters due to diarrhea ----
@@ -1076,7 +1087,8 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
         margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
         font: baseFont, hovermode: 'closest', showlegend: false,
         xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
-        yaxis: { title: 'Percent due to diarrhea', color: D.colors.diar_all, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' }
+        yaxis: { title: 'Percent due to diarrhea', color: D.colors.diar_all, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' },
+        shapes: lastWeekShapes(s.diar_all && s.diar_all.x)
       };
 
       // ---- Panel 3: NNDSS cyclosporiasis cases ----
@@ -1101,7 +1113,8 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
         margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
         font: baseFont, hovermode: 'closest', showlegend: false,
         xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
-        yaxis: { title: '% tested', color: D.colors.tested, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' }
+        yaxis: { title: '% tested', color: D.colors.tested, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' },
+        shapes: lastWeekShapes(s.tested && s.tested.x)
       };
 
       // ---- Panel 4b: % of cyclospora tests positive ----
@@ -1114,7 +1127,8 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
         margin: { t: 10, b: 34, l: LR.l, r: LR.r }, paper_bgcolor: 'white', plot_bgcolor: 'white',
         font: baseFont, hovermode: 'closest', showlegend: false,
         xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
-        yaxis: { title: '% positive', color: D.colors.positive, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' }
+        yaxis: { title: '% positive', color: D.colors.positive, gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' },
+        shapes: lastWeekShapes(s.positive && s.positive.x)
       };
 
       Plotly.react(edDiv, ed, edLayout, cfg);
@@ -1143,7 +1157,7 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
 <p>
 <b>NNDSS data:</b> cumulative cyclosporiasis cases reported to NNDSS by state for the selected year (cases per 100,000). NNDSS cyclosporiasis is reported as a cumulative year-to-date count, so it is de-cumulated into weekly incident cases. 2026 data are preliminary and incomplete. Not all states mandate cyclosporiasis reporting; states with zero cases may lack reporting requirements rather than having no cases. States that have reported zero cyclosporiasis cases in every year from 2022 onward are considered 'missing' and not plotted. Territories are excluded. Standardized data are on our <a href="https://github.com/PopHIVE/Ingest/tree/main/data/nnds/standard">GitHub</a>; the CDC presents its NNDSS data <a href="https://www.cdc.gov/nndss/what-is-case-surveillance/">here</a>.<br><br>
 <b>Epic insights:</b> percent of ED visits and all healthcare encounters attributable to all-cause diarrhea (ICD-10-CM A00-A09, R19.7). Insights are drawn from clinical electronic health records (EHR)from facilities using the Epic EHR and participating in Epic Cosmos. Epic Cosmos captures varying amounts of the population in different regions, so the data may be more representative of diarrhea in the community in some areas than others. This is a measure of diarrhea activity, not a cyclosporiasis case count. Counts fewer than 10 are suppressed and excluded (shown unfilled). Standardized data are on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/cosmos-diarrhea">GitHub</a>; the weekly file is <a href="https://github.com/PopHIVE/cyclo-resources/blob/main/data/cosmos-diarrhea/standard/weekly.csv.gz">weekly.csv.gz</a>.<br><br>
-Cyclospora testing insights are also drawn from Epic Cosmos by searching for the following tests: Cyclospora SP AG in stool by immunoassay 38403-2, acid fast stain 10659-1, safranin stain 50313-6, cayetanensis presence 10850-6, cayetanensis DNA presence by NAA with non-probe detection 82206-4, and cayetanensis DNA presence by NAA with non-probe detection 41436-7. The two weekly cyclospora testing measures have different denominators: <b>% of diarrhea encounters tested</b> for cyclospora (cyclospora tests ÷ all-cause diarrhea encounters that week) and <b>% of cyclospora tests</b> that are positive (positive results ÷ tests). All Epic values with a suppressed count (fewer than 10) are excluded.
+Cyclospora testing insights are also drawn from Epic Cosmos by searching for the following tests: Cyclospora SP AG in stool by immunoassay 38403-2, acid fast stain 10659-1, safranin stain 50313-6, cayetanensis presence 10850-6, cayetanensis DNA presence by NAA with non-probe detection 82206-4, and cayetanensis DNA presence by NAA with non-probe detection 41436-7. The two weekly cyclospora testing measures have different denominators: <b>% of diarrhea encounters tested</b> for cyclospora (cyclospora tests ÷ all-cause diarrhea encounters that week) and <b>% of cyclospora tests</b> that are positive (positive results ÷ tests). All Epic values with a suppressed count (fewer than 10) are excluded. The light gray shading on the four Epic panels marks the most recent week, which is still accruing data and is incomplete.
 </p>
 </details>
 ```
@@ -1242,14 +1256,19 @@ cat(sprintf('<script>window.AGE_DATA = %s;</script>\n',
       var t = D.ages.map(function (a) {
         return { x: D.x, y: s[a][state.metric], customdata: s[a].share, type: 'scatter', mode: 'lines',
           name: a, line: { color: D.colors[a], width: D.widths[a] }, connectgaps: false,
-          hovertemplate: nm + ' — ' + a + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of ' + pop + ' were diarrhea<br>Epic covered %{customdata:.2f}% of the population<extra></extra>' };
+          hovertemplate: nm + ' — ' + a + '<br>week ending %{x|%b %d, %Y}<br><b>%{y:.2f}%</b> of ' + pop + ' were diarrhea<extra></extra>' };
       });
       var layout = {
         margin: { t: 10, b: 40, l: 55, r: 20 }, paper_bgcolor: 'white', plot_bgcolor: 'white',
         font: { family: 'Rubik, sans-serif', color: '#00356b', size: 11 }, hovermode: 'closest',
         xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
         yaxis: { title: '% of ' + pop + ' (diarrhea)', gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' },
-        legend: { orientation: 'h', x: 0, y: -0.16 }
+        legend: { orientation: 'h', x: 0, y: -0.16 },
+        // Epic Cosmos' most recent week is still accruing data at rebuild
+        // time, so shade the last interval to flag it as incomplete.
+        shapes: (D.x && D.x.length > 1) ? [{ type: 'rect', xref: 'x', yref: 'paper', y0: 0, y1: 1,
+          x0: D.x[D.x.length - 2], x1: D.x[D.x.length - 1],
+          fillcolor: 'rgba(120,120,120,0.18)', line: { width: 0 }, layer: 'below' }] : []
       };
       subEl.textContent = nm + ' — % of ' + pop + ' that were all-cause diarrhea, by age, weekly.';
       Plotly.react(chart, t, layout, { displayModeBar: false, responsive: true });
@@ -1280,7 +1299,7 @@ cat(sprintf('<script>window.AGE_DATA = %s;</script>\n',
 ```{=html}
 <details class="chart-info">
 <summary>About this chart</summary>
-<p>The percent of ED visits and all healthcare encounters attributable to all-cause diarrhea (ICD-10-CM A00-A09, R19.7) are obtained from facilities using the Epic electronic health records platform and participating in Epic Cosmos. Use the toggle to switch the denominator between ED visits and all healthcare encounters. Epic Cosmos captures varying amounts of the population in different regions, so the data may be more representative of diarrhea in the community in some areas than others. This is a measure of diarrhea activity, not a cyclosporiasis case count. "Total" (navy) is the all-ages line. Counts fewer than 10 are suppressed and excluded, which is why some state/age lines have gaps. Standardized data are on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/cosmos-diarrhea">GitHub</a>; the weekly file is <a href="https://github.com/PopHIVE/cyclo-resources/blob/main/data/cosmos-diarrhea/standard/weekly.csv.gz">weekly.csv.gz</a>.</p>
+<p>The percent of ED visits and all healthcare encounters attributable to all-cause diarrhea (ICD-10-CM A00-A09, R19.7) are obtained from facilities using the Epic electronic health records platform and participating in Epic Cosmos. Use the toggle to switch the denominator between ED visits and all healthcare encounters. Epic Cosmos captures varying amounts of the population in different regions, so the data may be more representative of diarrhea in the community in some areas than others. This is a measure of diarrhea activity, not a cyclosporiasis case count. "Total" (navy) is the all-ages line. Counts fewer than 10 are suppressed and excluded, which is why some state/age lines have gaps. Standardized data are on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/cosmos-diarrhea">GitHub</a>; the weekly file is <a href="https://github.com/PopHIVE/cyclo-resources/blob/main/data/cosmos-diarrhea/standard/weekly.csv.gz">weekly.csv.gz</a>. The light gray shading marks the most recent week, which is still accruing data and is incomplete.</p>
 </details>
 ```
 
