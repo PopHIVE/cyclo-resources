@@ -932,7 +932,12 @@ county_block("FL")
 </details>
 ```
 
+
 ## Epic Cosmos Trends
+
+::: {.callout-warning}
+NOTE: there is an issue with the date alignments on the Epic Cosmos files. We are working to resolve this issue ASAP.
+:::
 
 Epic Cosmos captures broader diarrhea activity in health care facilities and how often clinicians order a cyclospora lab test. These are population-level signals of disease activity, not case counts. National total is shown by default. The last week of data, denoted with a gray box, is incomplete and likely to change. Start typing a state name to switch to a specific state.
 
