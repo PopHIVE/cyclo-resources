@@ -311,18 +311,13 @@ county_map <- us_counties %>% left_join(county_data, by = c("GEOID" = "geography
 #| results: hide
 
 # -----------------------------------------------------------------------------
-# Epic Cosmos diarrhea data. This now lives in cyclo-resources itself as the
-# `cosmos-diarrhea` data source (pulled from PopHIVE/epic_preprocessing), so we
-# read it from the freshly-cloned repo like the other cyclo sources. Fall back
-# to this repo's own working tree so the doc still renders before the source is
-# pushed to origin/main.
+# Epic Cosmos diarrhea data, pulled fresh at render time straight from the
+# canonical PopHIVE/Ingest `epic_diarrhea` data source (which itself pulls
+# from PopHIVE/epic_preprocessing).
 # All Epic values whose suppression flag == 1 are blanked to NA (per project
 # convention: suppressed counts are imputed as 5 and must not be shown).
 # -----------------------------------------------------------------------------
-epic_std <- file.path(cyclo_dir, "data/cosmos-diarrhea/standard")
-if (!file.exists(file.path(epic_std, "weekly.csv.gz"))) {
-  epic_std <- "data/cosmos-diarrhea/standard"
-}
+epic_base <- "https://raw.githubusercontent.com/PopHIVE/Ingest/main/data/epic_diarrhea/standard"
 
 # geography -> population, including national ("00") and DC. state_fips already
 # carries the national row ("00" / United States), so no separate bind needed.
@@ -337,7 +332,7 @@ geo_name <- setNames(geo_pop$geography_name, geo_pop$geography)
 # diarrhea percentage, each by age. Blank each where its own counts were
 # suppressed. (`epic_n_ed_encounters_weekly` is the total ED encounter count,
 # formerly `epic_n_all_encounters_weekly`; used for the coverage share below.)
-epic_weekly <- vroom::vroom(file.path(epic_std, "weekly.csv.gz"), show_col_types = FALSE) %>%
+epic_weekly <- vroom::vroom(file.path(epic_base, "data_weekly.csv.gz"), show_col_types = FALSE) %>%
   mutate(
     pct_ed_diarrhea = ifelse(
       epic_suppressed_flag_ed_diarrhea == 1 | epic_suppressed_flag_ed_encounters_weekly == 1,
@@ -350,7 +345,7 @@ epic_weekly <- vroom::vroom(file.path(epic_std, "weekly.csv.gz"), show_col_types
 # defined against all-cause diarrhea encounters: cyclospora tests / all
 # diarrhea encounters. % positive is positive / tested (already in the file).
 # Both are blanked where either underlying count was suppressed.
-epic_wtests <- vroom::vroom(file.path(epic_std, "weekly_tests.csv.gz"), show_col_types = FALSE) %>%
+epic_wtests <- vroom::vroom(file.path(epic_base, "weekly_tests.csv.gz"), show_col_types = FALSE) %>%
   mutate(
     pct_tested = ifelse(
       epic_suppressed_flag_cyclospora_tested == 1 | epic_suppressed_flag_all_diarrhea == 1,
@@ -936,7 +931,7 @@ county_block("FL")
 ## Epic Cosmos Trends
 
 ::: {.callout-warning}
-NOTE: there is an issue with the date alignments on the Epic Cosmos files. We are working to resolve this issue ASAP.
+The latest available week from Epic Cosmos (shown with a grayed bar) is based on incomplete data and should be interpreted with caution.
 :::
 
 Epic Cosmos captures broader diarrhea activity in health care facilities and how often clinicians order a cyclospora lab test. These are population-level signals of disease activity, not case counts. National total is shown by default. The last week of data, denoted with a gray box, is incomplete and likely to change. Start typing a state name to switch to a specific state.
