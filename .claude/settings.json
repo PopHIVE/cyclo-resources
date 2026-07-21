@@ -5,7 +5,19 @@
       "Bash(Rscript --version)",
       "Bash(python3 -c \"import pandas; print\\(pandas.__version__\\)\")",
       "Bash(python3 -c ' *)",
-      "Bash(python3)"
+      "Bash(python3)",
+      "Bash(quarto --version)",
+      "PowerShell(Get-Command Rscript -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command R -ErrorAction SilentlyContinue)",
+      "Read(//c/Program Files/R/**)",
+      "PowerShell($env:PATH = \"C:\\\\Program Files\\\\R\\\\R-4.3.0\\\\bin\\\\x64;\" + $env:PATH; quarto render \"index.qmd\" 2>&1 | Select-Object -Last 80)",
+      "Bash(command -v npx)",
+      "Bash(command -v node)",
+      "Bash(command -v msedge)",
+      "Bash(node -e \"require\\('puppeteer'\\); console.log\\('ok'\\)\")",
+      "Bash(npm ls *)",
+      "Read(//c//**)",
+      "PowerShell($env:PATH = \"C:\\\\Program Files\\\\R\\\\R-4.3.0\\\\bin\\\\x64;\" + $env:PATH; quarto render \"index.qmd\" 2>&1 | Select-Object -Last 40)"
     ]
   }
 }

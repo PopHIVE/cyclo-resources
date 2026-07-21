@@ -1,6 +1,6 @@
 ---
-title: "PopHIVE Cyclosporiasis  Resources"
-subtitle: "PopHIVE is a community-driven platform that empowers you with multiple sources of health data - so you can explore, understand, and act on what matters most."
+title: "[PopHIVE](https://www.pophive.org/) Cyclosporiasis  Resources"
+subtitle: "[PopHIVE.org](https://www.pophive.org/) is a community-driven platform that empowers you with multiple sources of health data - so you can explore, understand, and act on what matters most."
 date: today
 from: markdown-smart
 format:
@@ -321,7 +321,7 @@ in_last_update <- vroom::vroom(
 
 # KY, unlike the other five states, is NOT sourced from a state health-
 # department dashboard/API - it is a lower-tier "news" source (see
-# ky_cyclo_news's README.md): trusted KY news articles that relay Kentucky
+# ky_cyclo_news's README.md): news articles that relay Kentucky
 # Dept for Public Health (KDPH) figures, LLM-extracted and reconciled. Same
 # cumulative-latest-snapshot shape as MI/WV/IN, so it slots into the shared
 # region map below, but every KY-facing label in this document says so
@@ -919,12 +919,12 @@ state_totals <- county_data %>%
 
 cat("As noted above, data from NNDSS for this year may not be the most up-to-date. Below are totals reported by states for 2026:\n\n")
 cat(knitr::kable(state_totals, format = "pipe"), sep = "\n")
-cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026, West Virginia's count reflects cases reported since the start of its outbreak investigation, Indiana's count reflects cases reported since the start of its investigation (May 1, 2026), and Kentucky's count reflects cases named in news coverage to date - none of these four are a full-year total.\n\n†Kentucky's figures are compiled from trusted news media relaying Kentucky Dept for Public Health (KDPH) figures, not an official KDPH dashboard/API, and are the least complete and most likely to be revised of the sources on this page.\n")
+cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026, West Virginia's count reflects cases reported since the start of its outbreak investigation, Indiana's count reflects cases reported since the start of its investigation (May 1, 2026), and Kentucky's count reflects cases named in news coverage to date - none of these four are a full-year total.\n\n†Kentucky's figures are compiled from news reports summarizing Kentucky Dept for Public Health (KDPH) figures, not an official KDPH dashboard/API, and are the least complete and most likely to be revised of the sources on this page.\n")
 ```
 
 ### MI, OH, FL, WV, IN, and KY: county-level detail
 
-These six states display case counts at the county level. FL/MI/OH/WV/IN counts come from official state health department dashboards/APIs; Kentucky's are compiled from trusted news media relaying Kentucky Dept for Public Health (KDPH) figures, since KDPH does not publish a public county-level dashboard - hover over a KY county to see this flagged directly in its tooltip.
+These six states display case counts at the county level. FL/MI/OH/WV/IN counts come from official state health department dashboards/APIs; Kentucky's are compiled from  news reports relaying Kentucky Dept for Public Health (KDPH) figures, since KDPH does not publish a public county-level dashboard - hover over a KY county to see this flagged directly in its tooltip.
 Hover over a county to see its case count. Most states only report cases at the state level.
 Oregon also reports at the county level, but its data are suppressed due to small sample sizes because Oregon is not currently experiencing a large outbreak.
 
@@ -997,7 +997,7 @@ state_sources <- c(
   OH = paste0("Source: Ohio Dept. of Health."),
   WV = paste0("Source: WV Dept. of Health, Office of Epidemiology and Prevention Services."),
   IN = paste0("Source: Indiana Dept. of Health, Infectious Disease Epidemiology & Prevention Division."),
-  KY = paste0("Source: trusted KY news outlets relaying Kentucky Dept for Public Health (KDPH) figures - not an official KDPH dashboard/API.")
+  KY = paste0("Source: News reports on Kentucky Dept for Public Health (KDPH) figures - not an official KDPH dashboard/API.")
 )
 
 # FL's feed is explicitly preliminary (subject to revision for 1-2 weeks per
@@ -1016,11 +1016,25 @@ state_subtitles <- c(
   OH = paste0("Cumulative year-to-date preliminary cyclosporiasis cases per 100,000 population as of ", state_asof[["OH"]], "."),
   WV = paste0("Cumulative preliminary cyclosporiasis cases per 100,000 population reported during the outbreak investigation (as of ", wv_last_update, ")."),
   IN = paste0("Cumulative preliminary cyclosporiasis cases per 100,000 population reported during the investigation (as of ", in_last_update, ", starting May 1, 2026)."),
-  KY = paste0("Cumulative confirmed cyclosporiasis cases per 100,000 population as relayed by trusted KY news media covering KDPH figures - NOT an official KDPH dashboard/API (as of ", ky_last_update, ").")
+  KY = paste0("Cumulative confirmed cyclosporiasis cases per 100,000 population as relayed by news reports covering KDPH figures - NOT an official KDPH dashboard/API (as of ", ky_last_update, ").")
 )
+
+# Explicit lon/lat window for a set of states, computed from the actual county
+# geometry rather than left to plotly's `fitbounds` heuristic - fitbounds also
+# picks up the lon/lat of the state-outline scattergeo trace in the region map
+# below, which was making the auto-fit zoom out much further than the counties
+# actually need.
+geo_range <- function(abbrs, pad = 0.04) {
+  bbox <- sf::st_bbox(county_map %>% filter(STUSPS %in% abbrs))
+  lon_pad <- (bbox[["xmax"]] - bbox[["xmin"]]) * pad
+  lat_pad <- (bbox[["ymax"]] - bbox[["ymin"]]) * pad
+  list(lon = c(bbox[["xmin"]] - lon_pad, bbox[["xmax"]] + lon_pad),
+       lat = c(bbox[["ymin"]] - lat_pad, bbox[["ymax"]] + lat_pad))
+}
 
 make_county_plot <- function(abbr) {
   d <- county_hover %>% filter(STUSPS == abbr)
+  rng <- geo_range(abbr)
   # Explicit height: inside the tagList wrapper the chunk's fig-height no longer
   # sizes the widget, so set it here to keep the maps their previous size.
   plot_ly(height = 500) %>%
@@ -1036,7 +1050,7 @@ make_county_plot <- function(abbr) {
       )
     ) %>%
     layout(
-      geo = list(scope = "usa", fitbounds = "locations", visible = FALSE),
+      geo = list(visible = FALSE, lonaxis = list(range = rng$lon), lataxis = list(range = rng$lat)),
       annotations = list(list(
         text = state_sources[[abbr]], xref = "paper", yref = "paper",
         x = 0, y = -0.06, xanchor = "left", showarrow = FALSE, font = plotly_caption_font
@@ -1063,10 +1077,23 @@ county_block <- function(abbr) {
 # separate small maps. Reuses the same counties_geojson (built from all
 # SCRAPER_STATE_FIPS states) and just widens `locations`/fitbounds to the
 # whole region instead of one state.
-make_region_county_plot <- function(abbrs) {
+# height/width ratio of the padded lon/lat window, correcting lon degrees by
+# cos(latitude) since a degree of longitude covers less ground than a degree
+# of latitude away from the equator - used to size the responsive wrapper in
+# county_block_region() below so the map's aspect ratio (not a fixed pixel
+# height picked for one particular screen width) determines how tall it is.
+geo_aspect <- function(rng) {
+  mean_lat <- mean(rng$lat)
+  (rng$lat[2] - rng$lat[1]) / ((rng$lon[2] - rng$lon[1]) * cos(mean_lat * pi / 180))
+}
+
+make_region_county_plot <- function(abbrs, rng) {
   d <- county_hover %>% filter(STUSPS %in% abbrs)
   state_bnd <- sf_boundary_lonlat(state_shapes %>% filter(STUSPS %in% abbrs) %>% sf::st_geometry())
-  plot_ly(height = 950) %>%
+  # width/height = "100%" (rather than a fixed pixel size) so the widget fills
+  # whatever box county_block_region() wraps it in; that box's own size is what
+  # sets the actual on-screen dimensions.
+  plot_ly(width = "100%", height = "100%") %>%
     add_trace(
       type = "choropleth", geojson = counties_geojson, featureidkey = "properties.GEOID",
       locations = d$GEOID, z = log1p(d$cases_per_100k), zmin = 0, zmax = z_max_county,
@@ -1084,11 +1111,12 @@ make_region_county_plot <- function(abbrs) {
       hoverinfo = "skip", showlegend = FALSE
     ) %>%
     layout(
-      geo = list(scope = "usa", fitbounds = "locations", visible = FALSE),
+      geo = list(visible = FALSE, lonaxis = list(range = rng$lon), lataxis = list(range = rng$lat)),
       margin = list(t = 10, b = 10),
-      paper_bgcolor = "white"
+      paper_bgcolor = "white",
+      autosize = TRUE
     ) %>%
-    config(displayModeBar = FALSE)
+    config(displayModeBar = FALSE, responsive = TRUE)
 }
 
 # Per-state reporting basis and source are listed below the map (rather than
@@ -1104,7 +1132,20 @@ county_block_region <- function(abbrs, title) {
     '<p class="cyclo-map-title" style="margin-top:1rem;">%s</p><p class="cyclo-map-sub">%s</p>',
     title, notes
   )
-  htmltools::tagList(htmltools::HTML(header), make_region_county_plot(abbrs))
+  rng <- geo_range(abbrs)
+  # Classic "padding-top: <aspect>%" responsive-box trick: the outer div's
+  # height tracks its own (fluid) width via the padding, so the map keeps the
+  # region's true aspect ratio - and so fills the box completely - at any
+  # screen width, instead of the fixed pixel height fitting only one width.
+  pad_pct <- geo_aspect(rng) * 100
+  wrap_style <- sprintf("position:relative; width:100%%; padding-top:%.2f%%;", pad_pct)
+  inner_style <- "position:absolute; top:0; left:0; width:100%; height:100%;"
+  htmltools::tagList(
+    htmltools::HTML(header),
+    htmltools::div(style = wrap_style,
+      htmltools::div(style = inner_style, make_region_county_plot(abbrs, rng))
+    )
+  )
 }
 ```
 
@@ -1126,7 +1167,7 @@ county_block("FL")
 ```{=html}
 <details class="chart-info">
 <summary>About these charts</summary>
-<p>Cyclosporiasis  cases are obtained from individual state health departments, with one exception: Kentucky (KY) publishes no public county-level dashboard, so its county figures are instead compiled from trusted KY news outlets relaying Kentucky Dept for Public Health (KDPH) figures - a lower-trust source than the other five states' official feeds, flagged directly in each KY county's tooltip and in the map notes above. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>; raw data from WV are found <a href="https://oeps.wv.gov/cyclosporiasis-outbreak">here</a> (county counts are OCR'd from a dashboard image, since WV publishes no structured data table); raw data from IN are found <a href="https://www.in.gov/health/idepd/diseases-and-conditions-resource-page/cyclosporiasis/#Cases_by_County">here</a>; and KY's news-compiled data (methodology and outlet allowlist) can be found <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/ky_cyclo_news">here</a>.</p>
+<p>Cyclosporiasis  cases are obtained from individual state health departments, with one exception: Kentucky (KY) publishes no public county-level dashboard, so its county figures are instead compiled from news reports relaying Kentucky Dept for Public Health (KDPH) figures - a lower-trust source than the other five states' official feeds, flagged directly in each KY county's tooltip and in the map notes above. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>; raw data from WV are found <a href="https://oeps.wv.gov/cyclosporiasis-outbreak">here</a> (county counts are OCR'd from a dashboard image, since WV publishes no structured data table); raw data from IN are found <a href="https://www.in.gov/health/idepd/diseases-and-conditions-resource-page/cyclosporiasis/#Cases_by_County">here</a>; and KY's news-compiled data (methodology and outlet allowlist) can be found <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/ky_cyclo_news">here</a>.</p>
 </details>
 ```
 
@@ -1134,7 +1175,7 @@ county_block("FL")
 ## Epic Cosmos Trends
 
 ::: {.callout-warning}
-The latest available week from Epic Cosmos (shown with a grayed bar) is incompletedata based on small numbers and should be interpreted with caution.
+The latest available week from Epic Cosmos (shown with a grayed bar) is incomplete and based on very small numbers and should be interpreted with caution. The 'all encounters' data are particularly incomplete for the latest week.
 :::
 
 Epic Cosmos captures broader diarrhea activity in health care facilities and how often clinicians order a cyclospora lab test. These are population-level signals of disease activity, not case counts. National total is shown by default. The last week of data, denoted with a gray box, is incomplete and likely to change. Start typing a state name to switch to a specific state.
