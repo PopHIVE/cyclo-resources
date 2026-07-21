@@ -101,8 +101,8 @@ library(plotly)
 
 YEAR <- 2026
 MAP_YEARS <- 2022:YEAR
-SCRAPER_STATE_FIPS <- c("12", "26", "39", "54", "18") # FL, MI, OH, WV, IN
-state_names <- c(FL = "Florida", MI = "Michigan", OH = "Ohio", WV = "West Virginia", IN = "Indiana")
+SCRAPER_STATE_FIPS <- c("12", "26", "39", "54", "18", "21") # FL, MI, OH, WV, IN, KY
+state_names <- c(FL = "Florida", MI = "Michigan", OH = "Ohio", WV = "West Virginia", IN = "Indiana", KY = "Kentucky")
 
 # States with zero cyclosporiasis cases reported to NNDSS in every year
 # 2022-2026; shown as missing (not colored) on the national map rather than
