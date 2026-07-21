@@ -1066,7 +1066,7 @@ county_block <- function(abbr) {
 make_region_county_plot <- function(abbrs) {
   d <- county_hover %>% filter(STUSPS %in% abbrs)
   state_bnd <- sf_boundary_lonlat(state_shapes %>% filter(STUSPS %in% abbrs) %>% sf::st_geometry())
-  plot_ly(height = 650) %>%
+  plot_ly(height = 950) %>%
     add_trace(
       type = "choropleth", geojson = counties_geojson, featureidkey = "properties.GEOID",
       locations = d$GEOID, z = log1p(d$cases_per_100k), zmin = 0, zmax = z_max_county,
@@ -1112,7 +1112,7 @@ county_block_region <- function(abbrs, title) {
 ```{r}
 #| label: county-region
 #| fig-width: 9
-#| fig-height: 8
+#| fig-height: 11
 county_block_region(c("MI", "OH", "WV", "IN", "KY"), "Michigan, Ohio, West Virginia, Indiana & Kentucky")
 ```
 
