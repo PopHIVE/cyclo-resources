@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pophive.org/schemas/news_extraction.schema.json",
+  "title": "Cyclosporiasis news extraction",
+  "description": "Structured facts extracted from a SINGLE trusted-news article that relays health-department case counts. One instance == one article/snapshot. County figures are stored as data; article prose is never reproduced.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["article", "figures"],
+  "properties": {
+    "article": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "outlet", "published_time", "timezone", "state_context"],
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "outlet": { "type": "string", "description": "Publishing outlet, e.g. 'WEKU' / 'Louisville Public Media'." },
+        "outlet_tier": {
+          "type": "string",
+          "enum": ["A", "B", "quarantine"],
+          "description": "Trust tier from the domain allowlist. A = public media / established daily / HD-quoting local TV. Set by the harvester, not the model."
+        },
+        "published_time": { "type": "string", "format": "date-time", "description": "From article metadata (article:published_time)." },
+        "timezone": { "type": "string", "description": "IANA tz of the outlet, e.g. 'America/Kentucky/Louisville'. Used to resolve relative dates." },
+        "state_context": { "type": "string", "pattern": "^[A-Z]{2}$", "description": "USPS abbreviation of the state the article is primarily about, e.g. 'KY'." }
+      }
+    },
+    "figures": {
+      "type": "array",
+      "description": "Every case figure stated in the article. Do NOT invent geographies that are not named.",
+      "items": { "$ref": "#/$defs/figure" }
+    }
+  },
+  "$defs": {
+    "figure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["geography_name", "geography_level", "count", "count_type", "as_of_date", "coverage", "confidence"],
+      "properties": {
+        "geography_name": { "type": "string", "description": "County name WITHOUT the word 'County' (e.g. 'Jefferson'), or the state name for state-level rows." },
+        "geography_level": { "type": "string", "enum": ["county", "state"] },
+        "count": { "type": "integer", "minimum": 0 },
+        "count_is_approximate": { "type": "boolean", "default": false, "description": "true when phrased as 'more than', 'nearly', 'about', 'fewer than'." },
+        "count_type": { "type": "string", "enum": ["confirmed", "probable", "reported", "hospitalized"], "description": "'reported' = confirmed+probable combined when the article gives a single larger figure." },
+        "as_of_date": { "type": ["string", "null"], "format": "date", "description": "Absolute date the figure is current through, resolved from relative phrasing using article.published_time + article.timezone. null ONLY if unresolvable." },
+        "as_of_date_verbatim": { "type": "string", "description": "The exact phrase used, e.g. 'as of Wednesday evening'. For audit." },
+        "origin_agency": { "type": ["string", "null"], "description": "The body the figure is attributed to, e.g. 'KDPH'. The outlet is the relay, not the origin." },
+        "coverage": { "type": "string", "enum": ["complete_list", "partial_list", "single"], "description": "complete_list = an explicit full county roster; partial_list = only some counties named (e.g. 'led by X, Y, Z'); single = one geography. Downstream NEVER imputes zeros for unnamed counties." },
+        "source_char_span": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 2, "maxItems": 2, "description": "[start, end) offsets into the cleaned article text supporting this figure." },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

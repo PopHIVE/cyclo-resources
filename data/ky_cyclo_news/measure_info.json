@@ -1,0 +1,78 @@
+{
+  "ky_cyclo_news_cases": {
+    "id": "ky_cyclo_news_cases",
+    "short_name": "Cyclosporiasis confirmed cases, cumulative (KY news)",
+    "long_name": "Cumulative confirmed cyclosporiasis cases relayed by KY news media, by county/state",
+    "category": "infectious_disease",
+    "short_description": "Cumulative confirmed cyclosporiasis cases as reported by a trusted Kentucky news outlet relaying Kentucky Dept for Public Health (KDPH) figures.",
+    "long_description": "Cumulative confirmed cyclosporiasis case counts extracted from a trusted news article that relays Kentucky Dept for Public Health (KDPH) figures - NOT a direct KDPH dashboard/API feed. This is a lower-tier 'news' source (source_tier below) and must never be blended unlabeled with the dashboard-tier sources (fl_/in_/mi_/oh_/wv_/ca_/or_cyclo). Partial-county articles never contribute a zero for an unnamed county - absence here means 'not stated in this article', not 'zero cases'. An official KDPH source superseding a given as_of_date should retire the corresponding news row.",
+    "statement": "In {location}, {value} cumulative confirmed cyclosporiasis cases had been reported as of {time}, per news coverage.",
+    "measure_type": "Count",
+    "unit": "Cumulative case count",
+    "time_resolution": "Week",
+    "source_tier": "news",
+    "restrictions": "",
+    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }],
+    "citations": []
+  },
+  "ky_cyclo_news_cases_new": {
+    "id": "ky_cyclo_news_cases_new",
+    "short_name": "Cyclosporiasis new confirmed cases (KY news)",
+    "long_name": "Newly reported confirmed cyclosporiasis cases since the prior news snapshot, by county/state",
+    "category": "infectious_disease",
+    "short_description": "Incident (newly reported) confirmed cyclosporiasis cases since the previous news-derived snapshot for the same geography.",
+    "long_description": "Derived measure: the difference in ky_cyclo_news_cases between two consecutive news-derived snapshots for the same geography. News coverage is event-driven, not scheduled, so the interval between snapshots is irregular and a 'new cases' value can span anywhere from days to months. The first snapshot for a geography has a missing (NA) value here, since there is no prior snapshot to difference against. A negative value would indicate a downward revision and is unexpected for a cumulative count - see raw/ky_cyclo_news_review.csv.gz, since check_monotonic() in reconcile.R routes cumulative decreases to review rather than silently landing them.",
+    "statement": "In {location}, {value} new confirmed cyclosporiasis cases were reported as of {time}, per news coverage.",
+    "measure_type": "Incidence",
+    "unit": "New case count",
+    "time_resolution": "Week",
+    "source_tier": "news",
+    "restrictions": "",
+    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }],
+    "citations": []
+  },
+  "ky_cyclo_news_reported": {
+    "id": "ky_cyclo_news_reported",
+    "short_name": "Cyclosporiasis reported cases, confirmed+probable (KY news)",
+    "long_name": "Cumulative confirmed+probable ('reported') cyclosporiasis cases relayed by KY news media, by county/state",
+    "category": "infectious_disease",
+    "short_description": "Cumulative case count as reported by a trusted KY news outlet when the article gives a single combined confirmed+probable figure rather than splitting them out.",
+    "long_description": "Some KDPH-sourced news articles give a single, larger 'reported' figure that combines confirmed and probable cyclosporiasis cases rather than stating them separately (news_extraction.schema.json's count_type = 'reported'). This column is that combined figure; it is not simply ky_cyclo_news_cases plus a probable column, since not every article reports probable cases at all. Compare against ky_cyclo_news_cases at the same as_of_date to see the residual attributable to probable/unconfirmed cases.",
+    "statement": "In {location}, {value} cumulative reported (confirmed+probable) cyclosporiasis cases had been reported as of {time}, per news coverage.",
+    "measure_type": "Count",
+    "unit": "Cumulative case count",
+    "time_resolution": "Week",
+    "source_tier": "news",
+    "restrictions": "",
+    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }],
+    "citations": []
+  },
+  "ky_cyclo_news_hospitalized": {
+    "id": "ky_cyclo_news_hospitalized",
+    "short_name": "Cyclosporiasis hospitalizations, cumulative (KY news)",
+    "long_name": "Cumulative cyclosporiasis-associated hospitalizations relayed by KY news media, by county/state",
+    "category": "infectious_disease",
+    "short_description": "Cumulative cyclosporiasis-associated hospitalizations as reported by a trusted KY news outlet relaying KDPH figures.",
+    "long_description": "Cumulative count of cyclosporiasis-associated hospitalizations extracted from a trusted news article relaying KDPH figures. Reported far less consistently than case counts - most articles do not state a hospitalization figure at all, so this column will be sparse/missing for many (geography, time) rows rather than zero-filled.",
+    "statement": "In {location}, {value} cumulative cyclosporiasis-associated hospitalizations had been reported as of {time}, per news coverage.",
+    "measure_type": "Count",
+    "unit": "Cumulative case count",
+    "time_resolution": "Week",
+    "source_tier": "news",
+    "restrictions": "",
+    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }],
+    "citations": []
+  },
+
+  "_sources": {
+    "ky_news_cyclosporiasis_2026": {
+      "name": "Kentucky cyclosporiasis case counts, as relayed by trusted news media",
+      "url": "https://www.lpm.org/news/2026-07-17/where-have-cases-of-cyclosporiasis-been-detected-in-ky-what-health-officials-have-confirmed",
+      "organization": "Kentucky Department for Public Health (KDPH), via allowlisted news outlets",
+      "organization_url": "https://www.chfs.ky.gov/agencies/dph/Pages/default.aspx",
+      "description": "During the 2026 Kentucky cyclosporiasis outbreak, KDPH's own county-level case data was not available through a public dashboard/API, so this source instead harvests trusted news articles (Google News RSS discovery, restricted to an allowlist of KY public media and major dailies/network affiliates) that relay KDPH-attributed figures, extracts structured facts via an LLM against a fixed JSON schema, and reconciles them (FIPS resolution, Sum(county) vs state-total residual check, cumulative-monotonicity check vs prior snapshots). This is explicitly a LOWER-TRUST tier than the dashboard scrapers in this project (fl_/in_/mi_/oh_/wv_/ca_/or_cyclo) and must never be blended with them unlabeled. Article prose is never stored - only the extracted county/state -> count facts, the source URL, and attribution.",
+      "restrictions": "Underlying figures are Kentucky government (KDPH) public-health data relayed through copyrighted news reporting; only the facts (geography, count, date) are stored, not article text, per fair-use/facts-are-not-copyrightable practice.",
+      "date_accessed": 2026
+    }
+  }
+}
