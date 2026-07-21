@@ -319,7 +319,40 @@ in_last_update <- vroom::vroom(
   max() %>%
   format("%b %d, %Y")
 
-county_cases <- bind_rows(fl_county, oh_county, mi_county, wv_county, in_county)
+# KY, unlike the other five states, is NOT sourced from a state health-
+# department dashboard/API - it is a lower-tier "news" source (see
+# ky_cyclo_news's README.md): trusted KY news articles that relay Kentucky
+# Dept for Public Health (KDPH) figures, LLM-extracted and reconciled. Same
+# cumulative-latest-snapshot shape as MI/WV/IN, so it slots into the shared
+# region map below, but every KY-facing label in this document says so
+# explicitly - it must never read as an official KDPH feed.
+ky <- vroom::vroom(file.path(cyclo_dir, "data/ky_cyclo_news/standard/data.csv.gz"), show_col_types = FALSE)
+ky_county <- ky %>%
+  # ky's standard file mixes state-level (2-digit) and county-level (5-digit)
+  # geography rows in one file, unlike FL/MI/OH/WV/IN's county-only feeds -
+  # filter to county rows BEFORE zero-padding, since padding first would make
+  # the state row's "21" indistinguishable from a 5-digit county code.
+  filter(nchar(geography) == 5) %>%
+  mutate(geography = sprintf("%05d", geography)) %>%
+  filter(format(time, "%Y") == as.character(YEAR), time == max(time)) %>%
+  group_by(geography) %>%
+  summarize(cases = sum(ky_cyclo_news_cases, na.rm = TRUE), .groups = "drop")
+
+# KY has no page of its own to read a "Last updated" date from (there is no
+# dashboard) - the closest equivalent is the most recent as_of_date any
+# ingested news article has attributed a county-level figure to, read from
+# the long-format history that reconcile() maintains.
+ky_last_update <- vroom::vroom(
+  file.path(cyclo_dir, "data/ky_cyclo_news/raw/ky_cyclo_news_history.csv.gz"),
+  show_col_types = FALSE
+) %>%
+  filter(nchar(geography) == 5) %>%
+  pull(as_of_date) %>%
+  as.Date() %>%
+  max() %>%
+  format("%b %d, %Y")
+
+county_cases <- bind_rows(fl_county, oh_county, mi_county, wv_county, in_county, ky_county)
 
 # Latest reported date within YEAR for each state's county feed - these can
 # differ from each other (and from `as_of`, which is just today's date).
@@ -451,7 +484,7 @@ Cyclosporiasis is a diarrhea-causing infection from the parasite Cyclospira, spr
 diarrhea seeks medical care, most people with diarrhea are not tested for cyclosporiasis, and diarrhea has many causes beyond cyclosporiasis, which complicates case tracking.
 
 This dashboard tracks reported cases, combining CDC's NNDSS data and additional data at the county level from Florida,
-Michigan, Ohio, West Virginia, and Indiana with clinical insights from Epic Cosmos. Data reflected below are current as of `r as_of`.
+Michigan, Ohio, West Virginia, Indiana, and Kentucky (Kentucky's figures are compiled from news media relaying state health department data, not an official dashboard) with clinical insights from Epic Cosmos. Data reflected below are current as of `r as_of`.
 
 **Note**: State data are the authoritative source for case reporting. NNDSS data may lag or differ due to submission timing variations.
 
@@ -861,31 +894,37 @@ state_totals <- county_data %>%
   mutate(abbr = fips_to_abbr[substr(geography, 1, 2)]) %>%
   group_by(abbr) %>%
   summarize(cases = sum(cases), popsize = sum(popsize), .groups = "drop") %>%
-  arrange(match(abbr, c("MI", "OH", "FL", "WV", "IN"))) %>%
+  arrange(match(abbr, c("MI", "OH", "FL", "WV", "IN", "KY"))) %>%
   transmute(
-    State = paste0(state_names[abbr], ifelse(abbr %in% c("MI", "WV", "IN"), "*", "")),
+    # "*" = not a full-year total (all four flag a partial window); "†" is
+    # KY-only, flagging its news-relayed (non-official) source tier - kept as a
+    # separate marker so the two caveats aren't conflated in the footnote.
+    State = paste0(state_names[abbr], ifelse(abbr %in% c("MI", "WV", "IN", "KY"), "*", ""),
+                    ifelse(abbr == "KY", "†", "")),
     `Number of cases` = scales::comma(cases),
     `Cases per 100,000` = sprintf("%.1f", cases / popsize * 100000),
-    # state_asof["MI"]/state_asof["WV"]/state_asof["IN"] are rolled-forward
-    # reporting-week dates (per mi_cyclo's/wv_cyclo's/in_cyclo's ingest
-    # conventions), not the source health department's own posted date -
-    # override with the actual posted dates (mi_/wv_/in_last_update) here.
+    # state_asof["MI"]/state_asof["WV"]/state_asof["IN"]/state_asof["KY"] are
+    # rolled-forward reporting-week dates (per mi_cyclo's/wv_cyclo's/
+    # in_cyclo's/ky_cyclo_news's ingest conventions), not the source's own
+    # posted date - override with the actual posted dates (mi_/wv_/in_/
+    # ky_last_update) here.
     `Last updated` = case_when(
       abbr == "MI" ~ mi_last_update,
       abbr == "WV" ~ wv_last_update,
       abbr == "IN" ~ in_last_update,
+      abbr == "KY" ~ ky_last_update,
       TRUE ~ state_asof[abbr]
     )
   )
 
 cat("As noted above, data from NNDSS for this year may not be the most up-to-date. Below are totals reported by states for 2026:\n\n")
 cat(knitr::kable(state_totals, format = "pipe"), sep = "\n")
-cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026, West Virginia's count reflects cases reported since the start of its outbreak investigation, and Indiana's count reflects cases reported since the start of its investigation (May 1, 2026) - none of these three are a full-year total.\n")
+cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026, West Virginia's count reflects cases reported since the start of its outbreak investigation, Indiana's count reflects cases reported since the start of its investigation (May 1, 2026), and Kentucky's count reflects cases named in news coverage to date - none of these four are a full-year total.\n\n†Kentucky's figures are compiled from trusted news media relaying Kentucky Dept for Public Health (KDPH) figures, not an official KDPH dashboard/API, and are the least complete and most likely to be revised of the sources on this page.\n")
 ```
 
-### MI, OH, FL, WV, and IN: county-level detail
+### MI, OH, FL, WV, IN, and KY: county-level detail
 
-These five states display case counts at the county level collected from state health departments.
+These six states display case counts at the county level. FL/MI/OH/WV/IN counts come from official state health department dashboards/APIs; Kentucky's are compiled from trusted news media relaying Kentucky Dept for Public Health (KDPH) figures, since KDPH does not publish a public county-level dashboard - hover over a KY county to see this flagged directly in its tooltip.
 Hover over a county to see its case count. Most states only report cases at the state level.
 Oregon also reports at the county level, but its data are suppressed due to small sample sizes because Oregon is not currently experiencing a large outbreak.
 
@@ -932,10 +971,15 @@ sf_boundary_lonlat <- function(geom_sfc) {
 
 # OH's cumulative basis is year-to-date; MI/WV/IN's is cumulative-since-
 # outbreak/investigation-start (see state_subtitles below) - flagged in each
-# county's hover text since the combined MI/OH/WV/IN map mixes both bases in
-# one color scale.
+# county's hover text since the combined MI/OH/WV/IN/KY map mixes both bases in
+# one color scale. KY's label additionally flags it as news-derived (not an
+# official dashboard, unlike the other five) directly in the tooltip, per
+# ky_cyclo_news's README ("must never be blended unlabeled with the dashboard
+# scrapers") - it shares the map and color scale, but every hover never lets a
+# KY county read as confirmed by an official KDPH feed.
 county_basis_label <- c(FL = "year-to-date", MI = "outbreak cumulative", OH = "year-to-date",
-                         WV = "outbreak cumulative", IN = "investigation cumulative")
+                         WV = "outbreak cumulative", IN = "investigation cumulative",
+                         KY = "cumulative, per news reports - not an official KDPH dashboard")
 
 county_hover <- county_map %>%
   sf::st_drop_geometry() %>%
@@ -952,7 +996,8 @@ state_sources <- c(
   MI = paste0("Source: Michigan Dept. of Health & Human Services."),
   OH = paste0("Source: Ohio Dept. of Health."),
   WV = paste0("Source: WV Dept. of Health, Office of Epidemiology and Prevention Services."),
-  IN = paste0("Source: Indiana Dept. of Health, Infectious Disease Epidemiology & Prevention Division.")
+  IN = paste0("Source: Indiana Dept. of Health, Infectious Disease Epidemiology & Prevention Division."),
+  KY = paste0("Source: trusted KY news outlets relaying Kentucky Dept for Public Health (KDPH) figures - not an official KDPH dashboard/API.")
 )
 
 # FL's feed is explicitly preliminary (subject to revision for 1-2 weeks per
@@ -961,13 +1006,17 @@ state_sources <- c(
 # README.md) and carry the same outbreak-cumulative framing as MI's. IN's
 # county counts share that same outbreak-cumulative framing, but IDOH updates
 # them daily (Mon-Fri) rather than weekly - the finest resolution of any
-# source here.
+# source here. KY's subtitle is deliberately the most heavily-caveated of the
+# six: it is compiled from news articles relaying KDPH figures rather than a
+# KDPH dashboard/API, coverage is whatever the most recent article happened to
+# name (event-driven, not a scheduled release), and counts can be revised.
 state_subtitles <- c(
   FL = paste0("Cumulative year-to-date preliminary cyclosporiasis cases per 100,000 population as of ", state_asof[["FL"]], "."),
   MI = paste0("Cumulative preliminary cyclosporiasis cases per 100,000 population reported during the outbreak investigation (as of ", mi_last_update, ", starting July 1, 2026)."),
   OH = paste0("Cumulative year-to-date preliminary cyclosporiasis cases per 100,000 population as of ", state_asof[["OH"]], "."),
   WV = paste0("Cumulative preliminary cyclosporiasis cases per 100,000 population reported during the outbreak investigation (as of ", wv_last_update, ")."),
-  IN = paste0("Cumulative preliminary cyclosporiasis cases per 100,000 population reported during the investigation (as of ", in_last_update, ", starting May 1, 2026).")
+  IN = paste0("Cumulative preliminary cyclosporiasis cases per 100,000 population reported during the investigation (as of ", in_last_update, ", starting May 1, 2026)."),
+  KY = paste0("Cumulative confirmed cyclosporiasis cases per 100,000 population as relayed by trusted KY news media covering KDPH figures - NOT an official KDPH dashboard/API (as of ", ky_last_update, ").")
 )
 
 make_county_plot <- function(abbr) {
@@ -1064,7 +1113,7 @@ county_block_region <- function(abbrs, title) {
 #| label: county-region
 #| fig-width: 9
 #| fig-height: 8
-county_block_region(c("MI", "OH", "WV", "IN"), "Michigan, Ohio, West Virginia & Indiana")
+county_block_region(c("MI", "OH", "WV", "IN", "KY"), "Michigan, Ohio, West Virginia, Indiana & Kentucky")
 ```
 
 ```{r}
@@ -1077,7 +1126,7 @@ county_block("FL")
 ```{=html}
 <details class="chart-info">
 <summary>About these charts</summary>
-<p>Cyclosporiasis  cases are obtained from individual state health departments. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>; raw data from WV are found <a href="https://oeps.wv.gov/cyclosporiasis-outbreak">here</a> (county counts are OCR'd from a dashboard image, since WV publishes no structured data table); and raw data from IN are found <a href="https://www.in.gov/health/idepd/diseases-and-conditions-resource-page/cyclosporiasis/#Cases_by_County">here</a>.</p>
+<p>Cyclosporiasis  cases are obtained from individual state health departments, with one exception: Kentucky (KY) publishes no public county-level dashboard, so its county figures are instead compiled from trusted KY news outlets relaying Kentucky Dept for Public Health (KDPH) figures - a lower-trust source than the other five states' official feeds, flagged directly in each KY county's tooltip and in the map notes above. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>; raw data from WV are found <a href="https://oeps.wv.gov/cyclosporiasis-outbreak">here</a> (county counts are OCR'd from a dashboard image, since WV publishes no structured data table); raw data from IN are found <a href="https://www.in.gov/health/idepd/diseases-and-conditions-resource-page/cyclosporiasis/#Cases_by_County">here</a>; and KY's news-compiled data (methodology and outlet allowlist) can be found <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/ky_cyclo_news">here</a>.</p>
 </details>
 ```
 

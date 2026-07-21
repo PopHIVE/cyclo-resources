@@ -13,6 +13,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       KINSA_EMAIL: ${{ secrets.KINSA_EMAIL }}
       KINSA_PASSWORD: ${{ secrets.KINSA_PASSWORD }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
       - run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev libudunits2-dev libproj-dev libgdal-dev libgeos-dev libmagick++-dev tesseract-ocr libtesseract-dev libleptonica-dev
       - uses: actions/checkout@v4
@@ -26,7 +27,11 @@ jobs:
         with:
           extra-packages: |
             any::dplyr
+            any::tidyr
+            any::httr
             any::httr2
+            any::xml2
+            any::rvest
             any::purrr
             any::terra
             any::exactextractr
@@ -50,6 +55,7 @@ jobs:
       - run: Rscript -e "dcf::dcf_process('mi_cyclo')"
       - run: Rscript -e "dcf::dcf_process('oh_cyclo')"
       - run: Rscript -e "dcf::dcf_process('wv_cyclo')"
+      - run: Rscript -e "dcf::dcf_process('ky_cyclo_news')"
 
       - name: Render index.qmd
         run: quarto render index.qmd
