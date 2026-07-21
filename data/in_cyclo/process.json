@@ -1,0 +1,24 @@
+{
+  "name": "in_cyclo",
+  "type": "source",
+  "scripts": [
+    {
+      "path": "ingest.R",
+      "manual": false,
+      "frequency": 0,
+      "last_run": "",
+      "run_time": "",
+      "last_status": {
+        "log": "",
+        "success": true
+      }
+    }
+  ],
+  "checked": "",
+  "check_results": [],
+  "standalone": false,
+  "raw_state": {
+    "last_update_date": "2026-07-20",
+    "county_data": "Adams:1|Allen:51|Bartholomew:1|Blackford:1|Brown:1|Cass:1|Clark:28|Clinton:1|Dearborn:1|DeKalb:13|Delaware:4|Dubois:2|Elkhart:29|Floyd:29|Fountain:1|Hamilton:8|Hancock:11|Harrison:23|Hendricks:7|Henry:2|Howard:2|Huntington:2|Jackson:4|Jefferson:7|Jennings:2|Johnson:2|Kosciusko:15|LaGrange:4|Lake:5|Lawrence:1|Madison:3|Marion:48|Marshall:7|Monroe:6|Morgan:5|Noble:23|Orange:2|Owen:1|Perry:1|Porter:2|Ripley:2|Rush:2|Scott:3|Shelby:1|St. Joseph:22|Steuben:23|Tippecanoe:3|Vanderburgh:2|Vigo:1|Wayne:1|Washington:3|Wells:1|White:1|Whitley:6"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "wv_cyclo_cases_cumulative": {
+    "id": "wv_cyclo_cases_cumulative",
+    "short_name": "Cyclosporiasis cases, cumulative (WV county)",
+    "long_name": "Cumulative reported cyclosporiasis cases since outbreak start, by West Virginia county",
+    "category": "infectious_disease",
+    "short_description": "Total cyclosporiasis cases reported in a West Virginia county since the 2026 outbreak began, as of the most recent OEPS update.",
+    "long_description": "Cumulative count of cyclosporiasis cases reported to the West Virginia Department of Health Office of Epidemiology and Prevention Services (OEPS) during the 2026 multi-state Cyclospora outbreak (linked by FDA/CDC to iceberg lettuce), broken out by county. OEPS explicitly frames this as a cumulative count 'reported during the outbreak investigation period', NOT new cases since the last update - the value only grows or stays flat over time. The source page (https://oeps.wv.gov/cyclosporiasis-outbreak) has no structured data table, API, or dashboard embed; the county breakdown exists only as text inside a static PNG image that OEPS re-uploads on updates (Tuesdays and Fridays). This ingest script downloads that image and extracts the 'Cases by County' panel via OCR (magick + tesseract), since it is the one part of the image rendered as clean, high-contrast printed text; the accompanying epi curve bar chart is not digitized. Because the source image itself only ever shows the single latest cumulative snapshot (no historical archive), this ingest script accumulates one dated snapshot per run into raw/wv_cyclo_county_snapshots.csv, building a real time series across successive scheduled runs. OCR introduces some risk of misread digits/county names; a sanity check against the page's own printed 'Total Cases' figure is logged as a warning (not a hard failure) when the two disagree.",
+    "statement": "In {location}, {value} cumulative cyclosporiasis cases had been reported as of {time}.",
+    "measure_type": "Count",
+    "unit": "Cumulative case count",
+    "time_resolution": "Day",
+    "restrictions": "",
+    "sources": [{ "id": "oeps_wv_cyclosporiasis_2026" }],
+    "citations": []
+  },
+  "wv_cyclo_cases_new": {
+    "id": "wv_cyclo_cases_new",
+    "short_name": "Cyclosporiasis new cases (WV county)",
+    "long_name": "Newly reported cyclosporiasis cases since the prior OEPS update, by West Virginia county",
+    "category": "infectious_disease",
+    "short_description": "Incident (newly reported) cyclosporiasis cases in a West Virginia county since the previous OEPS dashboard update.",
+    "long_description": "Derived measure: the difference in wv_cyclo_cases_cumulative for the same county between two consecutive OEPS dashboard updates (OEPS updates the dashboard image on Tuesdays and Fridays, so consecutive snapshots are a few days apart, not a fixed week). Because OEPS only publishes a single cumulative snapshot at a time (no historical archive), this column can only be computed once at least two snapshots for a county have been collected by this ingest script; the first observed update for a county will have a missing (NA) value here since there is no prior snapshot to difference against. Values should be non-negative in principle, but OEPS notes case counts 'may change as additional information becomes available', so small negative values are possible and reflect genuine data revisions by the source, not a computation error. This measure inherits any OCR misread risk from wv_cyclo_cases_cumulative.",
+    "statement": "In {location}, {value} new cyclosporiasis cases were reported as of {time}.",
+    "measure_type": "Incidence",
+    "unit": "New case count",
+    "time_resolution": "Day",
+    "restrictions": "",
+    "sources": [{ "id": "oeps_wv_cyclosporiasis_2026" }],
+    "citations": []
+  },
+
+  "_sources": {
+    "oeps_wv_cyclosporiasis_2026": {
+      "name": "WV OEPS Cyclosporiasis Outbreak - Cases by County",
+      "url": "https://oeps.wv.gov/cyclosporiasis-outbreak",
+      "organization": "West Virginia Department of Health, Office of Epidemiology and Prevention Services (OEPS)",
+      "organization_url": "https://oeps.wv.gov",
+      "location": "\"Cases by County\" panel embedded in the dashboard image on the Cyclosporiasis Outbreak page",
+      "location_url": "https://oeps.wv.gov/cyclosporiasis-outbreak",
+      "description": "In 2026, West Virginia reported cases as part of a multi-state Cyclospora outbreak that FDA/CDC linked to iceberg lettuce (see FDA investigation page). OEPS publishes a single static dashboard image (not an interactive Tableau/Power BI/ArcGIS embed, and not an HTML table) showing an epi curve and a 'Cases by County' text panel, updated Tuesdays and Fridays. This is an active-outbreak-specific webpage; content/structure may change substantially or be removed once the outbreak is declared over - a future maintainer should verify the page still exists and the dashboard image still has a legible 'Cases by County' panel in the same relative position before assuming ingest failures are a code bug.",
+      "restrictions": "Public domain. West Virginia state government data is generally not subject to copyright restrictions; OEPS content is publicly published for outbreak awareness.",
+      "date_accessed": 2026
+    }
+  }
+}

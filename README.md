@@ -24,8 +24,10 @@ for a disease this rare.
 | Source | State | Resolution | Mechanism | Status |
 |---|---|---|---|---|
 | `data/fl_cyclo` | Florida | County x Week | Reverse-engineered stable POST to FLHealthCHARTS' "Reportable Diseases Frequency Report" (Merlin surveillance system) | Working |
+| `data/in_cyclo` | Indiana | County x Day | Server-rendered HTML table on IDOH's Cyclosporiasis resource page (2026 investigation-specific; updated daily Mon-Fri) | Working |
 | `data/mi_cyclo` | Michigan | County x Week | Server-rendered HTML table on MDHHS's "Infectious Disease Outbreaks" page (2026 outbreak-specific) | Working |
 | `data/oh_cyclo` | Ohio | County x Week | Direct query against the Tableau Server view underlying ODH's "Summary of Infectious Diseases in Ohio" dashboard | Working |
+| `data/wv_cyclo` | West Virginia | County, updated Tue/Fri | No structured data source at all - OCR extraction of the "Cases by County" panel embedded in a static PNG dashboard image on WV OEPS's outbreak page | Working |
 
 ### States screened and rejected
 
@@ -55,8 +57,10 @@ Follows PopHIVE/Ingest conventions exactly:
 cyclo-resources/
 ├── data/
 │   ├── fl_cyclo/{ingest.R, measure_info.json, process.json, raw/, standard/}
+│   ├── in_cyclo/{...}
 │   ├── mi_cyclo/{...}
-│   └── oh_cyclo/{...}
+│   ├── oh_cyclo/{...}
+│   └── wv_cyclo/{...}
 ├── resources/
 │   ├── all_fips.csv.gz                       # FIPS crosswalk (copied from ../ingest)
 │   └── ct_planning_regions_pop_under5.csv.gz
@@ -78,8 +82,10 @@ Each `ingest.R`:
 ```r
 # From project root, process one source:
 dcf::dcf_process("fl_cyclo")
+dcf::dcf_process("in_cyclo")
 dcf::dcf_process("mi_cyclo")
 dcf::dcf_process("oh_cyclo")
+dcf::dcf_process("wv_cyclo")
 
 # Or all at once:
 dcf::dcf_build()
@@ -106,5 +112,21 @@ dcf::dcf_build()
   column derives incident counts by differencing successive cumulative
   snapshots collected by this scraper over time, so it converges to a real
   weekly time series only after several scheduled runs.
-- No `bundle_*` combining these three sources has been created yet — this
-  project currently focuses on per-state collection.
+- **West Virginia has no structured data source at all**: `wv_cyclo` scrapes an
+  active-2026-outbreak webpage whose "Cases by County" breakdown exists only
+  as text inside a static PNG dashboard image (no Tableau/Power BI/HTML table).
+  `ingest.R` crops that panel from the downloaded image and OCRs it
+  (`magick` + `tesseract`), which is inherently less reliable than the
+  structured-source scrapers above; see `data/wv_cyclo/README.md` for
+  calibration details and failure modes to check first.
+- **Indiana is investigation-specific but the finest resolution in this
+  project**: `in_cyclo` scrapes an active-2026-investigation webpage (IDOH's
+  Cyclosporiasis resource page) that IDOH itself updates daily, Monday-Friday
+  - true county x day, better than any other source here (which top out at
+  weekly). Like `mi_cyclo`, it only reports *cumulative-since-investigation-
+  start* counts (beginning May 1, 2026); an `in_cyclo_cases_new` column
+  derives incident counts by differencing successive daily snapshots
+  collected by this scraper over time. The page may be restructured or
+  removed once the investigation is declared over.
+- No `bundle_*` combining these sources has been created yet — this project
+  currently focuses on per-state collection.

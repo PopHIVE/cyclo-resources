@@ -101,8 +101,8 @@ library(plotly)
 
 YEAR <- 2026
 MAP_YEARS <- 2022:YEAR
-SCRAPER_STATE_FIPS <- c("12", "26", "39") # FL, MI, OH
-state_names <- c(FL = "Florida", MI = "Michigan", OH = "Ohio")
+SCRAPER_STATE_FIPS <- c("12", "26", "39", "54", "18") # FL, MI, OH, WV, IN
+state_names <- c(FL = "Florida", MI = "Michigan", OH = "Ohio", WV = "West Virginia", IN = "Indiana")
 
 # States with zero cyclosporiasis cases reported to NNDSS in every year
 # 2022-2026; shown as missing (not colored) on the national map rather than
@@ -191,7 +191,7 @@ download_if_missing(
 #| label: prep-data
 #| results: hide
 
-# FIPS + population lookups (state, and county for FL/MI/OH)
+# FIPS + population lookups (state, and county for FL/MI/OH/WV/IN)
 all_fips <- vroom::vroom(file.path(CACHE_DIR, "all_fips.csv.gz"), show_col_types = FALSE)
 state_fips <- all_fips %>%
   filter(nchar(geography) == 2) %>%
@@ -201,7 +201,7 @@ pop_state_raw <- vroom::vroom(file.path(CACHE_DIR, "pop_state.csv.gz"), show_col
   filter(age_level == "Total") %>%
   select(geography_name = geography, popsize)
 
-# All 50 states + DC, including FL/MI/OH
+# All 50 states + DC, including FL/MI/OH/WV/IN
 all_state_pop <- state_fips %>%
   inner_join(pop_state_raw, by = "geography_name") %>%
   filter(geography_name != "United States")
@@ -235,9 +235,9 @@ state_data_by_year <- bind_rows(lapply(MAP_YEARS, function(yr) {
            mmwr_year = yr)
 }))
 
-# County-level feeds for FL / OH (weekly counts -> sum for YTD total) and MI
-# (already cumulative -> take latest snapshot per county). Left-join from the
-# full county population list so non-reporting counties show as 0.
+# County-level feeds for FL / OH (weekly counts -> sum for YTD total) and
+# MI / WV / IN (already cumulative -> take latest snapshot per county). Left-
+# join from the full county population list so non-reporting counties show as 0.
 fl <- vroom::vroom(file.path(cyclo_dir, "data/fl_cyclo/standard/data.csv.gz"), show_col_types = FALSE)
 fl_county <- fl %>%
   mutate(geography = sprintf("%05d", geography)) %>%
@@ -275,14 +275,60 @@ mi_last_update <- vroom::vroom(
   max() %>%
   format("%b %d, %Y")
 
-county_cases <- bind_rows(fl_county, oh_county, mi_county)
+# WV, like MI, only ever exposes a single cumulative-since-outbreak-start
+# snapshot (OCR'd from a dashboard image; see wv_cyclo's ingest.R), not a
+# full-year time series - take the latest snapshot per county, and read the
+# true OEPS-posted "Last updated" date from the raw scrape snapshots (WV's
+# `time` column is already that exact date, unlike MI's Saturday rollover,
+# but reading it the same way keeps both blocks symmetric).
+wv <- vroom::vroom(file.path(cyclo_dir, "data/wv_cyclo/standard/data.csv.gz"), show_col_types = FALSE)
+wv_county <- wv %>%
+  mutate(geography = sprintf("%05d", geography)) %>%
+  filter(format(time, "%Y") == as.character(YEAR), time == max(time)) %>%
+  group_by(geography) %>%
+  summarize(cases = sum(wv_cyclo_cases_cumulative, na.rm = TRUE), .groups = "drop")
+
+wv_last_update <- vroom::vroom(
+  file.path(cyclo_dir, "data/wv_cyclo/raw/wv_cyclo_county_snapshots.csv"),
+  show_col_types = FALSE
+) %>%
+  pull(last_update_date) %>%
+  as.Date() %>%
+  max() %>%
+  format("%b %d, %Y")
+
+# IN, like MI and WV, only ever exposes a single cumulative-since-
+# investigation-start snapshot (a server-rendered HTML table; see in_cyclo's
+# ingest.R) - take the latest snapshot per county. Unlike MI's Saturday
+# rollover, IN's own `time` is already the true IDOH-posted date (IDOH updates
+# daily, Mon-Fri), so in_last_update is read the same way purely to stay
+# symmetric with the mi_/wv_last_update blocks above.
+in_ <- vroom::vroom(file.path(cyclo_dir, "data/in_cyclo/standard/data.csv.gz"), show_col_types = FALSE)
+in_county <- in_ %>%
+  mutate(geography = sprintf("%05d", geography)) %>%
+  filter(format(time, "%Y") == as.character(YEAR), time == max(time)) %>%
+  group_by(geography) %>%
+  summarize(cases = sum(in_cyclo_cases_cumulative, na.rm = TRUE), .groups = "drop")
+
+in_last_update <- vroom::vroom(
+  file.path(cyclo_dir, "data/in_cyclo/raw/in_cyclo_county_snapshots.csv"),
+  show_col_types = FALSE
+) %>%
+  pull(last_update_date) %>%
+  as.Date() %>%
+  max() %>%
+  format("%b %d, %Y")
+
+county_cases <- bind_rows(fl_county, oh_county, mi_county, wv_county, in_county)
 
 # Latest reported date within YEAR for each state's county feed - these can
 # differ from each other (and from `as_of`, which is just today's date).
 state_asof <- c(
   FL = format(max(fl$time[format(fl$time, "%Y") == as.character(YEAR)]), "%b %d, %Y"),
   MI = format(max(mi$time[format(mi$time, "%Y") == as.character(YEAR)]), "%b %d, %Y"),
-  OH = format(max(oh$time[format(oh$time, "%Y") == as.character(YEAR)]), "%b %d, %Y")
+  OH = format(max(oh$time[format(oh$time, "%Y") == as.character(YEAR)]), "%b %d, %Y"),
+  WV = format(max(wv$time[format(wv$time, "%Y") == as.character(YEAR)]), "%b %d, %Y"),
+  IN = format(max(in_$time[format(in_$time, "%Y") == as.character(YEAR)]), "%b %d, %Y")
 )
 
 county_data <- pop_county %>%
@@ -290,7 +336,7 @@ county_data <- pop_county %>%
   mutate(cases = ifelse(is.na(cases), 0, cases),
          cases_per_100k = cases / popsize * 100000)
 
-# County shapefile for the FL/MI/OH panel map below (still a static ggplot
+# County shapefile for the FL/MI/OH/WV/IN panel map below (still a static ggplot
 # map, so it needs sf geometry; the national map is an interactive plotly
 # choropleth and only needs state abbreviations, not shapefiles).
 options(tigris_use_cache = TRUE)
@@ -405,7 +451,7 @@ Cyclosporiasis is a diarrhea-causing infection from the parasite Cyclospira, spr
 diarrhea seeks medical care, most people with diarrhea are not tested for cyclosporiasis, and diarrhea has many causes beyond cyclosporiasis, which complicates case tracking.
 
 This dashboard tracks reported cases, combining CDC's NNDSS data and additional data at the county level from Florida,
-Michigan, and Ohio with clinical insights from Epic Cosmos. Data reflected below are current as of `r as_of`.
+Michigan, Ohio, West Virginia, and Indiana with clinical insights from Epic Cosmos. Data reflected below are current as of `r as_of`.
 
 **Note**: State data are the authoritative source for case reporting. NNDSS data may lag or differ due to submission timing variations.
 
@@ -815,26 +861,32 @@ state_totals <- county_data %>%
   mutate(abbr = fips_to_abbr[substr(geography, 1, 2)]) %>%
   group_by(abbr) %>%
   summarize(cases = sum(cases), popsize = sum(popsize), .groups = "drop") %>%
-  arrange(match(abbr, c("MI", "OH", "FL"))) %>%
+  arrange(match(abbr, c("MI", "OH", "FL", "WV", "IN"))) %>%
   transmute(
-    State = paste0(state_names[abbr], ifelse(abbr == "MI", "*", "")),
+    State = paste0(state_names[abbr], ifelse(abbr %in% c("MI", "WV", "IN"), "*", "")),
     `Number of cases` = scales::comma(cases),
     `Cases per 100,000` = sprintf("%.1f", cases / popsize * 100000),
-    # state_asof["MI"] is the Saturday ending MI's reporting week (per
-    # mi_cyclo's ingest convention), not MDHHS's own "Last Update" date -
-    # override with MDHHS's actual posted date (mi_last_update) here.
-    `Last updated` = ifelse(abbr == "MI", mi_last_update, state_asof[abbr])
+    # state_asof["MI"]/state_asof["WV"]/state_asof["IN"] are rolled-forward
+    # reporting-week dates (per mi_cyclo's/wv_cyclo's/in_cyclo's ingest
+    # conventions), not the source health department's own posted date -
+    # override with the actual posted dates (mi_/wv_/in_last_update) here.
+    `Last updated` = case_when(
+      abbr == "MI" ~ mi_last_update,
+      abbr == "WV" ~ wv_last_update,
+      abbr == "IN" ~ in_last_update,
+      TRUE ~ state_asof[abbr]
+    )
   )
 
 cat("As noted above, data from NNDSS for this year may not be the most up-to-date. Below are totals reported by states for 2026:\n\n")
 cat(knitr::kable(state_totals, format = "pipe"), sep = "\n")
-cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026, not a full-year total.\n")
+cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026, West Virginia's count reflects cases reported since the start of its outbreak investigation, and Indiana's count reflects cases reported since the start of its investigation (May 1, 2026) - none of these three are a full-year total.\n")
 ```
 
-### MI, OH, and FL: county-level detail
+### MI, OH, FL, WV, and IN: county-level detail
 
-These three states display case counts at the county level collected from state health departments. 
-Hover over a county to see its case count. Most states only report cases at the state level. 
+These five states display case counts at the county level collected from state health departments.
+Hover over a county to see its case count. Most states only report cases at the state level.
 Oregon also reports at the county level, but its data are suppressed due to small sample sizes because Oregon is not currently experiencing a large outbreak.
 
 
@@ -843,7 +895,7 @@ Oregon also reports at the county level, but its data are suppressed due to smal
 #| include: false
 
 # plotly has no built-in US-counties location mode, so build a small GeoJSON
-# from the tigris county shapes (FL/MI/OH only) and use it directly.
+# from the tigris county shapes (FL/MI/OH/WV/IN only) and use it directly.
 counties_geojson_file <- tempfile(fileext = ".geojson")
 sf::st_write(county_map %>% select(GEOID), counties_geojson_file, driver = "GeoJSON", quiet = TRUE)
 counties_geojson <- jsonlite::fromJSON(counties_geojson_file, simplifyVector = FALSE)
@@ -860,15 +912,24 @@ z_max_county <- log1p(max(county_hover$cases_per_100k, na.rm = TRUE))
 state_sources <- c(
   FL = paste0("Source: Florida Dept. of Health."),
   MI = paste0("Source: Michigan Dept. of Health & Human Services."),
-  OH = paste0("Source: Ohio Dept. of Health.")
+  OH = paste0("Source: Ohio Dept. of Health."),
+  WV = paste0("Source: WV Dept. of Health, Office of Epidemiology and Prevention Services."),
+  IN = paste0("Source: Indiana Dept. of Health, Infectious Disease Epidemiology & Prevention Division.")
 )
 
 # FL's feed is explicitly preliminary (subject to revision for 1-2 weeks per
 # its README); MI/OH are not flagged that way, hence the differing wording.
+# WV's county counts are OCR'd from a dashboard image (see wv_cyclo's
+# README.md) and carry the same outbreak-cumulative framing as MI's. IN's
+# county counts share that same outbreak-cumulative framing, but IDOH updates
+# them daily (Mon-Fri) rather than weekly - the finest resolution of any
+# source here.
 state_subtitles <- c(
   FL = paste0("Cumulative year-to-date preliminary cyclosporiasis cases per 100,000 population as of ", state_asof[["FL"]], "."),
   MI = paste0("Cumulative preliminary cyclosporiasis cases per 100,000 population reported during the outbreak investigation (as of ", mi_last_update, ", starting July 1, 2026)."),
-  OH = paste0("Cumulative year-to-date preliminary cyclosporiasis cases per 100,000 population as of ", state_asof[["OH"]], ".")
+  OH = paste0("Cumulative year-to-date preliminary cyclosporiasis cases per 100,000 population as of ", state_asof[["OH"]], "."),
+  WV = paste0("Cumulative preliminary cyclosporiasis cases per 100,000 population reported during the outbreak investigation (as of ", wv_last_update, ")."),
+  IN = paste0("Cumulative preliminary cyclosporiasis cases per 100,000 population reported during the investigation (as of ", in_last_update, ", starting May 1, 2026).")
 )
 
 make_county_plot <- function(abbr) {
@@ -935,10 +996,24 @@ county_block("OH")
 county_block("FL")
 ```
 
+```{r}
+#| label: county-wv
+#| fig-width: 9
+#| fig-height: 7
+county_block("WV")
+```
+
+```{r}
+#| label: county-in
+#| fig-width: 9
+#| fig-height: 7
+county_block("IN")
+```
+
 ```{=html}
 <details class="chart-info">
 <summary>About these charts</summary>
-<p>Cyclosporiasis  cases are obtained from individual state health departments. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; and raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>.</p>
+<p>Cyclosporiasis  cases are obtained from individual state health departments. Rates are calculated using county-specific population denominators from the 2021 census. Standardized data can be found on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/oh_cyclo">GitHub</a>. Raw data from FL are found <a href="https://www.flhealthcharts.gov/ChartsReports/rdPage.aspx?rdReport=FrequencyMerlin.Frequency">here</a>; raw data from MI are found <a href="https://www.michigan.gov/mdhhs/keep-mi-healthy/infectious-diseases/infectious-disease-outbreaks">here</a>; raw data from OH are found <a href="https://data.ohio.gov/wps/portal/gov/data/view/summary-of-infectious-diseases-in-ohio">here</a>; raw data from WV are found <a href="https://oeps.wv.gov/cyclosporiasis-outbreak">here</a> (county counts are OCR'd from a dashboard image, since WV publishes no structured data table); and raw data from IN are found <a href="https://www.in.gov/health/idepd/diseases-and-conditions-resource-page/cyclosporiasis/#Cases_by_County">here</a>.</p>
 </details>
 ```
 
