@@ -900,11 +900,49 @@ counties_geojson_file <- tempfile(fileext = ".geojson")
 sf::st_write(county_map %>% select(GEOID), counties_geojson_file, driver = "GeoJSON", quiet = TRUE)
 counties_geojson <- jsonlite::fromJSON(counties_geojson_file, simplifyVector = FALSE)
 
+# Dissolved state outlines (counties unioned by STUSPS), used to draw a
+# darkened state-boundary line over the MI/OH/WV/IN combined map - without
+# this, that map's state lines look identical to its internal county lines
+# since both come from the same white 0.4-width county marker outline.
+state_shapes <- county_map %>%
+  sf::st_make_valid() %>%
+  group_by(STUSPS) %>%
+  summarise(.groups = "drop")
+
+# Flattens an sfc of (multi)polygons into one NA-separated lon/lat vector pair
+# - the standard trick for drawing many disjoint outlines as a single
+# scattergeo "lines" trace instead of one trace per state.
+sf_boundary_lonlat <- function(geom_sfc) {
+  # Cast to a single homogeneous type: st_boundary() on a mix of POLYGON and
+  # MULTIPOLYGON inputs (e.g. once WV/IN's per-state unions differ in
+  # multi-part-ness from MI/OH's) yields a mixed LINESTRING/MULTILINESTRING
+  # sfc_GEOMETRY, and st_coordinates() has no method for that generic class.
+  boundary <- sf::st_cast(sf::st_boundary(geom_sfc), "MULTILINESTRING")
+  coords <- sf::st_coordinates(boundary)
+  grp_cols <- intersect(c("L2", "L1"), colnames(coords))
+  grp <- do.call(paste, c(as.list(as.data.frame(coords[, grp_cols, drop = FALSE])), list(sep = "_")))
+  brk <- which(c(TRUE, grp[-1] != grp[-length(grp)]))
+  n <- nrow(coords)
+  segs <- lapply(seq_along(brk), function(i) {
+    s <- brk[i]; e <- if (i < length(brk)) brk[i + 1] - 1 else n
+    list(lon = c(coords[s:e, "X"], NA), lat = c(coords[s:e, "Y"], NA))
+  })
+  list(lon = unlist(lapply(segs, `[[`, "lon")), lat = unlist(lapply(segs, `[[`, "lat")))
+}
+
+# OH's cumulative basis is year-to-date; MI/WV/IN's is cumulative-since-
+# outbreak/investigation-start (see state_subtitles below) - flagged in each
+# county's hover text since the combined MI/OH/WV/IN map mixes both bases in
+# one color scale.
+county_basis_label <- c(FL = "year-to-date", MI = "outbreak cumulative", OH = "year-to-date",
+                         WV = "outbreak cumulative", IN = "investigation cumulative")
+
 county_hover <- county_map %>%
   sf::st_drop_geometry() %>%
-  mutate(hover_text = paste0(NAMELSAD, ": ", scales::comma(cases),
+  mutate(hover_text = paste0(NAMELSAD, ", ", STUSPS, ": ", scales::comma(cases),
                               " case", ifelse(cases == 1, "", "s"),
-                              " (", sprintf("%.1f", cases_per_100k), " per 100,000)"))
+                              " (", sprintf("%.1f", cases_per_100k), " per 100,000; ",
+                              county_basis_label[STUSPS], ")"))
 
 brks <- c(0, 1, 5, 25, 100)
 z_max_county <- log1p(max(county_hover$cases_per_100k, na.rm = TRUE))
@@ -970,44 +1008,70 @@ county_block <- function(abbr) {
   )
   htmltools::tagList(htmltools::HTML(header), make_county_plot(abbr))
 }
+
+# MI/OH/WV/IN border each other, so - unlike FL - they're shown as a single
+# continuous choropleth (one shared color scale, one map) rather than four
+# separate small maps. Reuses the same counties_geojson (built from all
+# SCRAPER_STATE_FIPS states) and just widens `locations`/fitbounds to the
+# whole region instead of one state.
+make_region_county_plot <- function(abbrs) {
+  d <- county_hover %>% filter(STUSPS %in% abbrs)
+  state_bnd <- sf_boundary_lonlat(state_shapes %>% filter(STUSPS %in% abbrs) %>% sf::st_geometry())
+  plot_ly(height = 650) %>%
+    add_trace(
+      type = "choropleth", geojson = counties_geojson, featureidkey = "properties.GEOID",
+      locations = d$GEOID, z = log1p(d$cases_per_100k), zmin = 0, zmax = z_max_county,
+      colorscale = pophive_magma_colorscale, text = d$hover_text, hoverinfo = "text",
+      marker = list(line = list(color = "white", width = 0.4)),
+      colorbar = list(
+        title = list(text = "Cases per<br>100,000", font = plotly_body_font),
+        tickvals = log1p(brks), ticktext = brks, tickfont = plotly_body_font,
+        len = 0.8, thickness = 18
+      )
+    ) %>%
+    add_trace(
+      type = "scattergeo", mode = "lines", lon = state_bnd$lon, lat = state_bnd$lat,
+      line = list(color = "#2b2b33", width = 1.6),
+      hoverinfo = "skip", showlegend = FALSE
+    ) %>%
+    layout(
+      geo = list(scope = "usa", fitbounds = "locations", visible = FALSE),
+      margin = list(t = 10, b = 10),
+      paper_bgcolor = "white"
+    ) %>%
+    config(displayModeBar = FALSE)
+}
+
+# Per-state reporting basis and source are listed below the map (rather than
+# as a single subtitle/annotation) because OH's year-to-date basis and MI/WV/
+# IN's outbreak-cumulative bases genuinely differ and shouldn't be papered
+# over with one blended sentence.
+county_block_region <- function(abbrs, title) {
+  notes <- paste(
+    sprintf("<strong>%s</strong> — %s %s", state_names[abbrs], state_subtitles[abbrs], state_sources[abbrs]),
+    collapse = "<br>"
+  )
+  header <- sprintf(
+    '<p class="cyclo-map-title" style="margin-top:1rem;">%s</p><p class="cyclo-map-sub">%s</p>',
+    title, notes
+  )
+  htmltools::tagList(htmltools::HTML(header), make_region_county_plot(abbrs))
+}
 ```
 
 
 ```{r}
-#| label: county-mi
+#| label: county-region
 #| fig-width: 9
-#| fig-height: 7
-county_block("MI")
+#| fig-height: 8
+county_block_region(c("MI", "OH", "WV", "IN"), "Michigan, Ohio, West Virginia & Indiana")
 ```
-
-
-```{r}
-#| label: county-oh
-#| fig-width: 9
-#| fig-height: 7
-county_block("OH")
-```
-
 
 ```{r}
 #| label: county-fl
 #| fig-width: 9
 #| fig-height: 7
 county_block("FL")
-```
-
-```{r}
-#| label: county-wv
-#| fig-width: 9
-#| fig-height: 7
-county_block("WV")
-```
-
-```{r}
-#| label: county-in
-#| fig-width: 9
-#| fig-height: 7
-county_block("IN")
 ```
 
 ```{=html}
