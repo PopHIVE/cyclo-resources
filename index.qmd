@@ -1,6 +1,6 @@
 ---
 title: "[PopHIVE](https://www.pophive.org/) Cyclosporiasis  Resources"
-subtitle: "[PopHIVE.org](https://www.pophive.org/) is a community-driven platform that empowers you with multiple sources of health data - so you can explore, understand, and act on what matters most."
+subtitle: "[PopHIVE.org](https://www.pophive.org/) is a community-driven platform from Yale School of Public Health that empowers you with multiple sources of health data - so you can explore, understand, and act on what matters most. Contact us at info@pophive.org"
 date: today
 from: markdown-smart
 format:
