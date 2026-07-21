@@ -5,11 +5,11 @@
     {
       "path": "ingest.R",
       "manual": false,
+      "last_run": "2026-07-21 09:25:31",
       "frequency": 0,
-      "last_run": "",
-      "run_time": "",
+      "run_time": 1.132,
       "last_status": {
-        "log": "",
+        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
         "success": true
       }
     }
@@ -20,5 +20,9 @@
   "raw_state": {
     "last_update_date": "2026-07-20",
     "county_data": "Adams:1|Allen:51|Bartholomew:1|Blackford:1|Brown:1|Cass:1|Clark:28|Clinton:1|Dearborn:1|DeKalb:13|Delaware:4|Dubois:2|Elkhart:29|Floyd:29|Fountain:1|Hamilton:8|Hancock:11|Harrison:23|Hendricks:7|Henry:2|Howard:2|Huntington:2|Jackson:4|Jefferson:7|Jennings:2|Johnson:2|Kosciusko:15|LaGrange:4|Lake:5|Lawrence:1|Madison:3|Marion:48|Marshall:7|Monroe:6|Morgan:5|Noble:23|Orange:2|Owen:1|Perry:1|Porter:2|Ripley:2|Rush:2|Scott:3|Shelby:1|St. Joseph:22|Steuben:23|Tippecanoe:3|Vanderburgh:2|Vigo:1|Wayne:1|Washington:3|Wells:1|White:1|Whitley:6"
+  },
+  "standard_state": {
+    "./data/in_cyclo/measure_info.json": "865f3d3e567c513c4bae1ada094b1626",
+    "./data/in_cyclo/standard/data.csv.gz": "dff934c165c5c821fe4e5acfce6877f6"
   }
 }

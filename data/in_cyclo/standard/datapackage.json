@@ -7,5 +7,224 @@
     "version": "1.0",
     "id": "odc-pddl"
   },
-  "resources": []
+  "resources": [
+    {
+      "bytes": 274,
+      "encoding": "windows-1252",
+      "md5": "dff934c165c5c821fe4e5acfce6877f6",
+      "format": "csv",
+      "name": "data.csv",
+      "filename": "data.csv.gz",
+      "versions": {
+        "hash": ["244a8e18fcaeb4569cab21aa5ed41643a1fcbdae"],
+        "author": ["weinbergerlab <dweinber@gmail.com>"],
+        "date": ["Mon Jul 20 22:29:39 2026 -0400"],
+        "message": ["adds WV and IN"]
+      },
+      "source": [],
+      "data_format": "wide",
+      "ids": [
+        {
+          "variable": "geography"
+        }
+      ],
+      "id_length": 5,
+      "time": "time",
+      "profile": "data-resource",
+      "created": "2026-07-21 09:23:28.525214",
+      "last_modified": "2026-07-21 09:23:28.525214",
+      "vintage": {},
+      "row_count": 54,
+      "entity_count": 54,
+      "schema": {
+        "fields": [
+          {
+            "name": "geography",
+            "duplicates": 0,
+            "info": [],
+            "time_range": [0, 0],
+            "type": "string",
+            "missing": 0,
+            "table": {
+              "18001": 1,
+              "18003": 1,
+              "18005": 1,
+              "18009": 1,
+              "18013": 1,
+              "18017": 1,
+              "18019": 1,
+              "18023": 1,
+              "18029": 1,
+              "18033": 1,
+              "18035": 1,
+              "18037": 1,
+              "18039": 1,
+              "18043": 1,
+              "18045": 1,
+              "18057": 1,
+              "18059": 1,
+              "18061": 1,
+              "18063": 1,
+              "18065": 1,
+              "18067": 1,
+              "18069": 1,
+              "18071": 1,
+              "18077": 1,
+              "18079": 1,
+              "18081": 1,
+              "18085": 1,
+              "18087": 1,
+              "18089": 1,
+              "18093": 1,
+              "18095": 1,
+              "18097": 1,
+              "18099": 1,
+              "18105": 1,
+              "18109": 1,
+              "18113": 1,
+              "18117": 1,
+              "18119": 1,
+              "18123": 1,
+              "18127": 1,
+              "18137": 1,
+              "18139": 1,
+              "18141": 1,
+              "18143": 1,
+              "18145": 1,
+              "18151": 1,
+              "18157": 1,
+              "18163": 1,
+              "18167": 1,
+              "18175": 1,
+              "18177": 1,
+              "18179": 1,
+              "18181": 1,
+              "18183": 1
+            }
+          },
+          {
+            "name": "time",
+            "duplicates": 53,
+            "info": [],
+            "time_range": [0, 0],
+            "type": "string",
+            "missing": 0,
+            "table": {
+              "2026-07-20": 54
+            }
+          },
+          {
+            "name": "in_cyclo_cases_cumulative",
+            "duplicates": 37,
+            "info": {
+              "id": "in_cyclo_cases_cumulative",
+              "short_name": "Cyclosporiasis cases, cumulative (IN county)",
+              "long_name": "Cumulative reported cyclosporiasis cases since investigation start, by Indiana county",
+              "category": "infectious_disease",
+              "short_description": "Total cyclosporiasis cases reported in an Indiana county since the 2026 investigation began (May 1, 2026), as of the most recent daily update.",
+              "long_description": "Cumulative count of cyclosporiasis cases reported to the Indiana Department of Health (IDOH) during the 2026 cyclosporiasis outbreak investigation, broken out by county. IDOH explicitly frames this as cases reported 'during the investigation time frame (beginning 5/1/2026)', NOT new cases since the prior update - the value only grows or stays flat over time and should not be interpreted as a daily incidence rate. IDOH updates the county table each day, Monday through Friday, by 1pm EDT (data reported as of noon); a same-day re-run of this ingest will not duplicate a data point. Because the source page itself only ever displays the single latest cumulative snapshot (no historical table), this ingest script accumulates one dated snapshot per distinct 'Last updated' date into raw/in_cyclo_county_snapshots.csv, building a real daily time series across successive scheduled runs. Counties with zero cumulative cases are not listed by IDOH at all and are therefore absent from this dataset rather than zero-filled.",
+              "statement": "In {location}, {value} cumulative cyclosporiasis cases had been reported as of {time}.",
+              "measure_type": "Count",
+              "unit": "Cumulative case count",
+              "time_resolution": "Day",
+              "sources": [
+                {
+                  "id": "idoh_cyclosporiasis_2026"
+                }
+              ]
+            },
+            "time_range": [0, 0],
+            "type": "integer",
+            "missing": 0,
+            "mean": 7.925926,
+            "sd": 11.526592,
+            "min": 1,
+            "max": 51
+          },
+          {
+            "name": "in_cyclo_cases_new",
+            "duplicates": 53,
+            "info": {
+              "id": "in_cyclo_cases_new",
+              "short_name": "Cyclosporiasis new cases (IN county, daily)",
+              "long_name": "Newly reported cyclosporiasis cases since the prior daily update, by Indiana county",
+              "category": "infectious_disease",
+              "short_description": "Incident (newly reported) cyclosporiasis cases in an Indiana county since the previous IDOH daily update.",
+              "long_description": "Derived measure: the day-over-day difference in in_cyclo_cases_cumulative for the same county, i.e. the number of additional cases attributed to that county between two consecutive daily IDOH updates (weekdays only; IDOH does not update the table on weekends/holidays, so a 'daily' difference spanning a weekend actually reflects up to three calendar days). Because IDOH only publishes a single cumulative snapshot at a time (no historical archive on the source page), this column can only be computed once at least two snapshots for a county have been collected by this ingest script; the first date a county appears will have a missing (NA) value here since there is no prior snapshot to difference against. Values should be non-negative in principle (cumulative counts should not decrease), but IDOH notes that 'data are subject to change as additional information is available', so small negative values are possible and reflect genuine data revisions by the source, not a computation error.",
+              "statement": "In {location}, {value} new cyclosporiasis cases were reported as of {time}.",
+              "measure_type": "Incidence",
+              "unit": "New case count",
+              "time_resolution": "Day",
+              "sources": [
+                {
+                  "id": "idoh_cyclosporiasis_2026"
+                }
+              ]
+            },
+            "time_range": [-1, -1],
+            "type": "unknown",
+            "missing": 54
+          }
+        ]
+      },
+      "sha512": "f2679fefe58059c81adc27509c96127597c0d77b5eb115e7b53b9f3006da40971af7137d2c283b5b948570ea68d448d4dc3dafd17dd46b7cbf6fc81cc72e81ed"
+    }
+  ],
+  "measure_info": {
+    "in_cyclo_cases_cumulative": {
+      "id": "in_cyclo_cases_cumulative",
+      "short_name": "Cyclosporiasis cases, cumulative (IN county)",
+      "long_name": "Cumulative reported cyclosporiasis cases since investigation start, by Indiana county",
+      "category": "infectious_disease",
+      "short_description": "Total cyclosporiasis cases reported in an Indiana county since the 2026 investigation began (May 1, 2026), as of the most recent daily update.",
+      "long_description": "Cumulative count of cyclosporiasis cases reported to the Indiana Department of Health (IDOH) during the 2026 cyclosporiasis outbreak investigation, broken out by county. IDOH explicitly frames this as cases reported 'during the investigation time frame (beginning 5/1/2026)', NOT new cases since the prior update - the value only grows or stays flat over time and should not be interpreted as a daily incidence rate. IDOH updates the county table each day, Monday through Friday, by 1pm EDT (data reported as of noon); a same-day re-run of this ingest will not duplicate a data point. Because the source page itself only ever displays the single latest cumulative snapshot (no historical table), this ingest script accumulates one dated snapshot per distinct 'Last updated' date into raw/in_cyclo_county_snapshots.csv, building a real daily time series across successive scheduled runs. Counties with zero cumulative cases are not listed by IDOH at all and are therefore absent from this dataset rather than zero-filled.",
+      "statement": "In {location}, {value} cumulative cyclosporiasis cases had been reported as of {time}.",
+      "measure_type": "Count",
+      "unit": "Cumulative case count",
+      "time_resolution": "Day",
+      "sources": [
+        {
+          "id": "idoh_cyclosporiasis_2026"
+        }
+      ],
+      "citations": []
+    },
+    "in_cyclo_cases_new": {
+      "id": "in_cyclo_cases_new",
+      "short_name": "Cyclosporiasis new cases (IN county, daily)",
+      "long_name": "Newly reported cyclosporiasis cases since the prior daily update, by Indiana county",
+      "category": "infectious_disease",
+      "short_description": "Incident (newly reported) cyclosporiasis cases in an Indiana county since the previous IDOH daily update.",
+      "long_description": "Derived measure: the day-over-day difference in in_cyclo_cases_cumulative for the same county, i.e. the number of additional cases attributed to that county between two consecutive daily IDOH updates (weekdays only; IDOH does not update the table on weekends/holidays, so a 'daily' difference spanning a weekend actually reflects up to three calendar days). Because IDOH only publishes a single cumulative snapshot at a time (no historical archive on the source page), this column can only be computed once at least two snapshots for a county have been collected by this ingest script; the first date a county appears will have a missing (NA) value here since there is no prior snapshot to difference against. Values should be non-negative in principle (cumulative counts should not decrease), but IDOH notes that 'data are subject to change as additional information is available', so small negative values are possible and reflect genuine data revisions by the source, not a computation error.",
+      "statement": "In {location}, {value} new cyclosporiasis cases were reported as of {time}.",
+      "measure_type": "Incidence",
+      "unit": "New case count",
+      "time_resolution": "Day",
+      "sources": [
+        {
+          "id": "idoh_cyclosporiasis_2026"
+        }
+      ],
+      "citations": []
+    },
+    "_sources": {
+      "idoh_cyclosporiasis_2026": {
+        "name": "IDOH Cyclosporiasis - Cases by County",
+        "url": "https://www.in.gov/health/idepd/diseases-and-conditions-resource-page/cyclosporiasis/",
+        "organization": "Indiana Department of Health (IDOH), Infectious Disease Epidemiology & Prevention Division",
+        "organization_url": "https://www.in.gov/health/idepd/",
+        "location": "\"Cases by County\" accordion table on the Cyclosporiasis resource page",
+        "location_url": "https://www.in.gov/health/idepd/diseases-and-conditions-resource-page/cyclosporiasis/#Cases_by_County",
+        "description": "In 2026, Indiana experienced an ongoing multi-county cyclosporiasis outbreak investigation (beginning May 1, 2026). IDOH publishes a 'Cases by County' HTML table on its Cyclosporiasis resource page (a server-rendered page, not an interactive Power BI/ArcGIS/Tableau dashboard), stating the table is 'updated each day, Monday through Friday, by 1 p.m. EDT' with data reported as of noon - the finest temporal resolution of any state source in this project. This is an active-investigation-specific webpage and content/structure may change substantially, be consolidated into a different page, or be removed entirely once the investigation is declared over - a future maintainer should verify the page still exists and still contains a 'Cases by County' table matching this ingest script's assumptions (see the extensive scraper comments in ingest.R) before assuming failures are a code bug.",
+        "restrictions": "Public domain. State of Indiana government data is generally not subject to copyright restrictions; IDOH content is publicly published for outbreak awareness.",
+        "date_accessed": 2026
+      },
+      "id": "_sources"
+    }
+  },
+  "change_report": {
+    "data.csv.gz": {
+      "state": "new file"
+    }
+  }
 }
