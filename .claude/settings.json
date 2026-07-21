@@ -20,7 +20,8 @@
       "PowerShell($env:PATH = \"C:\\\\Program Files\\\\R\\\\R-4.3.0\\\\bin\\\\x64;\" + $env:PATH; quarto render \"index.qmd\" 2>&1 | Select-Object -Last 40)",
       "Bash(awk 'NR>=4488 && NR<=4520 {print NR\": \"length\\($0\\)\" chars\"}' index.html)",
       "Bash(git checkout *)",
-      "Bash(quarto render *)"
+      "Bash(quarto render *)",
+      "PowerShell(quarto render \"c:\\\\Users\\\\DMW63\\\\OneDrive - Yale University\\\\Desktop\\\\R_Projects\\\\POPHIVE PROJECT\\\\cyclo_scraper\\\\index.qmd\" 2>&1)"
     ]
   }
 }
