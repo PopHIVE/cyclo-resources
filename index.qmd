@@ -731,6 +731,7 @@ cat(sprintf('<script>window.CYCLO_MAP = %s;</script>\n',
 .cyclo-age input.cyclo-state-input:focus { outline: none; border-color: #4e98e4; box-shadow: 0 0 0 2px #bedeff; }
 .cyclo-map-title { font-family: 'Source Serif 4', serif; color: #00356b; font-weight: 600; font-size: 1.15rem; margin: 0.5rem 0 0; }
 .cyclo-map-sub { font-family: 'Rubik', sans-serif; color: #767676; font-size: 0.82rem; margin: 0.15rem 0 0.25rem; }
+.cyclo-panel-note { font-family: 'Rubik', sans-serif; color: #26323d; font-size: 0.85rem; margin: 0.5rem 0 0.25rem; }
 .cyclo-slider-row { display: flex; align-items: center; gap: 0.75rem; margin: 0.25rem 0 0; font-family: 'Rubik', sans-serif; font-size: 0.82rem; color: #00356b; }
 .cyclo-slider-row input[type=range] { flex: 1; accent-color: #00356b; }
 #cyclo-period-label { min-width: 6.5rem; font-weight: 500; }
@@ -1256,14 +1257,19 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
 </div>
 <p class="cyclo-map-title">Epic diarrhea trends compared to cyclosporiasis cases (NNDSS)</p>
 <p class="cyclo-map-sub">Five panels share the same time range; each has its own y-axis scale.</p>
+<p class="cyclo-panel-note">The latest data are incomplete (~50% of expected reports on ED visits received as shown in gray) and likely bias true values.</p>
 <p class="cyclo-map-title" style="font-size:1rem;margin-top:0.75rem;">Epic Cosmos: % of ED encounters due to diarrhea</p>
 <div id="cmp-chart-ed" style="width:100%;height:190px;"></div>
+<p class="cyclo-panel-note"> The latest data are incomplete (~2% of expected reports on all encounters received as shown in gray) and likely bias true values.</p>
 <p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Epic Cosmos: % of all encounters due to diarrhea</p>
 <div id="cmp-chart-all" style="width:100%;height:190px;"></div>
+<p class="cyclo-panel-note"></p>
 <p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Cyclosporiasis cases (NNDSS)</p>
 <div id="cmp-chart-nnds" style="width:100%;height:190px;"></div>
+<p class="cyclo-panel-note">The latest data are incomplete (~10% of expected reports for diarrhea encounters received as shown in gray) and likely bias true values.</p>
 <p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Stool and cyclospora testing: % of diarrhea encounters tested for cyclospora</p>
 <div id="cmp-chart-tested" style="width:100%;height:190px;"></div>
+<p class="cyclo-panel-note"> The latest data are incomplete (~10% of expected reports for diarrhea encounters received as shown in gray) and likely bias true values.</p>
 <p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Stool and cyclospora testing: % of cyclospora tests positive</p>
 <p class="cyclo-map-sub">Positive Cyclospora test counts are suppressed in a large majority of the states and are not plotted if suppressed.</p>
 <div id="cmp-chart-positive" style="width:100%;height:190px;"></div>

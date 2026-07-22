@@ -20,3 +20,4 @@ index_files/
 # OneDrive conflict copies (e.g. "file-MWMJ0G3P8D.ext") created when a synced
 # file can't be reconciled across devices
 *-MWMJ0G3P8D.*
+.claude/settings.local.json
