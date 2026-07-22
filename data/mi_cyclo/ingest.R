@@ -225,7 +225,15 @@ if (!identical(process$raw_state, raw_state)) {
     group_by(geography, last_update_date) %>%
     summarize(mi_cyclo_cases_cumulative = sum(cases_cumulative), .groups = "drop") %>%
     mutate(time = format(to_epiweek_saturday(last_update_date), "%Y-%m-%d")) %>%
-    arrange(geography, last_update_date) %>%
+    # MDHHS occasionally posts an off-cycle mid-week update in addition to its
+    # usual Thursday cadence (e.g. a Monday update); both then round to the same
+    # epiweek-ending Saturday. Keep only the latest last_update_date per
+    # geography x time so each week contributes exactly one row.
+    arrange(geography, time, last_update_date) %>%
+    group_by(geography, time) %>%
+    slice_tail(n = 1) %>%
+    ungroup() %>%
+    arrange(geography, time) %>%
     group_by(geography) %>%
     mutate(
       mi_cyclo_cases_new = mi_cyclo_cases_cumulative - dplyr::lag(mi_cyclo_cases_cumulative)
