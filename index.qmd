@@ -898,10 +898,13 @@ state_totals <- county_data %>%
   arrange(match(abbr, c("MI", "OH", "FL", "WV", "IN", "KY"))) %>%
   transmute(
     # "*" = not a full-year total (all four flag a partial window); "†" is
-    # KY-only, flagging its news-relayed (non-official) source tier - kept as a
-    # separate marker so the two caveats aren't conflated in the footnote.
+    # KY-only, flagging its news-relayed (non-official) source tier; "‡" is
+    # MI-only, flagging that this row is a sum of county-level data that can
+    # lag MDHHS's own more-frequently-updated statewide total (see footnote) -
+    # kept as separate markers so the three caveats aren't conflated.
     State = paste0(state_names[abbr], ifelse(abbr %in% c("MI", "WV", "IN", "KY"), "*", ""),
-                    ifelse(abbr == "KY", "†", "")),
+                    ifelse(abbr == "KY", "†", ""),
+                    ifelse(abbr == "MI", "‡", "")),
     `Number of cases` = scales::comma(cases),
     `Cases per 100,000` = sprintf("%.1f", cases / popsize * 100000),
     # state_asof["MI"]/state_asof["WV"]/state_asof["IN"]/state_asof["KY"] are
@@ -918,9 +921,9 @@ state_totals <- county_data %>%
     )
   )
 
-cat("As noted above, data from NNDSS for this year may not be the most up-to-date. Below are totals reported by states for 2026:\n\n")
+cat("As noted above, data from NNDSS for this year may not be the most up-to-date. The table below sums the county-level cases reported by each state (detailed further down this page) for 2026 - this is not necessarily the same as each state's own headline case count (see ‡ note below):\n\n")
 cat(knitr::kable(state_totals, format = "pipe"), sep = "\n")
-cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026, West Virginia's count reflects cases reported since the start of its outbreak investigation, Indiana's count reflects cases reported since the start of its investigation (May 1, 2026), and Kentucky's count reflects cases named in news coverage to date - none of these four are a full-year total.\n\n†Kentucky's figures are compiled from news reports summarizing Kentucky Dept for Public Health (KDPH) figures, not an official KDPH dashboard/API, and are the least complete and most likely to be revised of the sources on this page.\n")
+cat("\n\n\\*Michigan's count reflects cases reported since July 1, 2026, West Virginia's count reflects cases reported since the start of its outbreak investigation, Indiana's count reflects cases reported since the start of its investigation (May 1, 2026), and Kentucky's count reflects cases named in news coverage to date - none of these four are a full-year total.\n\n†Kentucky's figures are compiled from news reports summarizing Kentucky Dept for Public Health (KDPH) figures, not an official KDPH dashboard/API, and are the least complete and most likely to be revised of the sources on this page.\n\n‡Michigan's count here is a sum of MDHHS's county-level breakdown, which is only updated weekly (Thursdays). MDHHS separately posts a statewide total on the same page that is updated daily (Mon-Fri) and can run well ahead of this sum during periods of rapid case growth - check MDHHS's page directly for the most current statewide count.\n")
 ```
 
 ### MI, OH, FL, WV, IN, and KY: county-level detail
