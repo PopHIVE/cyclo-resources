@@ -4,17 +4,33 @@
   "licenses": [],
   "resources": [
     {
-      "bytes": 285,
+      "bytes": 288,
       "encoding": "windows-1252",
-      "md5": "143560e726a862e82a3a805afb6cca1e",
+      "md5": "7f1846bd568236ebe540fffe8975fe79",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
-        "hash": ["3dffc14ec3d2fa362f3f78b5957baf329270df6a", "c3280ac1bcaf1562ca5a8b5cef632c2c310852c9"],
-        "author": ["weinbergerlab <dweinber@gmail.com>", "weinbergerlab <dweinber@gmail.com>"],
-        "date": ["Tue Jul 21 01:30:03 2026 -0400", "Tue Jul 21 01:17:35 2026 -0400"],
-        "message": ["update KY files", "scrape county data from news articles, test for KY"]
+        "hash": [
+          "210ae8b34efbce1501790ac3e9401a25e89e143d",
+          "3dffc14ec3d2fa362f3f78b5957baf329270df6a",
+          "c3280ac1bcaf1562ca5a8b5cef632c2c310852c9"
+        ],
+        "author": [
+          "GitHub Actions <actions@github.com>",
+          "weinbergerlab <dweinber@gmail.com>",
+          "weinbergerlab <dweinber@gmail.com>"
+        ],
+        "date": [
+          "Tue Jul 21 09:27:09 2026 +0000",
+          "Tue Jul 21 01:30:03 2026 -0400",
+          "Tue Jul 21 01:17:35 2026 -0400"
+        ],
+        "message": [
+          "scheduled daily data update",
+          "update KY files",
+          "scrape county data from news articles, test for KY"
+        ]
       },
       "source": [],
       "data_format": "wide",
@@ -26,8 +42,8 @@
       "id_length": 0,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-07-21 09:26:25.52017",
-      "last_modified": "2026-07-21 09:26:25.52017",
+      "created": "2026-07-22 09:24:31.520732",
+      "last_modified": "2026-07-22 09:24:31.520732",
       "vintage": {},
       "row_count": 40,
       "entity_count": 36,
@@ -118,14 +134,14 @@
             "time_range": [0, 3],
             "type": "integer",
             "missing": 36,
-            "mean": 3048,
-            "sd": 3369.255506,
-            "min": 192,
+            "mean": 3025,
+            "sd": 3395.462659,
+            "min": 100,
             "max": 7000
           },
           {
             "name": "ky_cyclo_news_hospitalized",
-            "duplicates": 38,
+            "duplicates": 39,
             "info": {
               "id": "ky_cyclo_news_hospitalized",
               "short_name": "Cyclosporiasis hospitalizations, cumulative (KY news)",
@@ -144,13 +160,9 @@
                 }
               ]
             },
-            "time_range": [3, 3],
-            "type": "integer",
-            "missing": 39,
-            "mean": 7,
-            "sd": "NA",
-            "min": 7,
-            "max": 7
+            "time_range": [-1, -1],
+            "type": "unknown",
+            "missing": 40
           },
           {
             "name": "ky_cyclo_news_cases",
@@ -176,10 +188,10 @@
             "time_range": [3, 4],
             "type": "integer",
             "missing": 3,
-            "mean": 8.432432,
-            "sd": 23.714202,
+            "mean": 7,
+            "sd": 18.577166,
             "min": 1,
-            "max": 108
+            "max": 100
           },
           {
             "name": "ky_cyclo_news_cases_new.x",
@@ -196,10 +208,35 @@
             "time_range": [-1, -1],
             "type": "unknown",
             "missing": 40
+          },
+          {
+            "name": "ky_cyclo_news_cases_new",
+            "duplicates": 39,
+            "info": {
+              "id": "ky_cyclo_news_cases_new",
+              "short_name": "Cyclosporiasis new confirmed cases (KY news)",
+              "long_name": "Newly reported confirmed cyclosporiasis cases since the prior news snapshot, by county/state",
+              "category": "infectious_disease",
+              "short_description": "Incident (newly reported) confirmed cyclosporiasis cases since the previous news-derived snapshot for the same geography.",
+              "long_description": "Derived measure: the difference in ky_cyclo_news_cases between two consecutive news-derived snapshots for the same geography. News coverage is event-driven, not scheduled, so the interval between snapshots is irregular and a 'new cases' value can span anywhere from days to months. The first snapshot for a geography has a missing (NA) value here, since there is no prior snapshot to difference against. A negative value would indicate a downward revision and is unexpected for a cumulative count - see raw/ky_cyclo_news_review.csv.gz, since check_monotonic() in reconcile.R routes cumulative decreases to review rather than silently landing them.",
+              "statement": "In {location}, {value} new confirmed cyclosporiasis cases were reported as of {time}, per news coverage.",
+              "measure_type": "Incidence",
+              "unit": "New case count",
+              "time_resolution": "Week",
+              "source_tier": "news",
+              "sources": [
+                {
+                  "id": "ky_news_cyclosporiasis_2026"
+                }
+              ]
+            },
+            "time_range": [-1, -1],
+            "type": "unknown",
+            "missing": 40
           }
         ]
       },
-      "sha512": "cef95d944ee586e15c45cedc5dd2cb38133909164781f2dc027b562c299f5d2e0e1074a9b79c20b8e1bcd1d2e8d7a53c80b13492fc9bbf025dbb372d65b2c988"
+      "sha512": "3f86ec0406099c92b69f67aac135dcc0d8dfa48ab20d80d33912a21620184b2d7ae9c5318ce317d7a1954a53b8ffc190c4ce8043e893beecf22329a35e38ae46"
     }
   ],
   "measure_info": {
@@ -294,7 +331,44 @@
   },
   "change_report": {
     "data.csv.gz": {
-      "state": "new file"
+      "state": "changed",
+      "variables": {
+        "geography": {
+          "status": "present",
+          "same_type": true,
+          "added_levels": [],
+          "dropped_levels": []
+        },
+        "time": {
+          "status": "present",
+          "same_type": true,
+          "added_levels": [],
+          "dropped_levels": []
+        },
+        "ky_cyclo_news_reported": {
+          "status": "present",
+          "same_type": true
+        },
+        "ky_cyclo_news_hospitalized": {
+          "status": "present",
+          "same_type": false
+        },
+        "ky_cyclo_news_cases": {
+          "status": "present",
+          "same_type": true
+        },
+        "ky_cyclo_news_cases_new.x": {
+          "status": "present",
+          "same_type": true
+        },
+        "ky_cyclo_news_cases_new.y": {
+          "status": "present",
+          "same_type": true
+        },
+        "ky_cyclo_news_cases_new": {
+          "status": "added"
+        }
+      }
     }
   }
 }

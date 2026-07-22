@@ -9,13 +9,18 @@
   },
   "resources": [
     {
-      "bytes": 191,
-      "encoding": "ISO-8859-1",
-      "md5": "a0662c33d1a5c566db3a55133924f09e",
+      "bytes": 325,
+      "encoding": "windows-1252",
+      "md5": "7d617c5a6512acefd00c8ce51fb361a9",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
-      "versions": {},
+      "versions": {
+        "hash": ["244a8e18fcaeb4569cab21aa5ed41643a1fcbdae"],
+        "author": ["weinbergerlab <dweinber@gmail.com>"],
+        "date": ["Mon Jul 20 22:29:39 2026 -0400"],
+        "message": ["adds WV and IN"]
+      },
       "source": [],
       "data_format": "wide",
       "ids": [
@@ -26,39 +31,66 @@
       "id_length": 0,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-07-20 22:00:13.22356",
-      "last_modified": "2026-07-20 21:47:06.748938",
+      "created": "2026-07-22 09:24:22.882665",
+      "last_modified": "2026-07-22 09:24:22.882665",
       "vintage": {},
-      "row_count": 27,
-      "entity_count": 27,
+      "row_count": 55,
+      "entity_count": 28,
       "schema": {
         "fields": [
           {
             "name": "geography",
-            "duplicates": 0,
+            "duplicates": 27,
             "info": [],
-            "time_range": [0, 0],
-            "type": "integer",
-            "missing": 0,
-            "mean": 52054,
-            "sd": 10392.348905,
-            "min": 54,
-            "max": 54107
-          },
-          {
-            "name": "time",
-            "duplicates": 26,
-            "info": [],
-            "time_range": [0, 0],
+            "time_range": [0, 1],
             "type": "string",
             "missing": 0,
             "table": {
-              "2026-07-17": 27
+              "54": 2,
+              "54005": 2,
+              "54007": 2,
+              "54009": 2,
+              "54011": 2,
+              "54019": 2,
+              "54029": 2,
+              "54033": 2,
+              "54035": 2,
+              "54039": 2,
+              "54041": 2,
+              "54043": 2,
+              "54045": 2,
+              "54049": 2,
+              "54053": 2,
+              "54057": 1,
+              "54061": 2,
+              "54065": 2,
+              "54069": 2,
+              "54071": 2,
+              "54077": 2,
+              "54079": 2,
+              "54081": 2,
+              "54085": 2,
+              "54087": 2,
+              "54099": 2,
+              "54105": 2,
+              "54107": 2
+            }
+          },
+          {
+            "name": "time",
+            "duplicates": 53,
+            "info": [],
+            "time_range": [0, 1],
+            "type": "string",
+            "missing": 0,
+            "table": {
+              "2026-07-17": 27,
+              "2026-07-21": 28
             }
           },
           {
             "name": "wv_cyclo_cases_cumulative",
-            "duplicates": 15,
+            "duplicates": 38,
             "info": {
               "id": "wv_cyclo_cases_cumulative",
               "short_name": "Cyclosporiasis cases, cumulative (WV county)",
@@ -76,17 +108,17 @@
                 }
               ]
             },
-            "time_range": [0, 0],
+            "time_range": [0, 1],
             "type": "integer",
             "missing": 0,
-            "mean": 10.296296,
-            "sd": 26.664316,
+            "mean": 12.145455,
+            "sd": 32.018755,
             "min": 1,
-            "max": 139
+            "max": 195
           },
           {
             "name": "wv_cyclo_cases_new",
-            "duplicates": 26,
+            "duplicates": 45,
             "info": {
               "id": "wv_cyclo_cases_new",
               "short_name": "Cyclosporiasis new cases (WV county)",
@@ -104,13 +136,17 @@
                 }
               ]
             },
-            "time_range": [-1, -1],
-            "type": "unknown",
-            "missing": 27
+            "time_range": [1, 1],
+            "type": "integer",
+            "missing": 28,
+            "mean": 4.111111,
+            "sd": 10.874576,
+            "min": 0,
+            "max": 56
           }
         ]
       },
-      "sha512": "a55ff8a4e5569eb30af0ab0ba38ad733b4ebd2ef6c82c020554938b04b3d34f3d0fe1feb006d131e3b628273acb2b41ddc2bf68bc9bb3816289a6294b9f6cf39"
+      "sha512": "50748e2cd1e2b70ca6eac953225e10fadd51c49814c5c16787f07110592d620c46d556659e66f4ef6819ac171ed6910c2171c6d7934845233834c4eee71933de"
     }
   ],
   "measure_info": {
@@ -163,6 +199,32 @@
         "date_accessed": 2026
       },
       "id": "_sources"
+    }
+  },
+  "change_report": {
+    "data.csv.gz": {
+      "state": "changed",
+      "variables": {
+        "geography": {
+          "status": "present",
+          "same_type": false,
+          "added_levels": ["54", "54005", "54007", "54009", "54011", "54019", "54029", "54033", "54035", "54039", "54041", "54043", "54045", "54049", "54053", "54057", "54061", "54065", "54069", "54071", "54077", "54079", "54081", "54085", "54087", "54099", "54105", "54107"]
+        },
+        "time": {
+          "status": "present",
+          "same_type": true,
+          "added_levels": "2026-07-21",
+          "dropped_levels": []
+        },
+        "wv_cyclo_cases_cumulative": {
+          "status": "present",
+          "same_type": true
+        },
+        "wv_cyclo_cases_new": {
+          "status": "present",
+          "same_type": false
+        }
+      }
     }
   }
 }

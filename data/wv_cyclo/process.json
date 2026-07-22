@@ -5,26 +5,11 @@
     {
       "path": "ingest.R",
       "manual": false,
+      "last_run": "2026-07-22 09:24:22",
       "frequency": 0,
-      "last_run": "2026-07-20 22:00:13",
-      "run_time": 2.22,
+      "run_time": 1.29,
       "last_status": {
-        "log": [
-          "",
-          "Attaching package: 'dplyr'",
-          "",
-          "The following objects are masked from 'package:stats':",
-          "",
-          "    filter, lag",
-          "",
-          "The following objects are masked from 'package:base':",
-          "",
-          "    intersect, setdiff, setequal, union",
-          "",
-          "Linking to ImageMagick 6.9.13.29",
-          "Enabled features: cairo, freetype, fftw, ghostscript, heic, lcms, pango, raw, rsvg, webp",
-          "Disabled features: fontconfig, x11"
-        ],
+        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", "", "Linking to ImageMagick 6.9.12.98", "Enabled features: fontconfig, freetype, fftw, heic, lcms, pango, raw, webp, x11", "Disabled features: cairo, ghostscript, rsvg", "Using 4 threads"],
         "success": true
       }
     }
@@ -38,11 +23,11 @@
   },
   "standalone": false,
   "raw_state": {
-    "last_update_date": "2026-07-17",
-    "county_data": "Boone:1|Braxton:2|Brooke:7|Cabell:31|Fayette:2|Hancock:15|Harrison:2|Jackson:2|Kanawha:20|Lewis:1|Lincoln:2|Logan:1|Marion:3|Mason:2|Monongalia:6|Morgan:2|Ohio:4|Pendleton:1|Preston:3|Putnam:13|Raleigh:1|Ritchie:1|Roane:1|Wayne:9|Wirt:1|Wood:6"
+    "last_update_date": "2026-07-21",
+    "county_data": "Boone:3|Braxton:2|Brooke:7|Cabell:42|Fayette:2|Hancock:20|Harrison:3|Jackson:2|Kanawha:32|Lewis:1|Lincoln:2|Logan:2|Marion:6|Mason:2|Mineral:1|Monongalia:9|Morgan:2|Ohio:4|Pendleton:1|Preston:3|Putnam:20|Raleigh:2|Ritchie:2|Roane:2|Wayne:14|Wirt:1|Wood:8"
   },
   "standard_state": {
     "./data/wv_cyclo/measure_info.json": "cba161e835adac7a184205025e81a961",
-    "./data/wv_cyclo/standard/data.csv.gz": "a0662c33d1a5c566db3a55133924f09e"
+    "./data/wv_cyclo/standard/data.csv.gz": "7d617c5a6512acefd00c8ce51fb361a9"
   }
 }

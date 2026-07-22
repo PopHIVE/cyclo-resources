@@ -5,9 +5,9 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-07-18 08:44:03",
+      "last_run": "2026-07-22 09:23:38",
       "frequency": 0,
-      "run_time": 1.544,
+      "run_time": 0.666,
       "last_status": {
         "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
         "success": true
@@ -33,6 +33,6 @@
   },
   "standard_state": {
     "./data/mi_cyclo/measure_info.json": "a637e2964c370746c7621070efc7844b",
-    "./data/mi_cyclo/standard/data.csv.gz": "2bc1066a9f9f7eb51ab1e27eb1149ab4"
+    "./data/mi_cyclo/standard/data.csv.gz": "f68db28ce7d5f254068d8af202c3c958"
   }
 }

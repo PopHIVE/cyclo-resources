@@ -5,9 +5,9 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-07-21 09:26:25",
+      "last_run": "2026-07-22 09:24:31",
       "frequency": 0,
-      "run_time": 6.591,
+      "run_time": 8.028,
       "last_status": {
         "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
         "success": true
@@ -44,11 +44,16 @@
       "https://news.google.com/rss/articles/CBMipwFBVV95cUxQUy15eUROeE80ZXBOMVVYT3BQRXdZYzdiOTIza1d1eWU1VTlTTTdUZjZSOUV0TDdBOHBzY0pmcW1mSi11azJJTUhYRjNaYllocTI5RndTVzBUQThzWnp5VzJ2ZzA0bzdNR3U2bWRUVUxYal8wUHphRG0xdjJ4Vm0tODhQTHRCOW5MaDdEYTFyTEJsNnR4VkVXRXcxXzFyLWw2MC1NemxBUQ?oc=5",
       "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPRURRaXFaRTB5enZCTzhOX3Rxc3dZYVJoaGdOMnRLRURjVE9HREFQVld1V2V1T29Kbmo4bUpmZlNpVXJsb0RrNWhYMnlETWNRZjdFbzRKdkRQQ1FuRkFlTTR1N25wdkZYQXh3ZjRiWk9xZW0xSkp6bi11SVVULUMwOUh0VkJtQkZRMl9Jc1M0N2toM3FHbWRzRjA4THJ1dmJFaTBNcjQ4YjBmZ9IBvgFBVV95cUxQZ1NiTW5iRHlnSGdMTDhLOEpVOWViQVRRSk5SdlJSTWVfNjItaFRYT25Ib1Q2SnRxU1dWT0RxVUVyVWdibWZtY0FwaDlNQkduazRpa0xDRU96Yk1WWnhLMmU5ZTBBQjEyVW1KZmpJM09XbzVZbE5ybVZMaWppX01jQ0gtWmFGWmpWVG13LVhqb2g4MkxiVWhBT2NWRV9RWmRXdTNiN2tYUUdaY0p0RklRYjdKT01uRzYtTUoxOXVB?oc=5",
       "https://news.google.com/rss/articles/CBMixwFBVV95cUxOUDhzNkJSMFkwMGN0cXBMa2U5d1J3alhiMWJJQ2hVVXI3RjJibDdRSDNyVW13akVHLWNxTmdxdjdUMk9ibHlPNW1KMm1TZk9FYnFUYjcxQTVZNXFZU0gxQ1I4OG95bXp0OHpDYlFHRDBvVHdMRVVMRlFFRUZPcWlqcnBzUnNLUkg5MHV5MDBrRTgtdVVGRUhOYTlNRGxoNHo0bE5QaGJ1V0hnVFB5dzZUS2RJcGlEcHpRMVZSaml1aDBnZ1VDeFNJ?oc=5",
-      "https://news.google.com/rss/articles/CBMi2wFBVV95cUxPOU9nQjYtMHdaZkRyRjM0VEVzYzN1LUFKZlo5amNkZkphd1dWaXZIVW41VUlWbk11bDU4R1E1MV9Ja1pQS3otTU01RmJrTnc5XzJ5RTNqVzRZZVRjZDIzd2dwWmdUb2NjZ2NIVUtpUXM3dFZKWG9vbG81bUstN0ZFUjQ3S29rZUVySU9lckxsY01YYUNoaXdZQzYxSERxcFNGUkl2Z3VfeVFPcWxVZW43YTZSWHEtUzJTV0hYSXNSYW80ZlM0UmswN2JLcFNZLXNMUjR5SldTWUlVYzA?oc=5"
+      "https://news.google.com/rss/articles/CBMi2wFBVV95cUxPOU9nQjYtMHdaZkRyRjM0VEVzYzN1LUFKZlo5amNkZkphd1dWaXZIVW41VUlWbk11bDU4R1E1MV9Ja1pQS3otTU01RmJrTnc5XzJ5RTNqVzRZZVRjZDIzd2dwWmdUb2NjZ2NIVUtpUXM3dFZKWG9vbG81bUstN0ZFUjQ3S29rZUVySU9lckxsY01YYUNoaXdZQzYxSERxcFNGUkl2Z3VfeVFPcWxVZW43YTZSWHEtUzJTV0hYSXNSYW80ZlM0UmswN2JLcFNZLXNMUjR5SldTWUlVYzA?oc=5",
+      "https://news.google.com/rss/articles/CBMibkFVX3lxTE9BOFN2bE9nQ0dTNjJrY0JELU5sNmdnNHp1TFpQVFIyY3NMT19ocUZmbUZFSVlKU1BHU1NFQ3NzbVEweVhvZkNGTzViSzhWYkZISEpyWE0tVUpGaVZBN3l6Y1MzMHFCSjY0RTNKMXBn?oc=5",
+      "https://news.google.com/rss/articles/CBMimAFBVV95cUxOaVBIWFVvQlgyeGMtN3J2M1QtSnhEZmw2UUNTQVdNc2ZXYW5QRjhpaDUtWF9nZjFPRVBnMVJYdGJXLVZzUHBkWWF3T21OdjU2czlzVlVYczl5MzlieEtZeGtmN1FLRGotMHAxRFJ0ZFAwdlE3OGc3RXY4eW12dURJX3lrYlpjazE4SjI0MkpaZmlQZU9RMV9FRw?oc=5",
+      "https://news.google.com/rss/articles/CBMi7gFBVV95cUxONnFYOHNMd0JVTEhjVDUtc2dnYWdKWlhLS25ZSDYwSEs2NzJ5NFl5Znk5dHpwM1g0Rno5eUFqMEVRQkpoLUJocFV4Tm1WNEZXTkFaSFV0Y1pMWWVVemRxMFJSM2d1VEF2NmYzd0FaSXJWMXlkWFNXbzlYRlA4cFFBd0piWkRTTWFWT2dwMktVeVQyWWx0VlJTQUZSaFZUZFpnbk1NdWVHX19rRWdZZjNtM0hTLXJyUG56WWxFcl9qWFJ1ai12NVlPXzlxc2FOUGo3VTdHSzdsd3l1bUZSeWdsWFNOekU4NFpON0N5ZC1B?oc=5",
+      "https://news.google.com/rss/articles/CBMieEFVX3lxTE10VTVMTEQ3UHE1ZDJEY2VNRV9scHh3SmhTUDQ4SlFFeV9RYnFvSXY4amlCcUNOc0VyYmN6c2N4Z1FISVVkOG9uQVVkNFduRUV1Tk9NYVVmRUhMX2tmcjAzRVZ0LWhxdmJGRXM3REE2ekNFZVBDbnpzZQ?oc=5",
+      "https://news.google.com/rss/articles/CBMitgFBVV95cUxQOUZpSmNyUnZEbERPeUNrQ01mdVhMU2RfcTRvOXQyNFhOeGI2MVlfeEx2Z2lmUV9POWNRMWM3QlJJaERHZ0JxbTRrQUtuR3pHRFRBTjRiMUdsSVRteFVoYmppLVZrN01NYzdsOFVqUURJVHJLT1hyVzVadGVMV0d5Y3V4OXQ4TVhuU0o5MHVSa1IzUDI1LVdScnA5RUM5OWw5Q1pRVnF0dWlERDdmYkZJaVA0c2VQUdIBygFBVV95cUxOVDNWd3NRZ3dZQkRkNUNnVFpWZ0pmZ2xVRklkdHpSMDVmV0ZxcnlpaHM2YkNhUnhEaS02aS0zT1pPaC1TbWN2M2ZQd0Fwd1JoNG45MG9uTFhSQ193SUNadnFTZEtGUXdCS3VEVHFFMHQ2OGJYb3NiTGg3OVI2dUtBdU5SenpqQkxkNFZuckRhbGhhcjdRVl9FSnozanlpb2h2bEFybGpmd3Y3MW02YWZSaWlqVzB4UGRPc0xsRTNMQ0tIdlVmc3dEemRB?oc=5"
     ]
   },
   "standard_state": {
     "./data/ky_cyclo_news/measure_info.json": "62f39cf0c6f60ccf29b39382dc21daba",
-    "./data/ky_cyclo_news/standard/data.csv.gz": "143560e726a862e82a3a805afb6cca1e"
+    "./data/ky_cyclo_news/standard/data.csv.gz": "7f1846bd568236ebe540fffe8975fe79"
   }
 }
