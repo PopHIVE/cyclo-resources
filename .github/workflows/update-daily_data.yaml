@@ -4,6 +4,10 @@ on:
     - cron: '0 7 * * *'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 jobs:
   update-daily-data:
     runs-on: ubuntu-latest
@@ -75,4 +79,5 @@ jobs:
           git config user.name "GitHub Actions"
           git add -A
           git commit -m "scheduled daily data update"
+          git pull --rebase origin main
           git push
