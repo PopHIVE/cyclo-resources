@@ -9,13 +9,29 @@
       "frequency": 0,
       "run_time": 1.018,
       "last_status": {
-        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
+        "log": [
+          "",
+          "Attaching package: ‘dplyr’",
+          "",
+          "The following objects are masked from ‘package:stats’:",
+          "",
+          "    filter, lag",
+          "",
+          "The following objects are masked from ‘package:base’:",
+          "",
+          "    intersect, setdiff, setequal, union",
+          ""
+        ],
         "success": true
       }
     }
   ],
-  "checked": "",
-  "check_results": [],
+  "checked": "2026-07-23 12:41:05",
+  "check_results": {
+    "data/ky_cyclo_news/standard/data.csv.gz": {
+      "measures": ["type_changed: ky_cyclo_news_hospitalized", "missing_info: ky_cyclo_news_cases_new.x", "missing_info: ky_cyclo_news_cases_new.y"]
+    }
+  },
   "standalone": false,
   "raw_state": {
     "processed_urls": [

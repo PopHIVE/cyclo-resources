@@ -9,13 +9,30 @@
       "frequency": 0,
       "run_time": 1.132,
       "last_status": {
-        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
+        "log": [
+          "",
+          "Attaching package: ‘dplyr’",
+          "",
+          "The following objects are masked from ‘package:stats’:",
+          "",
+          "    filter, lag",
+          "",
+          "The following objects are masked from ‘package:base’:",
+          "",
+          "    intersect, setdiff, setequal, union",
+          ""
+        ],
         "success": true
       }
     }
   ],
-  "checked": "",
-  "check_results": [],
+  "checked": "2026-07-23 12:41:05",
+  "check_results": {
+    "data/in_cyclo/raw/in_cyclo_county_snapshots.csv": {
+      "data": "not_compressed"
+    },
+    "data/in_cyclo/standard/data.csv.gz": []
+  },
   "standalone": false,
   "raw_state": {
     "last_update_date": "2026-07-20",

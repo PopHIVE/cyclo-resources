@@ -9,17 +9,35 @@
       "frequency": 0,
       "run_time": 1.29,
       "last_status": {
-        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", "", "Linking to ImageMagick 6.9.12.98", "Enabled features: fontconfig, freetype, fftw, heic, lcms, pango, raw, webp, x11", "Disabled features: cairo, ghostscript, rsvg", "Using 4 threads"],
+        "log": [
+          "",
+          "Attaching package: ‘dplyr’",
+          "",
+          "The following objects are masked from ‘package:stats’:",
+          "",
+          "    filter, lag",
+          "",
+          "The following objects are masked from ‘package:base’:",
+          "",
+          "    intersect, setdiff, setequal, union",
+          "",
+          "Linking to ImageMagick 6.9.12.98",
+          "Enabled features: fontconfig, freetype, fftw, heic, lcms, pango, raw, webp, x11",
+          "Disabled features: cairo, ghostscript, rsvg",
+          "Using 4 threads"
+        ],
         "success": true
       }
     }
   ],
-  "checked": "2026-07-20 22:01:29",
+  "checked": "2026-07-23 12:41:05",
   "check_results": {
     "data/wv_cyclo/raw/wv_cyclo_county_snapshots.csv": {
       "data": "not_compressed"
     },
-    "data/wv_cyclo/standard/data.csv.gz": []
+    "data/wv_cyclo/standard/data.csv.gz": {
+      "measures": ["type_changed: geography", "type_changed: wv_cyclo_cases_new"]
+    }
   },
   "standalone": false,
   "raw_state": {

@@ -26,14 +26,12 @@
       }
     }
   ],
-  "checked": "2026-07-14 18:23:01",
+  "checked": "2026-07-23 12:41:05",
   "check_results": {
     "data/oh_cyclo/raw/oh_cyclo_fetched_weeks.csv": {
       "data": "not_compressed"
     },
-    "data/oh_cyclo/standard/data.csv.gz": {
-      "measures": "type_changed: geography"
-    }
+    "data/oh_cyclo/standard/data.csv.gz": []
   },
   "standalone": false,
   "raw_state": {

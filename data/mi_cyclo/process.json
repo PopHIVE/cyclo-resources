@@ -9,22 +9,29 @@
       "frequency": 0,
       "run_time": 0.666,
       "last_status": {
-        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
+        "log": [
+          "",
+          "Attaching package: ‘dplyr’",
+          "",
+          "The following objects are masked from ‘package:stats’:",
+          "",
+          "    filter, lag",
+          "",
+          "The following objects are masked from ‘package:base’:",
+          "",
+          "    intersect, setdiff, setequal, union",
+          ""
+        ],
         "success": true
       }
     }
   ],
-  "checked": "2026-07-16 05:00:26",
+  "checked": "2026-07-23 12:41:05",
   "check_results": {
     "data/mi_cyclo/raw/mi_cyclo_county_snapshots.csv": {
       "data": "not_compressed"
     },
-    "data/mi_cyclo/standard/data.csv.gz": {
-      "measures": [
-        "type_changed: geography",
-        "type_changed: mi_cyclo_cases_new"
-      ]
-    }
+    "data/mi_cyclo/standard/data.csv.gz": []
   },
   "standalone": false,
   "raw_state": {
