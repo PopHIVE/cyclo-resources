@@ -41,7 +41,7 @@ flowchart LR
     end
     subgraph wv_cyclo["`wv_cyclo`"]
         direction LR
-        n8["`data.csv.gz<br/><br/><ul><li><code>type_changed: geography, wv_cyclo_cases_new</code></li></ul>`"]:::warn
+        n8["`data.csv.gz`"]:::pass
     end
     s0---s1["<strong><a href="https://skylab.cdph.ca.gov/idbsssprovisional/SSSprovisional.html" target="_blank" rel="noreferrer">Static Quarto/R Markdown report embedded via iframe on the CDPH page</a></strong>"]
     s1 --> n1
