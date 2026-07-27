@@ -21,3 +21,4 @@ index_files/
 # file can't be reconciled across devices
 *-MWMJ0G3P8D.*
 .claude/settings.local.json
+.claude/settings.json

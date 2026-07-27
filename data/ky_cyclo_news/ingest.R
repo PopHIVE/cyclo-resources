@@ -40,16 +40,24 @@ library(vroom)
 library(jsonlite)
 
 source("../../scripts/reconcile.R")
+source("infogram.R")
 
 if (!dir.exists("raw")) dir.create("raw")
 if (!dir.exists("standard")) dir.create("standard")
 
 if (!file.exists("process.json")) {
-  process <- list(raw_state = list(processed_urls = character()))
+  process <- list(raw_state = list(processed_urls = character(),
+                                   processed_embeds = character()))
 } else {
   process <- dcf::dcf_process_record()
 }
 processed_urls <- process$raw_state$processed_urls %||% character()
+# Embeds are keyed slug@updatedAt, NOT by URL like articles: an article is
+# immutable once published, but an Infogram map is revised IN PLACE at the same
+# URL (the KY graphic's counts changed between July 22 and July 24). Keying on
+# the graphic's own updatedAt re-ingests a refreshed map while still never
+# re-processing an unchanged one.
+processed_embeds <- process$raw_state$processed_embeds %||% character()
 
 # ---- Config -------------------------------------------------------------
 
@@ -71,6 +79,35 @@ classify_outlet_tier <- function(url, allowlist = KY_ALLOWLIST) {
   if (any(endsWith(host, allowlist$B))) return("B")
   "quarantine"
 }
+
+# ---- Infogram embed config (see infogram.R) --------------------------------
+
+# Known KY county-map embeds, checked EVERY run regardless of what Google News
+# RSS surfaces. Seeding matters because RSS is a rolling window: the article
+# ages out within days, but the map it hosts keeps being revised in place and is
+# the best county-level data this source has. Embeds found on freshly fetched
+# allowlisted articles are appended to this queue automatically, inheriting that
+# article's outlet and tier.
+#
+# Each row must name an outlet on KY_ALLOWLIST - an embed is trusted exactly as
+# far as the page carrying it, and is tier-gated identically to prose.
+KY_INFOGRAM_SEEDS <- tibble::tribble(
+  ~slug,                                    ~outlet, ~article_url,
+  "cyclospora-in-kentucky-1hnp27ejvprdy4g", "WLKY",
+    "https://www.wlky.com/article/cyclospora-cases-indiana-map-data/72794202"
+)
+
+# Share of a graphic's county names that must resolve within STATE_ABBR before
+# it is accepted. The article carrying the KY map carries an Indiana map too, and
+# the two states share ~40 county names, so this (plus row count == the state's
+# county count) is what separates them: KY table 120/120 vs KY, IN table 40/92.
+INFOGRAM_MIN_MATCH_RATE <- 0.95
+
+# TRUE: a graphic listing all 120 KY counties is a complete_list, so its 0-case
+# counties are stored as real zeros - the main advantage over the prose path,
+# which can only ever report the counties an article happens to name. Flip to
+# FALSE to store only counties with >=1 case (declared partial_list instead).
+INFOGRAM_EMIT_ZEROS <- TRUE
 
 # ---- 1. Discovery: Google News RSS ---------------------------------------
 
@@ -341,102 +378,202 @@ upsert_standard <- function(existing, new_standard) {
     arrange(geography, time)
 }
 
-# Day-over-day new-case count from the cumulative "confirmed" series in the
-# long history (mirrors in_cyclo/mi_cyclo's differencing approach).
+# Snapshot-over-snapshot new-case count from the cumulative "confirmed" series
+# in the long history (mirrors in_cyclo/mi_cyclo's differencing approach).
+#
+# The output is keyed on the week-ending Saturday, NOT the raw as_of_date. It
+# has to be: to_standard() snaps as_of_date to that Saturday, so keying on the
+# raw date meant this table never joined onto standard/ and every
+# ky_cyclo_news_cases_new value came out NA regardless of the underlying series.
+#
+# Two snapshots can land in the same MMWR week (2026-07-15 and 2026-07-17 both
+# end 2026-07-18). Collapsing to the latest as_of_date per (geography, week)
+# before differencing keeps one row per (geography, time) - which is what
+# standard/ is keyed on - and makes the difference a true week-over-week delta
+# rather than an artifact of how many times an outlet happened to publish.
 compute_cases_new <- function(history) {
   history %>%
-    filter(count_type == "confirmed") %>%
-    arrange(geography, as_of_date) %>%
+    filter(count_type == "confirmed", !is.na(as_of_date)) %>%
+    mutate(time = format(week_ending_saturday(as_of_date), "%Y-%m-%d")) %>%
+    group_by(geography, time) %>%
+    filter(as_of_date == max(as_of_date)) %>%
+    slice_head(n = 1) %>%            # ties on as_of_date: one row per week
+    ungroup() %>%
+    arrange(geography, time) %>%
     group_by(geography) %>%
     mutate(cases_new = count - dplyr::lag(count)) %>%
     ungroup() %>%
-    transmute(geography, time = format(as_of_date, "%Y-%m-%d"),
-              !!paste0(PREFIX, "_cases_new") := cases_new)
+    transmute(geography, time, !!paste0(PREFIX, "_cases_new") := cases_new)
 }
 
 all_fips <- load_fips()  # default path assumes cwd = data/ky_cyclo_news/
 
-articles    <- discover_articles()
+history_long      <- read_gz_if_exists(history_path, col_types = HISTORY_COL_TYPES)
+standard_existing <- read_gz_if_exists(standard_path, col_types = STANDARD_COL_TYPES)
+
+# Both harvest paths (prose and Infogram embed) produce the same
+# news_extraction.schema.json shape, so they are collected into one queue and
+# stored by one loop below - the reconcile/residual/monotonic/review machinery
+# is identical for both and neither gets a private route into standard/.
+extractions <- list()
+embed_queue <- KY_INFOGRAM_SEEDS %>% mutate(tier = vapply(article_url, classify_outlet_tier, character(1)))
+
+# ---- 7a. Prose path: allowlisted articles -> LLM extraction ----------------
+
+articles     <- discover_articles()
 new_articles <- articles %>% filter(!link %in% processed_urls)
 
 if (nrow(new_articles) == 0) {
   cat("ky_cyclo_news: no new candidate articles since last run.\n")
-} else {
-  history_long <- read_gz_if_exists(history_path, col_types = HISTORY_COL_TYPES)
-  standard_existing <- read_gz_if_exists(standard_path, col_types = STANDARD_COL_TYPES)
-  n_ingested <- 0
-
-  for (i in seq_len(nrow(new_articles))) {
-    link       <- new_articles$link[i]
-    source_url <- new_articles$source_url[i]
-
-    # Classify against the RSS feed's own <source url>, not the Google
-    # redirect link - see decode_google_news_url() for why the link's host
-    # is never usable for this. Quarantining here (before decoding) also
-    # avoids spending a batchexecute round-trip on off-allowlist outlets.
-    tier <- if (is.na(source_url)) "quarantine" else classify_outlet_tier(source_url)
-    if (tier == "quarantine") {
-      cat("ky_cyclo_news: quarantined (off-allowlist):", source_url %||% link, "\n")
-      processed_urls <- c(processed_urls, link)
-      next
-    }
-
-    real_url <- decode_google_news_url(link)
-    if (is.na(real_url)) { processed_urls <- c(processed_urls, link); next }
-
-    page <- fetch_main_text(real_url)
-    if (is.null(page) || nchar(page$text) < 200) { processed_urls <- c(processed_urls, link); next }
-
-    extraction <- tryCatch(
-      extract_via_llm(
-        article_text    = page$text,
-        url             = real_url,
-        outlet          = page$outlet %||% real_url,
-        published_time  = page$published_time %||% as.character(Sys.time()),
-        timezone        = "America/Kentucky/Louisville",
-        state_context   = STATE_ABBR
-      ),
-      error = function(e) { warning("ky_cyclo_news: ", conditionMessage(e)); NULL }
-    )
-    if (is.null(extraction) || length(extraction$figures) == 0) {
-      processed_urls <- c(processed_urls, link)
-      next
-    }
-    extraction$article$outlet_tier <- tier  # set by harvester, not the model
-
-    out <- reconcile(extraction, all_fips, prefix = PREFIX, history_long = history_long)
-
-    history_long      <- upsert_long_history(history_long, out$long)
-    standard_existing <- upsert_standard(standard_existing, out$standard)
-
-    if (nrow(out$provenance) > 0) {
-      prov <- if (file.exists(provenance_path)) bind_rows(read_gz_if_exists(provenance_path, col_types = PROVENANCE_COL_TYPES), out$provenance) else out$provenance
-      vroom::vroom_write(prov, provenance_path, delim = ",")
-    }
-    if (nrow(out$review) > 0) {
-      rev <- if (file.exists(review_path)) bind_rows(read_gz_if_exists(review_path, col_types = REVIEW_COL_TYPES), out$review) else out$review
-      vroom::vroom_write(rev, review_path, delim = ",")
-      cat("ky_cyclo_news:", nrow(out$review), "rows routed to review for", real_url, "\n")
-    }
-
-    processed_urls <- c(processed_urls, link)
-    n_ingested <- n_ingested + 1
-  }
-
-  if (n_ingested > 0) {
-    vroom::vroom_write(history_long, history_path, delim = ",")
-
-    cases_new <- compute_cases_new(history_long)
-    standard_final <- standard_existing %>%
-      left_join(cases_new, by = c("geography", "time"))
-    vroom::vroom_write(standard_final, standard_path, delim = ",")
-
-    cat("ky_cyclo_news: ingested", n_ingested, "new article(s);",
-        nrow(standard_final), "rows in standard/data.csv.gz\n")
-  } else {
-    cat("ky_cyclo_news: no article passed the allowlist/extraction gate this run.\n")
-  }
-
-  process$raw_state <- list(processed_urls = unique(processed_urls))
-  dcf::dcf_process_record(updated = process)
 }
+
+for (i in seq_len(nrow(new_articles))) {
+  link       <- new_articles$link[i]
+  source_url <- new_articles$source_url[i]
+
+  # Classify against the RSS feed's own <source url>, not the Google
+  # redirect link - see decode_google_news_url() for why the link's host
+  # is never usable for this. Quarantining here (before decoding) also
+  # avoids spending a batchexecute round-trip on off-allowlist outlets.
+  tier <- if (is.na(source_url)) "quarantine" else classify_outlet_tier(source_url)
+  if (tier == "quarantine") {
+    cat("ky_cyclo_news: quarantined (off-allowlist):", source_url %||% link, "\n")
+    processed_urls <- c(processed_urls, link)
+    next
+  }
+
+  real_url <- decode_google_news_url(link)
+  if (is.na(real_url)) { processed_urls <- c(processed_urls, link); next }
+
+  page <- fetch_main_text(real_url)
+  if (is.null(page) || nchar(page$text) < 200) { processed_urls <- c(processed_urls, link); next }
+
+  # Queue any Infogram map on this article for the structured path below. Done
+  # before the LLM call so an article whose prose carries no figures at all
+  # still contributes its map.
+  found <- discover_infogram_embeds(page$html_snapshot)
+  if (length(found) > 0) {
+    cat("ky_cyclo_news: found", length(found), "infogram embed(s) on", real_url, "\n")
+    embed_queue <- bind_rows(embed_queue, tibble(
+      slug        = found,
+      outlet      = page$outlet %||% real_url,
+      article_url = real_url,
+      tier        = tier
+    ))
+  }
+
+  extraction <- tryCatch(
+    extract_via_llm(
+      article_text    = page$text,
+      url             = real_url,
+      outlet          = page$outlet %||% real_url,
+      published_time  = page$published_time %||% as.character(Sys.time()),
+      timezone        = "America/Kentucky/Louisville",
+      state_context   = STATE_ABBR
+    ),
+    error = function(e) { warning("ky_cyclo_news: ", conditionMessage(e)); NULL }
+  )
+  processed_urls <- c(processed_urls, link)
+  if (is.null(extraction) || length(extraction$figures) == 0) next
+
+  extraction$article$outlet_tier <- tier  # set by harvester, not the model
+  extractions <- c(extractions, list(list(label = real_url, extraction = extraction)))
+}
+
+# ---- 7b. Structured path: Infogram embeds -> extraction --------------------
+
+# Runs unconditionally, NOT only when 7a found a new article: the map is revised
+# in place on a cadence of its own, so gating embed harvest on RSS novelty would
+# freeze county data on whatever day the article was first seen.
+embed_queue <- embed_queue %>% distinct(slug, .keep_all = TRUE)
+
+for (i in seq_len(nrow(embed_queue))) {
+  slug <- embed_queue$slug[i]
+  if (identical(embed_queue$tier[i], "quarantine")) {
+    cat("ky_cyclo_news: infogram", slug, "skipped - host page off-allowlist.\n")
+    next
+  }
+
+  d <- fetch_infogram_data(slug)
+  if (is.null(d)) next
+
+  # Dedup on the graphic's own revision stamp, not its URL - see processed_embeds.
+  embed_key <- paste0(slug, "@", d$updatedAt %||% "unknown")
+  if (embed_key %in% processed_embeds) {
+    cat("ky_cyclo_news: infogram", slug, "unchanged since last run (", embed_key, ")\n")
+    next
+  }
+
+  ex <- tryCatch(
+    infogram_to_extraction(
+      d, state_abbr = STATE_ABBR, all_fips = all_fips,
+      outlet         = embed_queue$outlet[i],
+      outlet_tier    = embed_queue$tier[i],
+      article_url    = embed_queue$article_url[i],
+      emit_zeros     = INFOGRAM_EMIT_ZEROS,
+      min_match_rate = INFOGRAM_MIN_MATCH_RATE
+    ),
+    error = function(e) { warning("ky_cyclo_news: infogram ", slug, ": ", conditionMessage(e)); NULL }
+  )
+  # Only record the key once the embed has actually been turned into an
+  # extraction. A fetch that parsed but was skipped for a transient reason must
+  # stay eligible next run; a state-gate rejection re-logs harmlessly.
+  if (is.null(ex)) next
+
+  m <- ex$.meta
+  cat(sprintf(paste0("ky_cyclo_news: infogram %s -> %d counties (%d with cases), ",
+                     "%s, as of %s, state total %s, county sum %d\n"),
+              slug, m$n_counties, m$n_nonzero, m$coverage, format(m$as_of),
+              m$state_confirmed %||% "NA", m$county_sum))
+
+  processed_embeds <- c(processed_embeds, embed_key)
+  extractions <- c(extractions, list(list(label = paste0("infogram:", slug), extraction = ex)))
+}
+
+# ---- 7c. Reconcile + store ------------------------------------------------
+
+n_ingested <- 0
+for (item in extractions) {
+  out <- reconcile(item$extraction, all_fips, prefix = PREFIX, history_long = history_long)
+
+  history_long      <- upsert_long_history(history_long, out$long)
+  standard_existing <- upsert_standard(standard_existing, out$standard)
+
+  if (nrow(out$provenance) > 0) {
+    prov <- if (file.exists(provenance_path)) bind_rows(read_gz_if_exists(provenance_path, col_types = PROVENANCE_COL_TYPES), out$provenance) else out$provenance
+    vroom::vroom_write(prov, provenance_path, delim = ",")
+  }
+  if (nrow(out$review) > 0) {
+    rev <- if (file.exists(review_path)) bind_rows(read_gz_if_exists(review_path, col_types = REVIEW_COL_TYPES), out$review) else out$review
+    vroom::vroom_write(rev, review_path, delim = ",")
+    cat("ky_cyclo_news:", nrow(out$review), "rows routed to review for", item$label, "\n")
+  }
+
+  n_ingested <- n_ingested + 1
+}
+
+if (n_ingested > 0) {
+  vroom::vroom_write(history_long, history_path, delim = ",")
+
+  # cases_new is fully derived from history_long, so the prior run's copy is
+  # dropped and recomputed rather than joined alongside. Without the drop,
+  # left_join() suffixes the collision every run and standard/ accumulates
+  # ky_cyclo_news_cases_new.x, .y, .x.x, ... (which is where the .x/.y columns
+  # already in this file - and dcf_check()'s missing_info warnings about them -
+  # came from). The select() also cleans those up on the next run.
+  cases_new <- compute_cases_new(history_long)
+  standard_final <- standard_existing %>%
+    select(-any_of(names(cases_new)[-(1:2)]),
+           -matches(paste0("^", PREFIX, "_cases_new\\."))) %>%
+    left_join(cases_new, by = c("geography", "time"))
+  vroom::vroom_write(standard_final, standard_path, delim = ",")
+
+  cat("ky_cyclo_news: ingested", n_ingested, "new snapshot(s);",
+      nrow(standard_final), "rows in standard/data.csv.gz\n")
+} else {
+  cat("ky_cyclo_news: nothing new passed the allowlist/extraction gate this run.\n")
+}
+
+process$raw_state <- list(processed_urls = unique(processed_urls),
+                          processed_embeds = unique(processed_embeds))
+dcf::dcf_process_record(updated = process)

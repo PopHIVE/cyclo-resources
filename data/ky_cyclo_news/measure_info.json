@@ -12,7 +12,7 @@
     "time_resolution": "Week",
     "source_tier": "news",
     "restrictions": "",
-    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }],
+    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }, { "id": "ky_news_cyclosporiasis_map_2026" }],
     "citations": []
   },
   "ky_cyclo_news_cases_new": {
@@ -28,7 +28,7 @@
     "time_resolution": "Week",
     "source_tier": "news",
     "restrictions": "",
-    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }],
+    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }, { "id": "ky_news_cyclosporiasis_map_2026" }],
     "citations": []
   },
   "ky_cyclo_news_reported": {
@@ -44,7 +44,7 @@
     "time_resolution": "Week",
     "source_tier": "news",
     "restrictions": "",
-    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }],
+    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }, { "id": "ky_news_cyclosporiasis_map_2026" }],
     "citations": []
   },
   "ky_cyclo_news_hospitalized": {
@@ -60,7 +60,7 @@
     "time_resolution": "Week",
     "source_tier": "news",
     "restrictions": "",
-    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }],
+    "sources": [{ "id": "ky_news_cyclosporiasis_2026" }, { "id": "ky_news_cyclosporiasis_map_2026" }],
     "citations": []
   },
 
@@ -72,6 +72,15 @@
       "organization_url": "https://www.chfs.ky.gov/agencies/dph/Pages/default.aspx",
       "description": "During the 2026 Kentucky cyclosporiasis outbreak, KDPH's own county-level case data was not available through a public dashboard/API, so this source instead harvests trusted news articles (Google News RSS discovery, restricted to an allowlist of KY public media and major dailies/network affiliates) that relay KDPH-attributed figures, extracts structured facts via an LLM against a fixed JSON schema, and reconciles them (FIPS resolution, Sum(county) vs state-total residual check, cumulative-monotonicity check vs prior snapshots). This is explicitly a LOWER-TRUST tier than the dashboard scrapers in this project (fl_/in_/mi_/oh_/wv_/ca_/or_cyclo) and must never be blended with them unlabeled. Article prose is never stored - only the extracted county/state -> count facts, the source URL, and attribution.",
       "restrictions": "Underlying figures are Kentucky government (KDPH) public-health data relayed through copyrighted news reporting; only the facts (geography, count, date) are stored, not article text, per fair-use/facts-are-not-copyrightable practice.",
+      "date_accessed": 2026
+    },
+    "ky_news_cyclosporiasis_map_2026": {
+      "name": "Kentucky cyclosporiasis county map, as published in allowlisted news outlets' Infogram embeds",
+      "url": "https://infogram.com/cyclospora-in-kentucky-1hnp27ejvprdy4g",
+      "organization": "Kentucky Department for Public Health (KDPH), via allowlisted news outlets' data graphics",
+      "organization_url": "https://www.chfs.ky.gov/agencies/dph/Pages/default.aspx",
+      "description": "The second of two harvest paths behind the ky_cyclo_news_* columns (see ky_news_cyclosporiasis_2026 for the prose path). Allowlisted Kentucky outlets publish their KDPH-derived county case map as an Infogram embed, which ships the graphic's underlying spreadsheet into the page as JSON. This source reads that table directly - no LLM inference - which yields a COMPLETE county roster (all 120 KY counties, so a county with no cases is a real zero rather than an unmentioned absence) and exact rather than hedged counts. Accepted only when at least 95% of the graphic's county names resolve within Kentucky, which is what separates it from the Indiana map published in the same articles (KY/IN share roughly 40 county names). State totals are taken from the graphic's own captions rather than summed from the map, so the sum(county)-vs-state residual check remains meaningful. This is the SAME news trust tier as the prose path - the outlet, not KDPH, builds the graphic - and passes through identical FIPS resolution, residual, monotonicity, and human review steps.",
+      "restrictions": "Underlying figures are Kentucky government (KDPH) public-health data relayed through a news outlet's data graphic; only the facts (geography, count, date) are stored, not the graphic or article text.",
       "date_accessed": 2026
     }
   }

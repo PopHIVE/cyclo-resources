@@ -4,29 +4,33 @@
   "licenses": [],
   "resources": [
     {
-      "bytes": 288,
-      "encoding": "windows-1252",
-      "md5": "7f1846bd568236ebe540fffe8975fe79",
+      "bytes": 703,
+      "encoding": "ISO-8859-1",
+      "md5": "b3603e3d8100fac9285943797faa930b",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "c652b7e7d827979c04095f4f92a5f055457406c0",
           "210ae8b34efbce1501790ac3e9401a25e89e143d",
           "3dffc14ec3d2fa362f3f78b5957baf329270df6a",
           "c3280ac1bcaf1562ca5a8b5cef632c2c310852c9"
         ],
         "author": [
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>",
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Wed Jul 22 09:25:17 2026 +0000",
           "Tue Jul 21 09:27:09 2026 +0000",
           "Tue Jul 21 01:30:03 2026 -0400",
           "Tue Jul 21 01:17:35 2026 -0400"
         ],
         "message": [
+          "scheduled daily data update",
           "scheduled daily data update",
           "update KY files",
           "scrape county data from news articles, test for KY"
@@ -42,62 +46,28 @@
       "id_length": 0,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-07-22 09:24:31.520732",
-      "last_modified": "2026-07-22 09:24:31.520732",
+      "created": "2026-07-27 13:39:10.281849",
+      "last_modified": "2026-07-21 01:17:09.782076",
       "vintage": {},
-      "row_count": 40,
-      "entity_count": 36,
+      "row_count": 160,
+      "entity_count": 121,
       "schema": {
         "fields": [
           {
             "name": "geography",
-            "duplicates": 4,
+            "duplicates": 39,
             "info": [],
             "time_range": [0, 4],
-            "type": "string",
+            "type": "integer",
             "missing": 0,
-            "table": {
-              "21": 5,
-              "21001": 1,
-              "21017": 1,
-              "21021": 1,
-              "21029": 1,
-              "21033": 1,
-              "21059": 1,
-              "21067": 1,
-              "21069": 1,
-              "21087": 1,
-              "21091": 1,
-              "21093": 1,
-              "21103": 1,
-              "21107": 1,
-              "21109": 1,
-              "21111": 1,
-              "21113": 1,
-              "21117": 1,
-              "21121": 1,
-              "21125": 1,
-              "21133": 1,
-              "21135": 1,
-              "21137": 1,
-              "21145": 1,
-              "21149": 1,
-              "21151": 1,
-              "21161": 1,
-              "21167": 1,
-              "21173": 1,
-              "21175": 1,
-              "21179": 1,
-              "21185": 1,
-              "21199": 1,
-              "21203": 1,
-              "21209": 1,
-              "21211": 1
-            }
+            "mean": 20460.5625,
+            "sd": 3683.168022,
+            "min": 21,
+            "max": 21239
           },
           {
             "name": "time",
-            "duplicates": 35,
+            "duplicates": 155,
             "info": [],
             "time_range": [0, 4],
             "type": "string",
@@ -107,12 +77,12 @@
               "2026-01-10": 1,
               "2026-05-02": 1,
               "2026-07-18": 36,
-              "2026-07-25": 1
+              "2026-07-25": 121
             }
           },
           {
             "name": "ky_cyclo_news_reported",
-            "duplicates": 35,
+            "duplicates": 154,
             "info": {
               "id": "ky_cyclo_news_reported",
               "short_name": "Cyclosporiasis reported cases, confirmed+probable (KY news)",
@@ -128,20 +98,23 @@
               "sources": [
                 {
                   "id": "ky_news_cyclosporiasis_2026"
+                },
+                {
+                  "id": "ky_news_cyclosporiasis_map_2026"
                 }
               ]
             },
-            "time_range": [0, 3],
+            "time_range": [0, 4],
             "type": "integer",
-            "missing": 36,
-            "mean": 3025,
-            "sd": 3395.462659,
-            "min": 100,
+            "missing": 155,
+            "mean": 2532,
+            "sd": 3137.704894,
+            "min": 192,
             "max": 7000
           },
           {
             "name": "ky_cyclo_news_hospitalized",
-            "duplicates": 39,
+            "duplicates": 159,
             "info": {
               "id": "ky_cyclo_news_hospitalized",
               "short_name": "Cyclosporiasis hospitalizations, cumulative (KY news)",
@@ -157,16 +130,19 @@
               "sources": [
                 {
                   "id": "ky_news_cyclosporiasis_2026"
+                },
+                {
+                  "id": "ky_news_cyclosporiasis_map_2026"
                 }
               ]
             },
             "time_range": [-1, -1],
             "type": "unknown",
-            "missing": 40
+            "missing": 160
           },
           {
             "name": "ky_cyclo_news_cases",
-            "duplicates": 29,
+            "duplicates": 144,
             "info": {
               "id": "ky_cyclo_news_cases",
               "short_name": "Cyclosporiasis confirmed cases, cumulative (KY news)",
@@ -182,36 +158,23 @@
               "sources": [
                 {
                   "id": "ky_news_cyclosporiasis_2026"
+                },
+                {
+                  "id": "ky_news_cyclosporiasis_map_2026"
                 }
               ]
             },
             "time_range": [3, 4],
             "type": "integer",
             "missing": 3,
-            "mean": 7,
-            "sd": 18.577166,
-            "min": 1,
-            "max": 100
-          },
-          {
-            "name": "ky_cyclo_news_cases_new.x",
-            "duplicates": 39,
-            "info": [],
-            "time_range": [-1, -1],
-            "type": "unknown",
-            "missing": 40
-          },
-          {
-            "name": "ky_cyclo_news_cases_new.y",
-            "duplicates": 39,
-            "info": [],
-            "time_range": [-1, -1],
-            "type": "unknown",
-            "missing": 40
+            "mean": 3.605096,
+            "sd": 16.868556,
+            "min": 0,
+            "max": 177
           },
           {
             "name": "ky_cyclo_news_cases_new",
-            "duplicates": 39,
+            "duplicates": 151,
             "info": {
               "id": "ky_cyclo_news_cases_new",
               "short_name": "Cyclosporiasis new confirmed cases (KY news)",
@@ -227,16 +190,23 @@
               "sources": [
                 {
                   "id": "ky_news_cyclosporiasis_2026"
+                },
+                {
+                  "id": "ky_news_cyclosporiasis_map_2026"
                 }
               ]
             },
-            "time_range": [-1, -1],
-            "type": "unknown",
-            "missing": 40
+            "time_range": [4, 4],
+            "type": "integer",
+            "missing": 124,
+            "mean": 3.194444,
+            "sd": 11.486189,
+            "min": 0,
+            "max": 69
           }
         ]
       },
-      "sha512": "3f86ec0406099c92b69f67aac135dcc0d8dfa48ab20d80d33912a21620184b2d7ae9c5318ce317d7a1954a53b8ffc190c4ce8043e893beecf22329a35e38ae46"
+      "sha512": "4f8ba5799376af2dc1ce14ee81743c2b4048a9f12435c9b7b90ce240608071e7767381e8a75696f4d0de0bcc908faa4a723c66b563e9fa1936e03d8ccf9687ab"
     }
   ],
   "measure_info": {
@@ -255,6 +225,9 @@
       "sources": [
         {
           "id": "ky_news_cyclosporiasis_2026"
+        },
+        {
+          "id": "ky_news_cyclosporiasis_map_2026"
         }
       ],
       "citations": []
@@ -274,6 +247,9 @@
       "sources": [
         {
           "id": "ky_news_cyclosporiasis_2026"
+        },
+        {
+          "id": "ky_news_cyclosporiasis_map_2026"
         }
       ],
       "citations": []
@@ -293,6 +269,9 @@
       "sources": [
         {
           "id": "ky_news_cyclosporiasis_2026"
+        },
+        {
+          "id": "ky_news_cyclosporiasis_map_2026"
         }
       ],
       "citations": []
@@ -312,6 +291,9 @@
       "sources": [
         {
           "id": "ky_news_cyclosporiasis_2026"
+        },
+        {
+          "id": "ky_news_cyclosporiasis_map_2026"
         }
       ],
       "citations": []
@@ -324,6 +306,15 @@
         "organization_url": "https://www.chfs.ky.gov/agencies/dph/Pages/default.aspx",
         "description": "During the 2026 Kentucky cyclosporiasis outbreak, KDPH's own county-level case data was not available through a public dashboard/API, so this source instead harvests trusted news articles (Google News RSS discovery, restricted to an allowlist of KY public media and major dailies/network affiliates) that relay KDPH-attributed figures, extracts structured facts via an LLM against a fixed JSON schema, and reconciles them (FIPS resolution, Sum(county) vs state-total residual check, cumulative-monotonicity check vs prior snapshots). This is explicitly a LOWER-TRUST tier than the dashboard scrapers in this project (fl_/in_/mi_/oh_/wv_/ca_/or_cyclo) and must never be blended with them unlabeled. Article prose is never stored - only the extracted county/state -> count facts, the source URL, and attribution.",
         "restrictions": "Underlying figures are Kentucky government (KDPH) public-health data relayed through copyrighted news reporting; only the facts (geography, count, date) are stored, not article text, per fair-use/facts-are-not-copyrightable practice.",
+        "date_accessed": 2026
+      },
+      "ky_news_cyclosporiasis_map_2026": {
+        "name": "Kentucky cyclosporiasis county map, as published in allowlisted news outlets' Infogram embeds",
+        "url": "https://infogram.com/cyclospora-in-kentucky-1hnp27ejvprdy4g",
+        "organization": "Kentucky Department for Public Health (KDPH), via allowlisted news outlets' data graphics",
+        "organization_url": "https://www.chfs.ky.gov/agencies/dph/Pages/default.aspx",
+        "description": "The second of two harvest paths behind the ky_cyclo_news_* columns (see ky_news_cyclosporiasis_2026 for the prose path). Allowlisted Kentucky outlets publish their KDPH-derived county case map as an Infogram embed, which ships the graphic's underlying spreadsheet into the page as JSON. This source reads that table directly - no LLM inference - which yields a COMPLETE county roster (all 120 KY counties, so a county with no cases is a real zero rather than an unmentioned absence) and exact rather than hedged counts. Accepted only when at least 95% of the graphic's county names resolve within Kentucky, which is what separates it from the Indiana map published in the same articles (KY/IN share roughly 40 county names). State totals are taken from the graphic's own captions rather than summed from the map, so the sum(county)-vs-state residual check remains meaningful. This is the SAME news trust tier as the prose path - the outlet, not KDPH, builds the graphic - and passes through identical FIPS resolution, residual, monotonicity, and human review steps.",
+        "restrictions": "Underlying figures are Kentucky government (KDPH) public-health data relayed through a news outlet's data graphic; only the facts (geography, count, date) are stored, not the graphic or article text.",
         "date_accessed": 2026
       },
       "id": "_sources"
