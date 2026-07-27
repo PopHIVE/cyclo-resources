@@ -9,14 +9,15 @@
   },
   "resources": [
     {
-      "bytes": 18524,
+      "bytes": 18368,
       "encoding": "windows-1252",
-      "md5": "c4b7876cad290ed77160fb2e6f6ba97c",
+      "md5": "c1520f5a6b0ec700f423e73d823840d4",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "38c12f2db7ec2169630c1423f328d7ac067f3978",
           "66309c4a23a12bddd60b70ea131cdb44a57fbf67",
           "6458d21b8114e618da5c7cf9ee09968a49e5d00d",
           "06639b8181bc9680e45fac86219f7970093b0dd7",
@@ -26,15 +27,18 @@
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Thu Jul 23 09:22:25 2026 +0000",
           "Fri Jul 17 17:55:00 2026 +0000",
           "Thu Jul 16 05:00:27 2026 +0000",
           "Tue Jul 14 18:23:01 2026 +0000",
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "scheduled daily data update",
           "scheduled daily data update",
           "scheduled data build",
           "scheduled data build",
@@ -51,8 +55,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-07-23 09:20:55.675762",
-      "last_modified": "2026-07-23 09:20:55.675762",
+      "created": "2026-07-25 05:18:30.921839",
+      "last_modified": "2026-07-25 05:18:30.921839",
       "vintage": {},
       "row_count": 6968,
       "entity_count": 67,
@@ -251,7 +255,7 @@
           },
           {
             "name": "fl_cyclo_cases",
-            "duplicates": 6958,
+            "duplicates": 6961,
             "info": {
               "id": "fl_cyclo_cases",
               "short_name": "Cyclosporiasis cases (confirmed)",
@@ -273,10 +277,10 @@
             "time_range": [0, 103],
             "type": "integer",
             "missing": 0,
-            "mean": 0.067882,
-            "sd": 0.421009,
+            "mean": 0.045924,
+            "sd": 0.296698,
             "min": 0,
-            "max": 15
+            "max": 8
           },
           {
             "name": "fl_cyclo_cases_probable",
@@ -302,14 +306,14 @@
             "time_range": [0, 103],
             "type": "integer",
             "missing": 0,
-            "mean": 0.003731,
-            "sd": 0.063285,
+            "mean": 0.003157,
+            "sd": 0.058608,
             "min": 0,
             "max": 2
           }
         ]
       },
-      "sha512": "ea1f9828a8f36f283385b60044090032a1b755998c8f8da022cbfe5093e60425b3005c7b9ecec8b8a9c900cedc6c1e7f386f9fa8490cafb40b494237d012735e"
+      "sha512": "6d2a81674010a1020eb0283eaad0cee24dd5662e34ba830128794d09887740acd925f0055276671d83f222249540dca7faac21be5d04a32cef7101b4cad129ac"
     }
   ],
   "measure_info": {
@@ -377,8 +381,8 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-07-18",
-          "dropped_levels": "2024-07-20"
+          "added_levels": [],
+          "dropped_levels": []
         },
         "fl_cyclo_cases": {
           "status": "present",
