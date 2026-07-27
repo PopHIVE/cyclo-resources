@@ -14,7 +14,7 @@
       }
     }
   ],
-  "checked": "2026-07-26 05:37:59",
+  "checked": "2026-07-27 05:55:56",
   "check_results": {
     "data/ky_cyclo_news/standard/data.csv.gz": {
       "measures": ["type_changed: ky_cyclo_news_hospitalized", "missing_info: ky_cyclo_news_cases_new.x", "missing_info: ky_cyclo_news_cases_new.y"]
