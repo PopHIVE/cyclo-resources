@@ -95,8 +95,11 @@ if (length(tbl_nodes) == 0) {
 county_tbl_idx <- NULL
 for (i in seq_along(tbl_nodes)) {
   header_txt <- tolower(rvest::html_text2(tbl_nodes[[i]]))
+  # IDOH has used both "cyclosporiasis" and "cyclospora" in this column header
+  # across revisions of the page (2026-07-28: switched to "Cyclospora Cases
+  # Reported") - accept either spelling rather than an exact phrase match.
   if (grepl("county", header_txt, fixed = TRUE) &&
-      grepl("number of cyclosporiasis cases reported", header_txt, fixed = TRUE)) {
+      grepl("number of cyclospora(sis)? cases reported", header_txt)) {
     county_tbl_idx <- i
     break
   }
