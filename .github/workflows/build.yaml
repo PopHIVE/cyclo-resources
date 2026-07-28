@@ -19,6 +19,8 @@ jobs:
         with:
           r-version: renv
       - uses: r-lib/actions/setup-renv@v2
+      - name: Validate JSON state files
+        run: Rscript scripts/validate_state_json.R
       - run: Rscript -e "renv::install('dissc-yale/dcf')"
       - run: Rscript -e "renv::install(c('magick', 'tesseract'))"
       - run: Rscript scripts/build.R

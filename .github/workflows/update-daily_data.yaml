@@ -54,6 +54,8 @@ jobs:
             github::dissc-yale/dcf
           cache-version: 1
       - uses: quarto-dev/quarto-actions/setup@v2
+      - name: Validate JSON state files
+        run: Rscript scripts/validate_state_json.R
       - run: Rscript -e "dcf::dcf_process('fl_cyclo')"
       - run: Rscript -e "dcf::dcf_process('in_cyclo')"
       - run: Rscript -e "dcf::dcf_process('mi_cyclo')"
