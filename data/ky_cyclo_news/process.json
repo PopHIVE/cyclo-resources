@@ -5,38 +5,19 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-07-27 13:39:10",
+      "last_run": "2026-07-29 05:25:42",
       "frequency": 0,
-      "run_time": 39.17,
+      "run_time": 1.378,
       "last_status": {
-        "log": [
-          "",
-          "Attaching package: 'dplyr'",
-          "",
-          "The following objects are masked from 'package:stats':",
-          "",
-          "    filter, lag",
-          "",
-          "The following objects are masked from 'package:base':",
-          "",
-          "    intersect, setdiff, setequal, union",
-          "",
-          "\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \rRequest failed [403]. Retrying in 5 seconds...",
-          "Request failed [403]. Retrying in 5 seconds...",
-          "\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m146.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m7.65MB/s\u001b[0m\r                                                                              \r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m45.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m1.67MB/s\u001b[0m\r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m146.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m7.65MB/s\u001b[0m\r                                                                              \r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m45.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.39MB/s\u001b[0m\r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m146.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m3.95MB/s\u001b[0m\r                                                                              \r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m45.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.05MB/s\u001b[0m\r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m146.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m7.29MB/s\u001b[0m\r                                                                              \r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m45.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.25MB/s\u001b[0m\r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m146.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m6.96MB/s\u001b[0m\r                                                                              \r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mindexed\u001b[0m \u001b[32m0B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m0B/s\u001b[0m\r\u001b[1mindexed\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m45.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.05MB/s\u001b[0m\r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m27.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m1.23MB/s\u001b[0m\r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r\r\u001b[1mwrote\u001b[0m \u001b[32m28.00B\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m1.28MB/s\u001b[0m\r\u001b[1mwrote\u001b[0m \u001b[32m2.15GB\u001b[0m in \u001b[36m 0s\u001b[0m, \u001b[32m2.15GB/s\u001b[0m\r                                                                              \r"
-        ],
+        "log": [],
         "success": true
       }
     }
   ],
-  "checked": "2026-07-27 05:55:56",
+  "checked": "2026-07-29 05:26:30",
   "check_results": {
     "data/ky_cyclo_news/standard/data.csv.gz": {
-      "measures": [
-        "type_changed: ky_cyclo_news_hospitalized",
-        "missing_info: ky_cyclo_news_cases_new.x",
-        "missing_info: ky_cyclo_news_cases_new.y"
-      ]
+      "measures": "type_changed: geography"
     }
   },
   "standalone": false,
@@ -95,12 +76,17 @@
       "https://news.google.com/rss/articles/CBMi8AFBVV95cUxNX1FMNTBfSWIyODdRdVZTZnFWS3Z2MC0yZE5zVzlLb3l1Q3BiM21pZjJST1UtQVExNWNTeWNnTnh1bzJhTUsxaVlLUFpYNGtucFN0RG5FajdkSXFLNWdLamYyZkpZNGJseHVZbFVGU3B4TWpFZUJQVXFOM0JWb0hNdld4X2J4Zkp3SkNqM3otMmQ2Z2xHY2FDakZFNFE1eHFnSmxDc3B6cm5mS3hKTk1UNDJ0RGJEU193NHVrVTlYWkZiZUk3Um56eGVxR1N1UTFTLTUtVXdvZElKVVVYZ0wwdS1SaGVnOFEwbl9LWXVBS1Y?oc=5",
       "https://news.google.com/rss/articles/CBMimwFBVV95cUxPOU9wRmpoWlZha1phSTRiXzcwaHdZeXBRd0hhY0lubHhSSXJDZWswaFUyRmVleW8xZnE1OFk1R3ppcjA2VnJKNnR2M3d1amxucGFILVlvN2FKbUhJeERCWnRlVEVNRlZIMVJLNzJ1TzkxTEROQU1wY3Z6enY1SmdDNHdMazRTYjg2SGJ5QjBHZ1hpbUxrbFAzVEE0aw?oc=5",
       "https://news.google.com/rss/articles/CBMi6gdBVV95cUxPdWxnZVFGWVVCa29oZnhscFllRUgyVS1MR2QtNEhDVjdHNW5ZVXI2dUh1REVpYVZRRFZLOTcwME5YTXdrdlZnWHZxYjN3bUxUc2dPSEVaVVhPeXhUd0tBci1HMldTcnQ4SW5XNmpsMHBHaHFEd0dlVm96Znp0eFpRaVdDSG5oUUtQS2d2MjZ4RnIxZGIxS0dvQU96M0dJdWJ2aUxSRzVnYnRTNVVCei1ISU9kNy1aT1VldUQxZlVCTmt6SUZYcGVlVlpLa1NZMXB0WmphalJyRWZrQm1yY2VlNWJMX2doNGNmV2k4N3hsNVNrWERiTFBvVURKTDRJWXkxcW53dTFIbUNVcjhVeVQ2c291WXZ3ZnNhS3hWWXRHeEgzczZoUi1YWGFFZS1Hc20xLVo1U3RBMVdrc0xmRkRSbnJpdVc1bVBKREZmWnNyMzBHSDdwQy02bzMzTzdSdEpLNzZOaVFRM0lhRzBBQXllM1JFZkVENlI2OEktMWU4ZTVnSXlJa21adkRQbzNDaE1paGhteEVPTnRKTTFfek1MVkVNZ09Ib0F3MkVNNl9CSU5vdE9RMlVmMWtiR1c0akozdllIQU1fd1F3TUYtOVlzb1ZEekt2blRmV05Kc3hCTFBPb1gtREwzcDNrS0NrME0xWndpdnEyVkdySUJKZklhQWZWYW1XSGRVVzNYSE80NWdKcEp3OFVfSHVta0R2YnIyM3dLYVBGOXBJOUJyV2xBN0VDSGN4OXRheFItdlU2X1VkdDBQSHA1bElfSEQtMG1uUXU5RzRCLURka1hIa0VoQ0trX2pZelBnWTlOZ2hQTVc0aXMzcHRRVG80SVZsS3QtTWZ2cFJnOVlGclpxQkZsanVWVDNqNTJzbmM4aEt2ZFBoN3lVTmFBOWE4QnhKT21wX0dfZ2ticm5TS3RtT1lQYkZOSjFnaEZEbGNhQmlrZ05BaEFFSDU2WkNQYUN4a1l6N3laTUE3WXZNRjM2VXZGa3RTZVVwUkhTOXdjeEdxTmMwRHJyYWxyTjdmdVNHRkNlbnZhUnplNHVJMHAzSFkzN3IxcE1BeDN1YmY4TlRSekZNNEZTXzdZblBVQW9jby1zN3Bnc1djUDRsLWRvQlB4aG5BODlRNEZ0OXlkMnJlbEtOX2tXTWFtVWlmbjFOdkhDZUdXdndmQ0p6ZXNld1lFcVdseE1PS2puRkhHSnBJQlI3SkVGWVVaZ19HVDlMUzBpZFlBYUtidlczQjIzb0wwQ1VfS0FlWEUzY1N0NGo2T01ac3RtNFZRVGo5U2V2b2hMRTFTSnEwM0RudUZzbFQ1MUVPRWE5MHpBMEE?oc=5",
-      "https://news.google.com/rss/articles/CBMijgFBVV95cUxORTFTdmxMeS1SMFdkTGZCbzBwbzZHTUhmMFc2cDQ1aGdsb1o4ckFnbW9HM1B5Q0tvajk5QmRBTDZRQ1NPc01PMlA4T0xpSGs3alJFUm1ham4tSFpmZG1fYkx1VGQ5RWFMMjRta3IwUFlUYWxsT2FJbjR0QnpPWFY1Y2VBWURJRzlQYnhnQmpn?oc=5"
+      "https://news.google.com/rss/articles/CBMijgFBVV95cUxORTFTdmxMeS1SMFdkTGZCbzBwbzZHTUhmMFc2cDQ1aGdsb1o4ckFnbW9HM1B5Q0tvajk5QmRBTDZRQ1NPc01PMlA4T0xpSGs3alJFUm1ham4tSFpmZG1fYkx1VGQ5RWFMMjRta3IwUFlUYWxsT2FJbjR0QnpPWFY1Y2VBWURJRzlQYnhnQmpn?oc=5",
+      "https://news.google.com/rss/articles/CBMirgFBVV95cUxQdlFQaUhUcDBDZF9SUzFIdmRIRkRWRUYzRHVZVksxYWE0eGNpZzhoWHNRVmV1U1lzSTl1cF9STUJ6MzZVWkZmeENBdE5uM0tVaThQZlBxcFo3T3FBSUpmdUdmZDFJMW1DYktmQzVmdHNlQ1ZqVks1SkltdzhfUU4tYWZPWmFHR3czck9NV1FuOE5OV25IYnhxRU5ERDJsTlZhRzdNTkFNMUp0NnFBSnc?oc=5",
+      "https://news.google.com/rss/articles/CBMiigFBVV95cUxPazE5cVlhVHk4ZDBJSXZjUTlEcDNTSHk1U3VmZXpOV1Z3V2dsZkY4Z2EwWldhT0dvV2liT3gxVThUWHZiTmVfelBod3Z2MlFmb1JfVU9mMnlFSWJzWGFkOFBxdndxZUhyaHRjU2tjQWpyOXhyRC1GRGp0ZzR5eExaM2d5cGVXcTdMYWc?oc=5"
     ],
-    "processed_embeds": "cyclospora-in-kentucky-1hnp27ejvprdy4g@2026-07-24T20:48:08.000Z"
+    "processed_embeds": [
+      "cyclospora-in-kentucky-1hnp27ejvprdy4g@2026-07-24T20:48:08.000Z",
+      "cyclospora-in-kentucky-1hnp27ejvprdy4g@2026-07-28T17:09:20.000Z"
+    ]
   },
   "standard_state": {
     "./data/ky_cyclo_news/measure_info.json": "04fdb8d5fc4e40bc9fac23cd9ffb83b7",
-    "./data/ky_cyclo_news/standard/data.csv.gz": "b3603e3d8100fac9285943797faa930b"
+    "./data/ky_cyclo_news/standard/data.csv.gz": "e5008c7e38b317843c1a882b23dd36ae"
   }
 }

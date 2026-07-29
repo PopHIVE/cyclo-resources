@@ -5,41 +5,31 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-07-21 09:25:31",
+      "last_run": "2026-07-29 05:25:40",
       "frequency": 0,
-      "run_time": 1.132,
+      "run_time": 0.585,
       "last_status": {
-        "log": [
-          "",
-          "Attaching package: ‘dplyr’",
-          "",
-          "The following objects are masked from ‘package:stats’:",
-          "",
-          "    filter, lag",
-          "",
-          "The following objects are masked from ‘package:base’:",
-          "",
-          "    intersect, setdiff, setequal, union",
-          ""
-        ],
+        "log": [],
         "success": true
       }
     }
   ],
-  "checked": "2026-07-23 12:41:05",
+  "checked": "2026-07-29 05:26:30",
   "check_results": {
     "data/in_cyclo/raw/in_cyclo_county_snapshots.csv": {
       "data": "not_compressed"
     },
-    "data/in_cyclo/standard/data.csv.gz": []
+    "data/in_cyclo/standard/data.csv.gz": {
+      "measures": "type_changed: in_cyclo_cases_new"
+    }
   },
   "standalone": false,
   "raw_state": {
-    "last_update_date": "2026-07-27",
-    "county_data": "Adams:2|Allen:144|Bartholomew:2|Blackford:1|Boone:3|Brown:1|Cass:1|Clark:38|Clinton:1|Crawford:2|Dearborn:1|DeKalb:48|Delaware:5|Dubois:2|Elkhart:51|Floyd:38|Fountain:1|Hamilton:15|Hancock:18|Harrison:42|Hendricks:11|Henry:4|Howard:4|Huntington:5|Jackson:9|Jay:1|Jefferson:11|Jennings:2|Johnson:3|Kosciusko:31|LaGrange:7|Lake:11|LaPorte:1|Lawrence:3|Madison:5|Marion:81|Marshall:9|Martin:1|Montgomery:1|Monroe:8|Morgan:13|Noble:44|Orange:3|Owen:4|Perry:1|Porter:3|Randolph:1|Ripley:3|Rush:2|Scott:3|Shelby:2|St. Joseph:36|Steuben:45|Sullivan:1|Tippecanoe:3|Vanderburgh:7|Vigo:4|Washington:4|Wayne:3|Wells:3|White:1|Whitley:9"
+    "last_update_date": "2026-07-28",
+    "county_data": "Adams:3|Allen:178|Bartholomew:3|Blackford:1|Boone:5|Brown:2|Cass:1|Clark:42|Clinton:1|Crawford:4|Dearborn:1|DeKalb:54|Delaware:5|Dubois:2|Elkhart:58|Floyd:39|Fountain:1|Grant:1|Hamilton:17|Hancock:18|Harrison:47|Hendricks:12|Henry:4|Howard:4|Huntington:8|Jackson:10|Jay:1|Jefferson:11|Jennings:3|Johnson:3|Knox:1|Kosciusko:46|LaGrange:9|Lake:11|LaPorte:2|Lawrence:3|Madison:5|Marion:88|Marshall:9|Martin:1|Monroe:8|Montgomery:1|Morgan:14|Noble:58|Orange:3|Owen:4|Perry:1|Porter:3|Randolph:1|Ripley:3|Rush:2|Scott:3|Shelby:3|St. Joseph:39|Steuben:53|Sullivan:1|Tippecanoe:4|Vanderburgh:8|Vigo:4|Wabash:1|Washington:5|Wayne:3|Wells:3|White:1|Whitley:14"
   },
   "standard_state": {
     "./data/in_cyclo/measure_info.json": "865f3d3e567c513c4bae1ada094b1626",
-    "./data/in_cyclo/standard/data.csv.gz": "dff934c165c5c821fe4e5acfce6877f6"
+    "./data/in_cyclo/standard/data.csv.gz": "20b10bf23844feae2b1d7d66fea7b54f"
   }
 }

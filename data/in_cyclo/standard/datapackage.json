@@ -9,17 +9,29 @@
   },
   "resources": [
     {
-      "bytes": 274,
+      "bytes": 830,
       "encoding": "windows-1252",
-      "md5": "dff934c165c5c821fe4e5acfce6877f6",
+      "md5": "20b10bf23844feae2b1d7d66fea7b54f",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
-        "hash": ["244a8e18fcaeb4569cab21aa5ed41643a1fcbdae"],
-        "author": ["weinbergerlab <dweinber@gmail.com>"],
-        "date": ["Mon Jul 20 22:29:39 2026 -0400"],
-        "message": ["adds WV and IN"]
+        "hash": [
+          "b868e2c7a131563ec5e7f30129b5bf54eb0df973",
+          "244a8e18fcaeb4569cab21aa5ed41643a1fcbdae"
+        ],
+        "author": [
+          "anshap32 <73296024+anshap32@users.noreply.github.com>",
+          "weinbergerlab <dweinber@gmail.com>"
+        ],
+        "date": [
+          "Tue Jul 28 09:22:28 2026 -0400",
+          "Mon Jul 20 22:29:39 2026 -0400"
+        ],
+        "message": [
+          "Fix in_cyclo scraper for IDOH column header wording change",
+          "adds WV and IN"
+        ]
       },
       "source": [],
       "data_format": "wide",
@@ -31,91 +43,104 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-07-21 09:23:28.525214",
-      "last_modified": "2026-07-21 09:23:28.525214",
+      "created": "2026-07-29 05:25:40.726418",
+      "last_modified": "2026-07-29 05:25:40.726418",
       "vintage": {},
-      "row_count": 54,
-      "entity_count": 54,
+      "row_count": 181,
+      "entity_count": 65,
       "schema": {
         "fields": [
           {
             "name": "geography",
-            "duplicates": 0,
+            "duplicates": 116,
             "info": [],
-            "time_range": [0, 0],
+            "time_range": [0, 2],
             "type": "string",
             "missing": 0,
             "table": {
-              "18001": 1,
-              "18003": 1,
-              "18005": 1,
-              "18009": 1,
-              "18013": 1,
-              "18017": 1,
-              "18019": 1,
-              "18023": 1,
-              "18029": 1,
-              "18033": 1,
-              "18035": 1,
-              "18037": 1,
-              "18039": 1,
-              "18043": 1,
-              "18045": 1,
-              "18057": 1,
-              "18059": 1,
-              "18061": 1,
-              "18063": 1,
-              "18065": 1,
-              "18067": 1,
-              "18069": 1,
-              "18071": 1,
-              "18077": 1,
-              "18079": 1,
-              "18081": 1,
-              "18085": 1,
-              "18087": 1,
-              "18089": 1,
-              "18093": 1,
-              "18095": 1,
-              "18097": 1,
-              "18099": 1,
-              "18105": 1,
-              "18109": 1,
-              "18113": 1,
-              "18117": 1,
-              "18119": 1,
-              "18123": 1,
-              "18127": 1,
-              "18137": 1,
-              "18139": 1,
-              "18141": 1,
-              "18143": 1,
-              "18145": 1,
-              "18151": 1,
-              "18157": 1,
-              "18163": 1,
-              "18167": 1,
-              "18175": 1,
-              "18177": 1,
-              "18179": 1,
-              "18181": 1,
-              "18183": 1
+              "18001": 3,
+              "18003": 3,
+              "18005": 3,
+              "18009": 3,
+              "18011": 2,
+              "18013": 3,
+              "18017": 3,
+              "18019": 3,
+              "18023": 3,
+              "18025": 2,
+              "18029": 3,
+              "18033": 3,
+              "18035": 3,
+              "18037": 3,
+              "18039": 3,
+              "18043": 3,
+              "18045": 3,
+              "18053": 1,
+              "18057": 3,
+              "18059": 3,
+              "18061": 3,
+              "18063": 3,
+              "18065": 3,
+              "18067": 3,
+              "18069": 3,
+              "18071": 3,
+              "18075": 2,
+              "18077": 3,
+              "18079": 3,
+              "18081": 3,
+              "18083": 1,
+              "18085": 3,
+              "18087": 3,
+              "18089": 3,
+              "18091": 2,
+              "18093": 3,
+              "18095": 3,
+              "18097": 3,
+              "18099": 3,
+              "18101": 2,
+              "18105": 3,
+              "18107": 2,
+              "18109": 3,
+              "18113": 3,
+              "18117": 3,
+              "18119": 3,
+              "18123": 3,
+              "18127": 3,
+              "18135": 2,
+              "18137": 3,
+              "18139": 3,
+              "18141": 3,
+              "18143": 3,
+              "18145": 3,
+              "18151": 3,
+              "18153": 2,
+              "18157": 3,
+              "18163": 3,
+              "18167": 3,
+              "18169": 1,
+              "18175": 3,
+              "18177": 3,
+              "18179": 3,
+              "18181": 3,
+              "18183": 3
             }
           },
           {
             "name": "time",
-            "duplicates": 53,
+            "duplicates": 178,
             "info": [],
-            "time_range": [0, 0],
+            "time_range": [0, 2],
             "type": "string",
             "missing": 0,
             "table": {
-              "2026-07-20": 54
+              "2026-07-20": 54,
+              "2026-07-27": 62,
+              "2026-07-28": 65
             }
           },
           {
             "name": "in_cyclo_cases_cumulative",
-            "duplicates": 37,
+            "duplicates": 142,
             "info": {
               "id": "in_cyclo_cases_cumulative",
               "short_name": "Cyclosporiasis cases, cumulative (IN county)",
@@ -133,17 +158,17 @@
                 }
               ]
             },
-            "time_range": [0, 0],
+            "time_range": [0, 2],
             "type": "integer",
             "missing": 0,
-            "mean": 7.925926,
-            "sd": 11.526592,
+            "mean": 12.160221,
+            "sd": 22.571658,
             "min": 1,
-            "max": 51
+            "max": 178
           },
           {
             "name": "in_cyclo_cases_new",
-            "duplicates": 53,
+            "duplicates": 159,
             "info": {
               "id": "in_cyclo_cases_new",
               "short_name": "Cyclosporiasis new cases (IN county, daily)",
@@ -161,13 +186,17 @@
                 }
               ]
             },
-            "time_range": [-1, -1],
-            "type": "unknown",
-            "missing": 54
+            "time_range": [1, 2],
+            "type": "integer",
+            "missing": 65,
+            "mean": 4.413793,
+            "sd": 10.778456,
+            "min": 0,
+            "max": 93
           }
         ]
       },
-      "sha512": "f2679fefe58059c81adc27509c96127597c0d77b5eb115e7b53b9f3006da40971af7137d2c283b5b948570ea68d448d4dc3dafd17dd46b7cbf6fc81cc72e81ed"
+      "sha512": "8d019a91da17699c1190e086a1ebaffaa430f491b3d392017dcc46014d59399c82d8be72e00ddeeab1064950fd20f21b922d216e64391b61278dde23adafced2"
     }
   ],
   "measure_info": {
@@ -224,7 +253,29 @@
   },
   "change_report": {
     "data.csv.gz": {
-      "state": "new file"
+      "state": "changed",
+      "variables": {
+        "geography": {
+          "status": "present",
+          "same_type": true,
+          "added_levels": ["18011", "18025", "18053", "18075", "18083", "18091", "18101", "18107", "18135", "18153", "18169"],
+          "dropped_levels": []
+        },
+        "time": {
+          "status": "present",
+          "same_type": true,
+          "added_levels": ["2026-07-27", "2026-07-28"],
+          "dropped_levels": []
+        },
+        "in_cyclo_cases_cumulative": {
+          "status": "present",
+          "same_type": true
+        },
+        "in_cyclo_cases_new": {
+          "status": "present",
+          "same_type": false
+        }
+      }
     }
   }
 }
