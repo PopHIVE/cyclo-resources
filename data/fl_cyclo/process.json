@@ -5,9 +5,9 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-07-25 05:18:30",
+      "last_run": "2026-07-30 05:14:12",
       "frequency": 0,
-      "run_time": 16.288,
+      "run_time": 14.736,
       "last_status": {
         "log": [],
         "success": true
@@ -23,10 +23,10 @@
   },
   "standalone": false,
   "raw_state": {
-    "hash": "5e98673e7754b9d3d0ead0ccf750634b"
+    "hash": "7312188daf0ceed33cb246e0ffacfa40"
   },
   "standard_state": {
     "./data/fl_cyclo/measure_info.json": "cbf6884f94f1b9b5469955c4a260f793",
-    "./data/fl_cyclo/standard/data.csv.gz": "c1520f5a6b0ec700f423e73d823840d4"
+    "./data/fl_cyclo/standard/data.csv.gz": "d8dc026a380450923d3bf6f9e562cdc3"
   }
 }

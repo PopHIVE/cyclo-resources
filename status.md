@@ -22,7 +22,7 @@ flowchart LR
     end
     subgraph in_cyclo["`in_cyclo`"]
         direction LR
-        n3["`data.csv.gz<br/><br/><ul><li><code>type_changed: in_cyclo_cases_new</code></li></ul>`"]:::warn
+        n3["`data.csv.gz`"]:::pass
     end
     subgraph ky_cyclo_news["`ky_cyclo_news`"]
         direction LR
