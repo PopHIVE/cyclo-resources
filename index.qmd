@@ -142,16 +142,29 @@ pophive_magma_colorscale <- local({
 ```{r}
 #| label: fetch-data
 
-# cyclo_resources is a private repo - clone/pull via git (uses cached GitHub
-# credentials); raw.githubusercontent.com download would 404 without a token.
-cyclo_dir <- file.path(CACHE_DIR, "cyclo_resources")
-if (!dir.exists(cyclo_dir)) {
-  system2("git", c("clone", "--depth", "1",
-                    "https://github.com/PopHIVE/cyclo-resources.git", shQuote(cyclo_dir)),
-          stdout = FALSE, stderr = FALSE)
+# Prefer the working tree this document is being rendered inside. In
+# update-daily_data.yaml the dcf_process() scrapers refresh data/ locally and the
+# render step runs BEFORE the commit/push, so cloning origin/main here would
+# render the PREVIOUS run's state data - the page silently lagged a full cycle
+# behind its own scrape (e.g. on 2026-07-31 MI showed its Jul 23 snapshot while
+# the fresh Jul 30 one sat uncommitted in data/mi_cyclo). Reading locally also
+# means an ad-hoc local render reflects local scraper output, as expected.
+#
+# Fall back to a clone when rendered outside a checkout. cyclo_resources is a
+# private repo, so this goes over git (using cached GitHub credentials) rather
+# than raw.githubusercontent.com, which would 404 without a token.
+if (dir.exists(file.path("data", "mi_cyclo", "standard"))) {
+  cyclo_dir <- "."
 } else {
-  system2("git", c("-C", shQuote(cyclo_dir), "pull", "--ff-only"),
-          stdout = FALSE, stderr = FALSE)
+  cyclo_dir <- file.path(CACHE_DIR, "cyclo_resources")
+  if (!dir.exists(cyclo_dir)) {
+    system2("git", c("clone", "--depth", "1",
+                      "https://github.com/PopHIVE/cyclo-resources.git", shQuote(cyclo_dir)),
+            stdout = FALSE, stderr = FALSE)
+  } else {
+    system2("git", c("-C", shQuote(cyclo_dir), "pull", "--ff-only"),
+            stdout = FALSE, stderr = FALSE)
+  }
 }
 
 # raw.githubusercontent.com intermittently drops a request or rate-limits the

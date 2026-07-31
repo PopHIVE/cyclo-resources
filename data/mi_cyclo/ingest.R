@@ -99,17 +99,26 @@ county_raw <- rvest::html_table(county_node, header = FALSE, fill = TRUE)
 county_raw <- county_raw[-1, ]
 names(county_raw) <- c("county_raw", "cases_cumulative")
 
-# Extract the "Last Update: <Month DD, YYYY>" text that immediately follows the table
+# Extract the "Last Update: <Month DD, YYYY>" text that immediately follows the table.
+# As of 2026-07-30 MDHHS wraps the table in <div class="table-responsive">, so the
+# <table> has no element siblings at all and the date <p> is a sibling of that
+# wrapper instead. Accept either shape (sibling of the table, as before, or sibling
+# of the table's immediate parent) rather than searching all following nodes - a
+# document-wide `following::` would silently latch onto some other outbreak
+# section's date label if MDHHS ever drops the cyclosporiasis one.
+lu_pred <- "[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'last update')][1]"
 update_node <- rvest::html_element(
   county_node,
-  xpath = "following-sibling::p[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'last update')][1]"
+  xpath = paste0("following-sibling::p", lu_pred, " | ../following-sibling::p", lu_pred)
 )
 if (is.na(update_node)) {
   stop("Could not find the 'Last Update' date next to the county table - ",
        "source page structure may have changed.")
 }
 update_txt <- rvest::html_text2(update_node)
-last_update_date <- as.Date(sub(".*[Ll]ast [Uu]pdate:?\\s*", "", update_txt), format = "%B %d, %Y")
+# The page uses "Last Update:", "Last update:" and "Last updated:" interchangeably
+# across its outbreak sections, so tolerate the trailing "d" too.
+last_update_date <- as.Date(sub(".*[Ll]ast [Uu]pdated?:?\\s*", "", update_txt), format = "%B %d, %Y")
 if (is.na(last_update_date)) {
   stop("Could not parse the 'Last Update' date from text: ", update_txt)
 }
