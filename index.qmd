@@ -488,6 +488,36 @@ epic_wtests <- vroom::vroom(file.path(epic_base, "weekly_tests.csv.gz"), show_co
     n_positive = ifelse(is.na(pct_positive), NA_real_, epic_n_cyclospora_positive),
     n_tests_denom = ifelse(is.na(pct_positive), NA_real_, epic_n_cyclospora_tested))
 
+# -----------------------------------------------------------------------------
+# Epic Cosmos keeps backfilling a week for some time after it first appears, so
+# the newest week(s) can carry a denominator that is a small fraction of its
+# eventual size - and a percentage computed on that sliver swings wildly. For the
+# week ending 2026-07-11, national all-cause diarrhea encounters (the denominator
+# behind "% of diarrhea encounters tested") stood at 26,321 against ~175k-200k in
+# the settled weeks before it, inflating that panel from ~6.5% to 8.1%; total
+# encounters over the same week stood at 1.6M against ~51.5M. Suppression flags
+# alone do not catch this: the thinned counts are still >= 10, so they pass
+# unflagged.
+#
+# So blank any week whose denominator collapses by more than EPIC_DEN_DROP_MAX
+# relative to the preceding week, rather than plotting a ratio drawn from a
+# non-representative sample. Both Epic charts in the "Epic Cosmos Trends"
+# section below run their series through this.
+# -----------------------------------------------------------------------------
+EPIC_DEN_DROP_MAX <- 0.50
+
+# `value` and `den` must be the same length and ordered by ascending week. `den`
+# should be the RAW (un-suppressed) denominator, so that one thin week does not
+# lower the baseline the following week is judged against.
+drop_thin_weeks <- function(value, den) {
+  if (length(value) < 2) return(value)
+  prev <- dplyr::lag(den)
+  thin <- !is.na(den) & !is.na(prev) & prev > 0 &
+    den < (1 - EPIC_DEN_DROP_MAX) * prev
+  value[thin] <- NA_real_
+  value
+}
+
 # Earliest date in the Epic data - the weekly time series below start here.
 epic_start <- min(epic_weekly$time)
 
@@ -1219,7 +1249,7 @@ county_block("FL")
 ## Epic Cosmos Trends
 
 ::: {.callout-warning}
-The latest available week from Epic Cosmos (shown with a grayed bar) is incomplete and based on very small numbers and should be interpreted with caution. The 'all encounters' data are particularly incomplete for the latest week.
+The latest available weeks from Epic Cosmos (shown with a grayed bar) are incomplete and based on very small numbers and should be interpreted with caution. The 'all encounters' data are particularly incomplete for the latest week. If the number of encounters is less than 50% of the previous week, data are suppressed and not plotted.
 :::
 
 Epic Cosmos captures broader diarrhea activity in health care facilities and how often clinicians order a cyclospora lab test. These are population-level signals of disease activity, not case counts. National total is shown by default. The last week of data, denoted with a gray box, is incomplete and likely to change. Start typing a state name to switch to a specific state.
@@ -1259,18 +1289,26 @@ cmp_series <- lapply(compare_geos$geography, function(g) {
   dn <- nnds_weekly_incident %>% filter(geography == g) %>% arrange(date)
   de <- epic_wk_total %>% filter(geography == g) %>% arrange(time)
   dt <- epic_wtests %>% filter(geography == g) %>% arrange(time)
+  # Each Epic percentage is additionally blanked in weeks where its own raw
+  # denominator collapsed vs the prior week (see drop_thin_weeks above) - the
+  # backfill artifact the suppression flags do not catch.
   out <- list(
     nnds     = list(x = format(dn$date), y = r4(dn$value_per100k)),
-    diar     = list(x = format(de$time), y = r4(de$pct_ed_diarrhea), share = r4(de$share_covered),
+    diar     = list(x = format(de$time),
+                     y = r4(drop_thin_weeks(de$pct_ed_diarrhea, de$epic_n_ed_encounters_weekly)),
+                     share = r4(de$share_covered),
                      num = de$n_ed_diarrhea, den = de$n_ed_encounters),
-    diar_all = list(x = format(de$time), y = r4(de$pct_all_diarrhea),
+    diar_all = list(x = format(de$time),
+                     y = r4(drop_thin_weeks(de$pct_all_diarrhea, de$epic_n_encounters_total_weekly)),
                      num = de$n_all_diarrhea, den = de$n_encounters_total),
-    tested   = list(x = format(dt$time), y = r4(dt$pct_tested),
+    tested   = list(x = format(dt$time),
+                     y = r4(drop_thin_weeks(dt$pct_tested, dt$epic_n_all_diarrhea)),
                      num = dt$n_tested, den = dt$n_diarrhea_encounters),
     # Positive counts are suppressed in most state-weeks; plot every
     # non-suppressed point (gaps where suppressed) rather than gating on a
     # minimum number of weeks.
-    positive = list(x = format(dt$time), y = r4(dt$pct_positive),
+    positive = list(x = format(dt$time),
+                     y = r4(drop_thin_weeks(dt$pct_positive, dt$epic_n_cyclospora_tested)),
                      num = dt$n_positive, den = dt$n_tests_denom)
   )
   out
@@ -1300,21 +1338,20 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
 </div>
 <p class="cyclo-map-title">Epic diarrhea trends compared to cyclosporiasis cases (NNDSS)</p>
 <p class="cyclo-map-sub">Five panels share the same time range; each has its own y-axis scale.</p>
-<p class="cyclo-panel-note">The latest data are incomplete (~50% of expected reports on ED visits received as shown in gray) and likely bias true values.</p>
 <p class="cyclo-map-title" style="font-size:1rem;margin-top:0.75rem;">Epic Cosmos: % of ED encounters due to diarrhea</p>
+<p class="cyclo-map-sub">The latest data (shown in gray) are incomplete and likely bias true values.</p>
 <div id="cmp-chart-ed" style="width:100%;height:190px;"></div>
-<p class="cyclo-panel-note"> The latest data are incomplete (~2% of expected reports on all encounters received as shown in gray) and likely bias true values.</p>
 <p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Epic Cosmos: % of all encounters due to diarrhea</p>
+<p class="cyclo-map-sub">The latest data (shown in gray) are incomplete and likely bias true values.</p>
 <div id="cmp-chart-all" style="width:100%;height:190px;"></div>
-<p class="cyclo-panel-note"></p>
 <p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Cyclosporiasis cases (NNDSS)</p>
+<p class="cyclo-map-sub">Weekly new (incident) cases, de-cumulated from the year-to-date count. NNDSS counts are backfilled as late reports reach CDC from state health departments, so every week here is a floor rather than a final count, and the most recent week may still increase.</p>
 <div id="cmp-chart-nnds" style="width:100%;height:190px;"></div>
-<p class="cyclo-panel-note">The latest data are incomplete (~10% of expected reports for diarrhea encounters received as shown in gray) and likely bias true values.</p>
 <p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Stool and cyclospora testing: % of diarrhea encounters tested for cyclospora</p>
+<p class="cyclo-map-sub">The latest data (shown in gray) are incomplete and likely bias true values.</p>
 <div id="cmp-chart-tested" style="width:100%;height:190px;"></div>
-<p class="cyclo-panel-note"> The latest data are incomplete (~10% of expected reports for diarrhea encounters received as shown in gray) and likely bias true values.</p>
 <p class="cyclo-map-title" style="font-size:1rem;margin-top:1rem;">Stool and cyclospora testing: % of cyclospora tests positive</p>
-<p class="cyclo-map-sub">Positive Cyclospora test counts are suppressed in a large majority of the states and are not plotted if suppressed.</p>
+<p class="cyclo-map-sub">Positive Cyclospora test counts are suppressed in a large majority of the states and are not plotted if suppressed. The latest data (shown in gray) are incomplete and likely bias true values.</p>
 <div id="cmp-chart-positive" style="width:100%;height:190px;"></div>
 
 <script>
@@ -1346,16 +1383,22 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
     // (matching x-axes) while each panel keeps its own independent y-axis.
     var LR = { l: 66, r: 66 };
 
-    // Epic Cosmos' most recent week is still accruing data when the site
-    // rebuilds, so shade the last interval to flag it as incomplete rather
-    // than let it read as a real dip/rise.
+    // Epic Cosmos is still accruing data for its most recent weeks when the site
+    // rebuilds, so shade them to flag as incomplete rather than let them read as
+    // a real dip/rise. Backfill demonstrably runs more than one week behind (the
+    // second-newest week is routinely revised too), so this covers the last TWO
+    // intervals, not just the last one.
+    var INCOMPLETE_WEEKS = 2;
     function lastWeekShapes(xArr) {
       if (!xArr || xArr.length < 2) return [];
-      var lastMs = new Date(xArr[xArr.length - 1]).getTime();
-      var prevMs = new Date(xArr[xArr.length - 2]).getTime();
+      var n = xArr.length;
+      var lastMs = new Date(xArr[n - 1]).getTime();
+      var prevMs = new Date(xArr[n - 2]).getTime();
+      // clamp for short series, so a 2-point series still shades its one interval
+      var startMs = new Date(xArr[Math.max(0, n - 1 - INCOMPLETE_WEEKS)]).getTime();
       var pad = (lastMs - prevMs) * 0.35;
       return [{ type: 'rect', xref: 'x', yref: 'paper', y0: 0, y1: 1,
-        x0: new Date(prevMs - pad).toISOString().slice(0, 10),
+        x0: new Date(startMs - pad).toISOString().slice(0, 10),
         x1: new Date(lastMs + pad).toISOString().slice(0, 10),
         fillcolor: 'rgba(90,90,90,0.32)', line: { width: 0 }, layer: 'below' }];
     }
@@ -1469,13 +1512,14 @@ cat(sprintf('<script>window.CMP_DATA = %s;</script>\n',
 <p>
 <b>NNDSS data:</b> cumulative cyclosporiasis cases reported to NNDSS by state for the selected year (cases per 100,000). NNDSS cyclosporiasis is reported as a cumulative year-to-date count, so it is de-cumulated into weekly incident cases. 2026 data are preliminary and incomplete. Not all states mandate cyclosporiasis reporting; states with zero cases may lack reporting requirements rather than having no cases. States that have reported zero cyclosporiasis cases in every year from 2022 onward are considered 'missing' and not plotted. Territories are excluded. Standardized data are on our <a href="https://github.com/PopHIVE/Ingest/tree/main/data/nnds/standard">GitHub</a>; the CDC presents its NNDSS data <a href="https://www.cdc.gov/nndss/what-is-case-surveillance/">here</a>.<br><br>
 <b>Epic insights:</b> percent of ED visits and all healthcare encounters attributable to all-cause diarrhea (ICD-10-CM A00-A09, R19.7). Insights are drawn from clinical electronic health records (EHR)from facilities using the Epic EHR and participating in Epic Cosmos. Epic Cosmos captures varying amounts of the population in different regions, so the data may be more representative of diarrhea in the community in some areas than others. This is a measure of diarrhea activity, not a cyclosporiasis case count. Counts fewer than 10 are suppressed and excluded (shown unfilled). Standardized data are on our <a href="https://github.com/PopHIVE/cyclo-resources/tree/main/data/cosmos-diarrhea">GitHub</a>; the weekly file is <a href="https://github.com/PopHIVE/cyclo-resources/blob/main/data/cosmos-diarrhea/standard/weekly.csv.gz">weekly.csv.gz</a>.<br><br>
-Cyclospora testing insights are also drawn from Epic Cosmos by searching for the following tests: Cyclospora SP AG in stool by immunoassay 38403-2, acid fast stain 10659-1, safranin stain 50313-6, cayetanensis presence 10850-6, cayetanensis DNA presence by NAA with non-probe detection 82206-4, and cayetanensis DNA presence by NAA with non-probe detection 41436-7. The two weekly cyclospora testing measures have different denominators: <b>% of diarrhea encounters tested</b> for cyclospora (cyclospora tests ÷ all-cause diarrhea encounters that week) and <b>% of cyclospora tests</b> that are positive (positive results ÷ tests). All Epic values with a suppressed count (fewer than 10) are excluded. The light gray shading on the four Epic panels marks the most recent week, which is still accruing data and is incomplete.
+Cyclospora testing insights are also drawn from Epic Cosmos by searching for the following tests: Cyclospora SP AG in stool by immunoassay 38403-2, acid fast stain 10659-1, safranin stain 50313-6, cayetanensis presence 10850-6, cayetanensis DNA presence by NAA with non-probe detection 82206-4, and cayetanensis DNA presence by NAA with non-probe detection 41436-7. The two weekly cyclospora testing measures have different denominators: <b>% of diarrhea encounters tested</b> for cyclospora (cyclospora tests ÷ all-cause diarrhea encounters that week) and <b>% of cyclospora tests</b> that are positive (positive results ÷ tests). All Epic values with a suppressed count (fewer than 10) are excluded. The light gray shading on the four Epic panels marks the two most recent weeks, which are still accruing data and are incomplete. Separately, because Epic backfills a week for some time after it first appears, any week whose own denominator fell more than 50% below the preceding week is dropped entirely - a percentage computed on that small a sample is not comparable to the weeks around it, and the counts involved are often still above the fewer-than-10 suppression threshold, so the flags alone do not catch it.<br><br>
+<b>NNDSS backfill:</b> the NNDSS panel plots weekly incident cases de-cumulated from a year-to-date count, so it is not cumulative and can fall while the outbreak grows. Case counts are also revised upward as late reports reach CDC, so each week is a floor rather than a settled figure.
 </p>
 </details>
 ```
 
 ### Epic diarrhea by age group
-Weekly share of emergency-department and all healthcare encounters attributable to all-cause diarrhea. National total shown by default; start typing a state name to switch to a specific state. The last week of data, denoted with a gray box, is incomplete and likely to change.
+Weekly share of emergency-department and all healthcare encounters attributable to all-cause diarrhea. National total shown by default; start typing a state name to switch to a specific state.
 
 ```{r}
 #| label: epic-age-trend
@@ -1508,6 +1552,15 @@ age_series <- lapply(compare_geos$geography, function(g) {
     ed[idx] <- d$pct_ed_diarrhea; all[idx] <- d$pct_all_diarrhea; sh[idx] <- d$share_covered
     ed_num[idx] <- d$n_ed_diarrhea; ed_den[idx] <- d$n_ed_encounters
     all_num[idx] <- d$n_all_diarrhea; all_den[idx] <- d$n_encounters_total
+    # Same backfill guard as the panels above. Applied AFTER scattering onto the
+    # shared age_x grid, so the week-over-week comparison runs in ascending date
+    # order regardless of the row order coming out of the join, and against the
+    # raw (un-suppressed) denominators.
+    ed_den_raw <- rep(NA_real_, length(age_x)); all_den_raw <- rep(NA_real_, length(age_x))
+    ed_den_raw[idx] <- d$epic_n_ed_encounters_weekly
+    all_den_raw[idx] <- d$epic_n_encounters_total_weekly
+    ed <- drop_thin_weeks(ed, ed_den_raw)
+    all <- drop_thin_weeks(all, all_den_raw)
     list(ed = round(ed, 4), all = round(all, 4), share = round(sh, 4),
          ed_num = ed_num, ed_den = ed_den, all_num = all_num, all_den = all_den)
   })
@@ -1585,20 +1638,25 @@ cat(sprintf('<script>window.AGE_DATA = %s;</script>\n',
         xaxis: { type: 'date', range: D.xrange, gridcolor: '#eee', zeroline: false },
         yaxis: { title: '% of ' + pop + ' (diarrhea)', gridcolor: '#e5e5e5', griddash: 'dash', zeroline: false, rangemode: 'tozero' },
         legend: { orientation: 'h', x: 0, y: -0.16 },
-        // Epic Cosmos' most recent week is still accruing data at rebuild
-        // time, so shade the last interval to flag it as incomplete.
+        // Epic Cosmos is still accruing data for its most recent weeks at
+        // rebuild time, so shade the last two intervals as incomplete - matching
+        // the five-panel chart above.
         shapes: (function () {
           if (!D.x || D.x.length < 2) return [];
-          var lastMs = new Date(D.x[D.x.length - 1]).getTime();
-          var prevMs = new Date(D.x[D.x.length - 2]).getTime();
+          var n = D.x.length;
+          var lastMs = new Date(D.x[n - 1]).getTime();
+          var prevMs = new Date(D.x[n - 2]).getTime();
+          var startMs = new Date(D.x[Math.max(0, n - 3)]).getTime();
           var pad = (lastMs - prevMs) * 0.35;
           return [{ type: 'rect', xref: 'x', yref: 'paper', y0: 0, y1: 1,
-            x0: new Date(prevMs - pad).toISOString().slice(0, 10),
+            x0: new Date(startMs - pad).toISOString().slice(0, 10),
             x1: new Date(lastMs + pad).toISOString().slice(0, 10),
             fillcolor: 'rgba(90,90,90,0.32)', line: { width: 0 }, layer: 'below' }];
         })()
       };
-      subEl.textContent = nm + ' — % of ' + pop + ' that were all-cause diarrhea, by age, weekly.';
+      subEl.textContent = nm + ' — % of ' + pop + ' that were all-cause diarrhea, by age, weekly. '
+        + 'The two most recent weeks, shaded gray, are still accruing data and likely to change; '
+        + 'weeks whose encounter denominator fell more than 50% below the week before it are suppressed.';
       Plotly.react(chart, t, layout, { displayModeBar: false, responsive: true });
     }
     function pickState() { var c = codeByName[input.value.trim().toLowerCase()]; if (c) { state.code = c; render(); } }
