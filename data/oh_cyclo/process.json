@@ -5,9 +5,9 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-07-25 05:19:23",
+      "last_run": "2026-07-31 05:41:00",
       "frequency": 0,
-      "run_time": 39.5,
+      "run_time": 43.859,
       "last_status": {
         "log": [],
         "success": true
@@ -23,13 +23,13 @@
   },
   "standalone": false,
   "raw_state": {
-    "n_rows": 797,
-    "total_cases": 3281,
+    "n_rows": 850,
+    "total_cases": 4708,
     "last_week": "2026-07-25",
-    "hash": "8d87e3c6231b307c02c708fabc850add"
+    "hash": "dea6e95bee77da2ee1548a9ae6506334"
   },
   "standard_state": {
     "./data/oh_cyclo/measure_info.json": "4a51df2084eb928ef1df99bb05fa31df",
-    "./data/oh_cyclo/standard/data.csv.gz": "3e6ef7082cb8e191abedf3bebc74d575"
+    "./data/oh_cyclo/standard/data.csv.gz": "299fb8d5832cfa9065e4cf770f18e673"
   }
 }

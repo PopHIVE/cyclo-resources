@@ -30,7 +30,7 @@ flowchart LR
     end
     subgraph mi_cyclo["`mi_cyclo`"]
         direction LR
-        n5["`data.csv.gz`"]:::pass
+        n5["`data.csv.gz<br /><br />Script Failed:<br />Could not find the 'Last Update' date next to the county table - source page structure may have changed.`"]:::fail
     end
     subgraph oh_cyclo["`oh_cyclo`"]
         direction LR
