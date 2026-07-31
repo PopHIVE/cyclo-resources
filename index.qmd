@@ -154,24 +154,51 @@ if (!dir.exists(cyclo_dir)) {
           stdout = FALSE, stderr = FALSE)
 }
 
+# raw.githubusercontent.com intermittently drops a request or rate-limits the
+# runner IP, and download.file() has no retry - so a single blip aborts the
+# whole render, as it did on 2026-07-31 on a 712-byte file whose neighbors in
+# this chunk downloaded fine. Retry with backoff instead.
+download_retry <- function(url, dest, tries = 3) {
+  for (attempt in seq_len(tries)) {
+    err <- tryCatch({
+      download.file(url, dest, mode = "wb", quiet = TRUE)
+      NULL
+    }, error = function(e) e)
+    if (is.null(err) && file.exists(dest) && file.size(dest) > 0) return(invisible(dest))
+    # a failed transfer can leave an empty or truncated file behind, which
+    # download_if_missing() would otherwise treat as a valid cache hit
+    unlink(dest)
+    if (attempt == tries) {
+      stop(sprintf("failed to download %s after %d attempts: %s", url, tries,
+                   if (is.null(err)) "empty file" else conditionMessage(err)),
+           call. = FALSE)
+    }
+    # stderr() rather than message(), so the notice survives the document's
+    # `message: false` and lands in the Actions log
+    cat(sprintf("download attempt %d/%d failed, retrying in %ds: %s\n",
+                attempt, tries, 2^attempt, url), file = stderr())
+    Sys.sleep(2^attempt)
+  }
+}
+
 download_if_missing <- function(url, dest) {
-  if (!file.exists(dest)) download.file(url, dest, mode = "wb", quiet = TRUE)
+  if (!file.exists(dest)) download_retry(url, dest)
 }
 
 # NNDSS and Epic Health Alerts are live surveillance feeds that update weekly,
 # so (unlike the static reference files below) they must be re-fetched on
 # every render rather than reused once cached - otherwise CACHE_DIR silently
 # pins the page to whatever snapshot happened to exist on disk.
-download.file(
+download_retry(
   "https://raw.githubusercontent.com/PopHIVE/Ingest/main/data/nnds/standard/data.csv.gz",
-  file.path(CACHE_DIR, "nnds_data.csv.gz"), mode = "wb", quiet = TRUE
+  file.path(CACHE_DIR, "nnds_data.csv.gz")
 )
 # Epic Research Health Alerts now live in the Ingest repo
 # (data/epic_health_alerts, scraped there from epicresearch.org); read the
 # standardized feed from Ingest like the other Ingest sources above.
-download.file(
+download_retry(
   "https://raw.githubusercontent.com/PopHIVE/Ingest/main/data/epic_health_alerts/standard/data.csv.gz",
-  file.path(CACHE_DIR, "epic_health_alerts.csv.gz"), mode = "wb", quiet = TRUE
+  file.path(CACHE_DIR, "epic_health_alerts.csv.gz")
 )
 download_if_missing(
   "https://raw.githubusercontent.com/PopHIVE/Ingest/main/resources/all_fips.csv.gz",
