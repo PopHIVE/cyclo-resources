@@ -4,14 +4,15 @@
   "licenses": [],
   "resources": [
     {
-      "bytes": 1173,
+      "bytes": 1172,
       "encoding": "windows-1252",
-      "md5": "7c34f519b710730545611b4e93bbfd7c",
+      "md5": "39f8074f833230596f514ffa148fd88d",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "eb5093e9ad97944e7953cdc670f753cf7fa4c67d",
           "66b4eadbdd760737b8f7a32587b7d974cf0c4217",
           "090d1f1712ef9c4201c99521d4005d24e5a68cc0",
           "c652b7e7d827979c04095f4f92a5f055457406c0",
@@ -21,6 +22,7 @@
         ],
         "author": [
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
@@ -28,6 +30,7 @@
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Sat Aug 1 05:33:01 2026 +0000",
           "Wed Jul 29 05:26:30 2026 +0000",
           "Mon Jul 27 13:39:53 2026 -0400",
           "Wed Jul 22 09:25:17 2026 +0000",
@@ -36,6 +39,7 @@
           "Tue Jul 21 01:17:35 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "scheduled data build",
           "update KY data and scraper",
           "scheduled daily data update",
@@ -54,8 +58,8 @@
       "id_length": 0,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-08-01 05:32:14.247224",
-      "last_modified": "2026-08-01 05:32:14.247224",
+      "created": "2026-08-01 09:02:51.389796",
+      "last_modified": "2026-08-01 09:02:51.389796",
       "vintage": {},
       "row_count": 281,
       "entity_count": 121,
@@ -235,8 +239,8 @@
             "time_range": [0, 5],
             "type": "integer",
             "missing": 275,
-            "mean": 2213.333333,
-            "sd": 2912.97859,
+            "mean": 2326.666667,
+            "sd": 2851.161915,
             "min": 192,
             "max": 7000
           },
@@ -334,7 +338,7 @@
           }
         ]
       },
-      "sha512": "783b6c3ea5ea4cb1a804d3951d7fc58fe1cc5ea966608e5fa6ea85b85db288e7df3e8953d198725609ec7b54947b18fe31a6a3fc82102e9e5f11b68adfdb59d6"
+      "sha512": "d1203eed66d921c803fd94a99e279363bd3ccf521a68bb381eaaceb9861aa8afd3df3a1af178c1a2b38bb697bf654b3c751a5c207eb89ae6e5fa98027c3f7e8f"
     }
   ],
   "measure_info": {
@@ -461,7 +465,7 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-08-01",
+          "added_levels": [],
           "dropped_levels": []
         },
         "ky_cyclo_news_reported": {
