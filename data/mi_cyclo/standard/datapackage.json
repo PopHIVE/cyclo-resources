@@ -17,6 +17,7 @@
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "3a903e51235d34024af7be12ec1583c9832a41c1",
           "8930316ee7635dead915c906b3e579ee31997d18",
           "25cd529d06f2515c052547a206f7c1098475d2f2",
           "4a52b7a74288224f4e53a503b0b9cf33b41fa404",
@@ -24,6 +25,7 @@
           "d85a5e2ce223b3148d7912bdb4251aac1cb4a974"
         ],
         "author": [
+          "anshap32 <73296024+anshap32@users.noreply.github.com>",
           "GitHub Actions <actions@github.com>",
           "danweinberger <daniel.weinberger@yale.edu>",
           "anshap32 <73296024+anshap32@users.noreply.github.com>",
@@ -31,6 +33,7 @@
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Fri Jul 31 09:18:23 2026 -0400",
           "Fri Jul 24 05:25:02 2026 +0000",
           "Tue Jul 21 23:33:07 2026 -0400",
           "Fri Jul 17 09:38:02 2026 -0400",
@@ -38,6 +41,7 @@
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "fixed MI bug, updated webpage",
           "scheduled data build",
           "fix michigan county archiving which was causing double counting of some rows",
           "Update MI cyclosporiasis data (through 2026-07-16 snapshot)",
@@ -55,8 +59,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-07-14 14:05:23.667236",
-      "last_modified": "2026-07-31 09:02:59.952635",
+      "created": "2026-08-01 05:30:58.297599",
+      "last_modified": "2026-08-01 05:30:58.297599",
       "vintage": {},
       "row_count": 248,
       "entity_count": 71,
@@ -272,29 +276,7 @@
   },
   "change_report": {
     "data.csv.gz": {
-      "state": "changed",
-      "variables": {
-        "geography": {
-          "status": "present",
-          "same_type": true,
-          "added_levels": "26113",
-          "dropped_levels": []
-        },
-        "time": {
-          "status": "present",
-          "same_type": true,
-          "added_levels": "2026-08-01",
-          "dropped_levels": []
-        },
-        "mi_cyclo_cases_cumulative": {
-          "status": "present",
-          "same_type": true
-        },
-        "mi_cyclo_cases_new": {
-          "status": "present",
-          "same_type": true
-        }
-      }
+      "state": "unchanged"
     }
   }
 }

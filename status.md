@@ -26,11 +26,11 @@ flowchart LR
     end
     subgraph ky_cyclo_news["`ky_cyclo_news`"]
         direction LR
-        n4["`data.csv.gz<br/><br/><ul><li><code>type_changed: geography</code></li></ul>`"]:::warn
+        n4["`data.csv.gz`"]:::pass
     end
     subgraph mi_cyclo["`mi_cyclo`"]
         direction LR
-        n5["`data.csv.gz<br /><br />Script Failed:<br />Could not find the 'Last Update' date next to the county table - source page structure may have changed.`"]:::fail
+        n5["`data.csv.gz`"]:::pass
     end
     subgraph oh_cyclo["`oh_cyclo`"]
         direction LR
