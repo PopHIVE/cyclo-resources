@@ -4,14 +4,15 @@
   "licenses": [],
   "resources": [
     {
-      "bytes": 1172,
+      "bytes": 1173,
       "encoding": "windows-1252",
-      "md5": "39f8074f833230596f514ffa148fd88d",
+      "md5": "bca1a8f72a28b712919573dd279e3fed",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "be10701e3499719070e99d457190265f3770c060",
           "eb5093e9ad97944e7953cdc670f753cf7fa4c67d",
           "66b4eadbdd760737b8f7a32587b7d974cf0c4217",
           "090d1f1712ef9c4201c99521d4005d24e5a68cc0",
@@ -23,6 +24,7 @@
         "author": [
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
@@ -30,6 +32,7 @@
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Sat Aug 1 09:03:35 2026 +0000",
           "Sat Aug 1 05:33:01 2026 +0000",
           "Wed Jul 29 05:26:30 2026 +0000",
           "Mon Jul 27 13:39:53 2026 -0400",
@@ -39,6 +42,7 @@
           "Tue Jul 21 01:17:35 2026 -0400"
         ],
         "message": [
+          "scheduled daily data update",
           "scheduled data build",
           "scheduled data build",
           "update KY data and scraper",
@@ -58,22 +62,22 @@
       "id_length": 0,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-08-01 09:02:51.389796",
-      "last_modified": "2026-08-01 09:02:51.389796",
+      "created": "2026-08-06 09:36:35.93662",
+      "last_modified": "2026-08-06 09:36:35.93662",
       "vintage": {},
-      "row_count": 281,
+      "row_count": 282,
       "entity_count": 121,
       "schema": {
         "fields": [
           {
             "name": "geography",
-            "duplicates": 160,
+            "duplicates": 161,
             "info": [],
-            "time_range": [0, 5],
+            "time_range": [0, 6],
             "type": "string",
             "missing": 0,
             "table": {
-              "21": 6,
+              "21": 7,
               "21001": 3,
               "21003": 2,
               "21005": 2,
@@ -200,7 +204,7 @@
             "name": "time",
             "duplicates": 275,
             "info": [],
-            "time_range": [0, 5],
+            "time_range": [0, 6],
             "type": "string",
             "missing": 0,
             "table": {
@@ -209,7 +213,8 @@
               "2026-05-02": 1,
               "2026-07-18": 36,
               "2026-07-25": 121,
-              "2026-08-01": 121
+              "2026-08-01": 121,
+              "2026-08-08": 1
             }
           },
           {
@@ -236,17 +241,17 @@
                 }
               ]
             },
-            "time_range": [0, 5],
+            "time_range": [0, 6],
             "type": "integer",
             "missing": 275,
-            "mean": 2326.666667,
-            "sd": 2851.161915,
+            "mean": 2080,
+            "sd": 2683.315362,
             "min": 192,
             "max": 7000
           },
           {
             "name": "ky_cyclo_news_hospitalized",
-            "duplicates": 280,
+            "duplicates": 281,
             "info": {
               "id": "ky_cyclo_news_hospitalized",
               "short_name": "Cyclosporiasis hospitalizations, cumulative (KY news)",
@@ -270,11 +275,11 @@
             },
             "time_range": [-1, -1],
             "type": "unknown",
-            "missing": 281
+            "missing": 282
           },
           {
             "name": "ky_cyclo_news_cases",
-            "duplicates": 259,
+            "duplicates": 260,
             "info": {
               "id": "ky_cyclo_news_cases",
               "short_name": "Cyclosporiasis confirmed cases, cumulative (KY news)",
@@ -298,7 +303,7 @@
             },
             "time_range": [3, 5],
             "type": "integer",
-            "missing": 3,
+            "missing": 4,
             "mean": 4,
             "sd": 20.889256,
             "min": 0,
@@ -306,7 +311,7 @@
           },
           {
             "name": "ky_cyclo_news_cases_new",
-            "duplicates": 269,
+            "duplicates": 270,
             "info": {
               "id": "ky_cyclo_news_cases_new",
               "short_name": "Cyclosporiasis new confirmed cases (KY news)",
@@ -330,7 +335,7 @@
             },
             "time_range": [4, 5],
             "type": "integer",
-            "missing": 124,
+            "missing": 125,
             "mean": 1.955414,
             "sd": 9.540295,
             "min": 0,
@@ -338,7 +343,7 @@
           }
         ]
       },
-      "sha512": "d1203eed66d921c803fd94a99e279363bd3ccf521a68bb381eaaceb9861aa8afd3df3a1af178c1a2b38bb697bf654b3c751a5c207eb89ae6e5fa98027c3f7e8f"
+      "sha512": "8bcd6e94fa1b0f59ad8b440da4c925cf5a021444531f72e4f1932d26c44384d664e32e3a22a00cb9d569c9be9661ef3680c83979fcbeab6f11b68bc463813a07"
     }
   ],
   "measure_info": {
@@ -465,7 +470,7 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": [],
+          "added_levels": "2026-08-08",
           "dropped_levels": []
         },
         "ky_cyclo_news_reported": {
