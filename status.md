@@ -22,7 +22,7 @@ flowchart LR
     end
     subgraph in_cyclo["`in_cyclo`"]
         direction LR
-        n3["`data.csv.gz<br /><br />Script Failed:<br />Could not parse the 'Last updated' date from text: August 34`"]:::fail
+        n3["`data.csv.gz`"]:::pass
     end
     subgraph ky_cyclo_news["`ky_cyclo_news`"]
         direction LR

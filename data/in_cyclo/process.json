@@ -5,9 +5,9 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-08-04 05:19:47",
+      "last_run": "2026-08-06 05:20:46",
       "frequency": 0,
-      "run_time": 2.165,
+      "run_time": 0.669,
       "last_status": {
         "log": [],
         "success": true
@@ -23,11 +23,11 @@
   },
   "standalone": false,
   "raw_state": {
-    "last_update_date": "2026-08-03",
-    "county_data": "Adams:3|Allen:290|Bartholomew:4|Blackford:2|Boone:6|Brown:2|Cass:2|Clark:46|Clay:1|Clinton:1|Crawford:7|Dearborn:1|Decatur:1|DeKalb:77|Delaware:10|Dubois:2|Elkhart:74|Floyd:42|Fountain:1|Fulton:3|Grant:1|Greene:1|Hamilton:25|Hancock:25|Harrison:53|Hendricks:19|Henry:7|Howard:4|Huntington:14|Jackson:12|Jay:1|Jefferson:8|Jennings:4|Johnson:4|Knox:1|Kosciusko:67|LaGrange:15|Lake:16|LaPorte:2|Lawrence:3|Madison:9|Marion:108|Marshall:12|Martin:1|Monroe:8|Montgomery:1|Morgan:18|Noble:85|Orange:4|Owen:4|Perry:2|Porter:3|Putnam:2|Randolph:2|Ripley:4|Rush:2|Scott:3|Shelby:4|St. Joseph:53|Steuben:92|Sullivan:1|Switzerland:2|Tippecanoe:7|Vanderburgh:10|Vigo:6|Wabash:9|Warrick:1|Washington:7|Wayne:8|Wells:3|White:1|Whitley:20"
+    "last_update_date": "2026-08-05",
+    "county_data": "Adams:4|Allen:399|Bartholomew:4|Blackford:2|Boone:7|Brown:2|Cass:3|Clark:50|Clay:1|Clinton:1|Crawford:10|Dearborn:1|Decatur:1|DeKalb:117|Delaware:15|Dubois:2|Elkhart:85|Floyd:45|Fountain:1|Fulton:3|Grant:2|Greene:1|Hamilton:28|Hancock:28|Harrison:66|Hendricks:22|Henry:7|Howard:6|Huntington:22|Jackson:14|Jay:1|Jefferson:8|Jennings:5|Johnson:6|Knox:1|Kosciusko:86|LaGrange:17|Lake:18|LaPorte:2|Lawrence:3|Madison:10|Marion:124|Marshall:13|Martin:1|Monroe:8|Montgomery:1|Morgan:19|Noble:123|Orange:5|Owen:4|Perry:2|Porter:4|Putnam:3|Randolph:2|Ripley:4|Rush:2|Scott:5|Shelby:5|St. Joseph:64|Steuben:119|Sullivan:1|Switzerland:3|Tippecanoe:8|Union:1|Vanderburgh:11|Vigo:7|Wabash:11|Warrick:1|Washington:8|Wayne:10|Wells:3|White:1|Whitley:26"
   },
   "standard_state": {
     "./data/in_cyclo/measure_info.json": "865f3d3e567c513c4bae1ada094b1626",
-    "./data/in_cyclo/standard/data.csv.gz": "34ed63871acbd0308bc70e207aade3be"
+    "./data/in_cyclo/standard/data.csv.gz": "6a4dea4122ad67ace5623aa7e6d16a8b"
   }
 }
