@@ -5,11 +5,11 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-08-06 09:36:35",
+      "last_run": "2026-08-07 04:29:53",
       "frequency": 0,
-      "run_time": 6.048,
+      "run_time": 2.765,
       "last_status": {
-        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
+        "log": [],
         "success": true
       }
     }
@@ -103,16 +103,18 @@
       "https://news.google.com/rss/articles/CBMidEFVX3lxTE9WU2h1MkVFeFZaQ0ZlemgxdzRVVDdxZXVscGs1RmdnLVlxS1ZaM3NMeHlnUnBMSGk2YWIxb09RVGdfU1c3a2xkUkZncS11cnZfSXVhcDAzeERuQllaQ3I3dWVuYVpIV05oc3h5cUNnSGVNUnhQ0gF0QVVfeXFMTW5fLW9uaVVITjJ6OHY4c25nU0RjNVFxR2JnRW1iR0RMT0RZQmE5cFB2T04tQWJWU3Q3TkdtMnJDUEhvZklGQkR0d0RrTjdPTldfSzZLbzJGc2wtczUtc19iMzMyakJoYmtndllHMldIc0dKalM?oc=5",
       "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPY25wNi1JekpiNjRoZVljbDkzMHBpTkZVSTd5cEtndUQyWTdBd1dmZDROUTJKWTNveVlKVnloY1E5YTZrTGFSODU5ZlRXN1c2alRlZkxpSzVuVEVPQW82VzRrQm1vcEVpVXpKajl2OUJJbGJjU1lidk1JUHlvYXZNelM0RDZSVFBvNEg3bWMtVkxoRGJhTkxLRWJpamp0b2EzSy01dXFPcXZaeVVScW9uSWc2Tk9DOUN0?oc=5",
       "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPZ0NUaFM4bENnM2ZIeDY5SDB4WXB0S1lRenNvcW04UF9rMW1sQmVVSE9yNjVtNEZsQlFDVnFKYllGWktNR1V0bGlLY1ZwNGM1cGZGT0tKTWNIVUN0QWVzTzZ2RGtpYkFWUTJKNTk1bThvb0hVQVFqZE1XQlpXdEV0d1h3VS1tVkxOc09TY1p4WHhtQWVjeWk4Wldwbk5tYzdSVVVPaGF3a0R0LTd1MENieW9fSXpsSGI2Z1lSNkhQWHRiUmM?oc=5",
-      "https://news.google.com/rss/articles/CBMilgFBVV95cUxQT1dVWVhNZkRJZ1VuMUo2YnZsVS1uU1lpN3o0Y0RlNlppVlBQbnpPbnBGdXp5WkJCZUlsV0VfMVlmYWZCbURyR1I4Q0Rrb1hGWWJHZnB4VHJLMDctY0RBMlQyUWl5bDZIOFIwb241WmR4TWp2SzR1Z1Rrc3pjTjl1ZHV6LWxfUjRyM3NKbmtpMWxOcVJ6MFE?oc=5"
+      "https://news.google.com/rss/articles/CBMilgFBVV95cUxQT1dVWVhNZkRJZ1VuMUo2YnZsVS1uU1lpN3o0Y0RlNlppVlBQbnpPbnBGdXp5WkJCZUlsV0VfMVlmYWZCbURyR1I4Q0Rrb1hGWWJHZnB4VHJLMDctY0RBMlQyUWl5bDZIOFIwb241WmR4TWp2SzR1Z1Rrc3pjTjl1ZHV6LWxfUjRyM3NKbmtpMWxOcVJ6MFE?oc=5",
+      "https://news.google.com/rss/articles/CBMiiwFBVV95cUxQTWxyWUl1QVJPT0x4QWJ0WEJGWlctMjhobVk5bDBNWENMWURaU1VWZjhiWVZqZ2FhZUZSbVNGQVM0bUdjRUtfQXVWLVFWVHFlWFV2RVNLQnlPbF9uNmlKeTc0b2pxYWZuWFY1ZnVvVGU5NHlTWEZNY2dieVFIZnBxWmt2S1lHTzNyYW5F?oc=5"
     ],
     "processed_embeds": [
       "cyclospora-in-kentucky-1hnp27ejvprdy4g@2026-07-24T20:48:08.000Z",
       "cyclospora-in-kentucky-1hnp27ejvprdy4g@2026-07-28T17:09:20.000Z",
-      "cyclospora-in-kentucky-1hnp27ejvprdy4g@2026-07-31T18:31:28.000Z"
+      "cyclospora-in-kentucky-1hnp27ejvprdy4g@2026-07-31T18:31:28.000Z",
+      "cyclospora-in-kentucky-1hnp27ejvprdy4g@2026-08-06T18:06:51.000Z"
     ]
   },
   "standard_state": {
     "./data/ky_cyclo_news/measure_info.json": "04fdb8d5fc4e40bc9fac23cd9ffb83b7",
-    "./data/ky_cyclo_news/standard/data.csv.gz": "bca1a8f72a28b712919573dd279e3fed"
+    "./data/ky_cyclo_news/standard/data.csv.gz": "caec3d3648cd0953cb71396487539268"
   }
 }

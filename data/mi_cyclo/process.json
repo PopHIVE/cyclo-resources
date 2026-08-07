@@ -5,9 +5,9 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-08-01 05:32:14",
+      "last_run": "2026-08-07 04:29:53",
       "frequency": 0,
-      "run_time": 0.142,
+      "run_time": 0.306,
       "last_status": {
         "log": [],
         "success": true
@@ -23,11 +23,11 @@
   },
   "standalone": false,
   "raw_state": {
-    "last_update_date": "2026-07-30",
-    "county_data": "Alcona:13|Allegan:85|Alpena:98|Antrim:3|Arenac:5|Barry:23|Bay:10|Benzie:3|Berrien:22|Branch:15|Calhoun:297|Cass:12|Charlevoix:5|Cheboygan:3|Clare:36|Clinton:226|Crawford:49|Delta:1|Detroit City:246|Eaton:381|Emmet:2|Genesee:502|Gladwin:4|Grand Traverse:12|Gratiot:217|Hillsdale:57|Houghton:3|Huron:48|Ingham:810|Ionia:176|Iosco:26|Isabella:102|Jackson:293|Kalamazoo:256|Kalkaska:5|Kent:159|Lake:6|Lapeer:25|Leelanau:2|Lenawee:368|Livingston:356|Macomb:282|Manistee:4|Marquette:5|Mason:6|Mecosta:20|Midland:29|Missaukee:1|Monroe:368|Montcalm:55|Montmorency:3|Muskegon:348|Newaygo:33|Oakland:1043|Oceana:25|Ogemaw:6|Osceola:25|Oscoda:2|Otsego:3|Ottawa:124|Presque Isle:9|Roscommon:12|Saginaw:86|Sanilac:43|Shiawassee:445|St. Clair:26|St Joseph:34|Tuscola:22|Van Buren:100|Washtenaw:875|Wayne:1379|Wexford:2"
+    "last_update_date": "2026-08-06",
+    "county_data": "Alcona:14|Allegan:100|Alpena:111|Antrim:3|Arenac:6|Barry:32|Bay:11|Benzie:3|Berrien:23|Branch:17|Calhoun:353|Cass:13|Charlevoix:5|Cheboygan:4|Clare:38|Clinton:241|Crawford:52|Delta:1|Detroit City:337|Eaton:401|Emmet:4|Genesee:598|Gladwin:4|Grand Traverse:15|Gratiot:219|Hillsdale:67|Houghton:3|Huron:50|Ingham:880|Ionia:184|Iosco:28|Isabella:115|Jackson:384|Kalamazoo:315|Kalkaska:5|Kent:201|Lake:9|Lapeer:32|Leelanau:2|Lenawee:399|Livingston:438|Macomb:397|Manistee:4|Marquette:4|Mason:7|Mecosta:32|Midland:32|Missaukee:1|Monroe:390|Montcalm:63|Montmorency:4|Muskegon:511|Newaygo:54|Oakland:1344|Oceana:35|Ogemaw:6|Osceola:35|Oscoda:4|Otsego:3|Ottawa:155|Presque Isle:9|Roscommon:13|Saginaw:92|Sanilac:44|Shiawassee:475|St. Clair:28|St Joseph:47|Tuscola:23|Van Buren:129|Washtenaw:1028|Wayne:1794|Wexford:2"
   },
   "standard_state": {
     "./data/mi_cyclo/measure_info.json": "a637e2964c370746c7621070efc7844b",
-    "./data/mi_cyclo/standard/data.csv.gz": "7d44a47a7dbef4d3d3b995ab0053102a"
+    "./data/mi_cyclo/standard/data.csv.gz": "63ca93169e8f4dffab2edbf2380698d8"
   }
 }

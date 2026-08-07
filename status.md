@@ -14,7 +14,7 @@ flowchart LR
     s13(("<strong><a href="https://oeps.wv.gov/cyclosporiasis-outbreak" target="_blank" rel="noreferrer">WV OEPS Cyclosporiasis Outbreak - Cases by County</a></strong>"))
     subgraph ca_cyclo["`ca_cyclo`"]
         direction LR
-        n1["`data.csv.gz`"]:::pass
+        n1["`data.csv.gz<br /><br />Script Failed:<br />Failed to fetch CDPH IDB Provisional Summary Report: HTTP 401`"]:::fail
     end
     subgraph fl_cyclo["`fl_cyclo`"]
         direction LR
