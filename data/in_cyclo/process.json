@@ -5,9 +5,9 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-08-07 04:29:50",
+      "last_run": "2026-08-08 03:30:00",
       "frequency": 0,
-      "run_time": 0.879,
+      "run_time": 0.773,
       "last_status": {
         "log": [],
         "success": true
@@ -23,11 +23,11 @@
   },
   "standalone": false,
   "raw_state": {
-    "last_update_date": "2026-08-06",
-    "county_data": "Adams:5|Allen:414|Bartholomew:4|Blackford:2|Boone:7|Brown:2|Cass:3|Clark:52|Clay:1|Clinton:1|Crawford:10|Dearborn:1|Decatur:1|DeKalb:119|Delaware:16|Dubois:2|Elkhart:87|Floyd:46|Fountain:1|Fulton:3|Grant:2|Greene:1|Hamilton:28|Hancock:29|Harrison:72|Hendricks:24|Henry:7|Howard:6|Huntington:22|Jackson:14|Jay:1|Jefferson:8|Jennings:5|Johnson:6|Knox:1|Kosciusko:89|LaGrange:19|Lake:19|LaPorte:2|Lawrence:3|Madison:10|Marion:126|Marshall:13|Martin:1|Monroe:8|Montgomery:1|Morgan:19|Noble:127|Orange:5|Owen:4|Perry:2|Porter:4|Putnam:3|Randolph:2|Ripley:4|Rush:2|Scott:5|Shelby:5|St. Joseph:65|Steuben:121|Sullivan:1|Switzerland:4|Tippecanoe:8|Union:1|Vanderburgh:11|Vigo:7|Wabash:11|Warrick:1|Washington:8|Wayne:10|Wells:3|White:1|Whitley:26"
+    "last_update_date": "2026-08-07",
+    "county_data": "Adams:7|Allen:449|Bartholomew:4|Blackford:2|Boone:7|Brown:2|Cass:3|Clark:53|Clay:1|Clinton:1|Crawford:11|Dearborn:1|Decatur:1|DeKalb:127|Delaware:16|Dubois:3|Elkhart:89|Floyd:46|Fountain:1|Fulton:3|Grant:2|Greene:2|Hamilton:28|Hancock:31|Harrison:72|Hendricks:24|Henry:7|Howard:6|Huntington:23|Jackson:15|Jasper:2|Jay:1|Jefferson:8|Jennings:5|Johnson:6|Knox:1|Kosciusko:94|LaGrange:20|Lake:19|LaPorte:2|Lawrence:3|Madison:10|Marion:131|Marshall:13|Martin:1|Monroe:8|Montgomery:1|Morgan:19|Noble:131|Orange:6|Owen:4|Perry:2|Porter:4|Putnam:3|Randolph:2|Ripley:4|Rush:2|Scott:5|Shelby:5|St. Joseph:65|Steuben:125|Sullivan:1|Switzerland:4|Tippecanoe:9|Union:1|Vanderburgh:11|Vigo:7|Wabash:11|Warrick:1|Washington:8|Wayne:10|Wells:3|White:1|Whitley:26"
   },
   "standard_state": {
     "./data/in_cyclo/measure_info.json": "865f3d3e567c513c4bae1ada094b1626",
-    "./data/in_cyclo/standard/data.csv.gz": "90b738de96f3ae864c61919163be2b45"
+    "./data/in_cyclo/standard/data.csv.gz": "f2791f23deac3dbf5e41da2b6922c941"
   }
 }

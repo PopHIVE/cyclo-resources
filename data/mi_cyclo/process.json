@@ -5,9 +5,9 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-08-07 04:29:53",
+      "last_run": "2026-08-08 03:30:03",
       "frequency": 0,
-      "run_time": 0.306,
+      "run_time": 0.344,
       "last_status": {
         "log": [],
         "success": true
@@ -24,10 +24,10 @@
   "standalone": false,
   "raw_state": {
     "last_update_date": "2026-08-06",
-    "county_data": "Alcona:14|Allegan:100|Alpena:111|Antrim:3|Arenac:6|Barry:32|Bay:11|Benzie:3|Berrien:23|Branch:17|Calhoun:353|Cass:13|Charlevoix:5|Cheboygan:4|Clare:38|Clinton:241|Crawford:52|Delta:1|Detroit City:337|Eaton:401|Emmet:4|Genesee:598|Gladwin:4|Grand Traverse:15|Gratiot:219|Hillsdale:67|Houghton:3|Huron:50|Ingham:880|Ionia:184|Iosco:28|Isabella:115|Jackson:384|Kalamazoo:315|Kalkaska:5|Kent:201|Lake:9|Lapeer:32|Leelanau:2|Lenawee:399|Livingston:438|Macomb:397|Manistee:4|Marquette:4|Mason:7|Mecosta:32|Midland:32|Missaukee:1|Monroe:390|Montcalm:63|Montmorency:4|Muskegon:511|Newaygo:54|Oakland:1344|Oceana:35|Ogemaw:6|Osceola:35|Oscoda:4|Otsego:3|Ottawa:155|Presque Isle:9|Roscommon:13|Saginaw:92|Sanilac:44|Shiawassee:475|St. Clair:28|St Joseph:47|Tuscola:23|Van Buren:129|Washtenaw:1028|Wayne:1794|Wexford:2"
+    "county_data": "Alcona:14|Allegan:100|Alpena:111|Antrim:3|Arenac:6|Barry:32|Bay:11|Benzie:3|Berrien:23|Branch:17|Calhoun:353|Cass:13|Charlevoix:5|Cheboygan:4|Clare:38|Clinton:241|Crawford:52|Delta:1|Detroit City:337|Eaton:401|Emmet:4|Genesee:598|Gladwin:4|Grand Traverse:15|Gratiot:219|Hillsdale:67|Houghton:3|Huron:50|Ingham:880|Ionia:184|Iosco:28|Isabella:115|Jackson:384|Kalamazoo:315|Kalkaska:5|Kent:201|Lake:9|Lapeer:32|Leelanau:2|Lenawee:399|Livingston:438|Luce:1|Macomb:397|Manistee:4|Marquette:4|Mason:7|Mecosta:32|Midland:32|Missaukee:1|Monroe:390|Montcalm:63|Montmorency:4|Muskegon:511|Newaygo:54|Oakland:1344|Oceana:35|Ogemaw:6|Osceola:35|Oscoda:4|Otsego:3|Ottawa:155|Presque Isle:9|Roscommon:13|Saginaw:92|Sanilac:44|Shiawassee:475|St. Clair:28|St Joseph:47|Tuscola:23|Van Buren:129|Washtenaw:1028|Wayne:1794|Wexford:2"
   },
   "standard_state": {
     "./data/mi_cyclo/measure_info.json": "a637e2964c370746c7621070efc7844b",
-    "./data/mi_cyclo/standard/data.csv.gz": "63ca93169e8f4dffab2edbf2380698d8"
+    "./data/mi_cyclo/standard/data.csv.gz": "e478df8108ddfdce2ccd7304f11b95e4"
   }
 }

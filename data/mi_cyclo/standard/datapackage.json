@@ -9,14 +9,15 @@
   },
   "resources": [
     {
-      "bytes": 1737,
+      "bytes": 1741,
       "encoding": "windows-1252",
-      "md5": "63ca93169e8f4dffab2edbf2380698d8",
+      "md5": "e478df8108ddfdce2ccd7304f11b95e4",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "486e846026ab961a81a6320e6e6397194cdf16eb",
           "3a903e51235d34024af7be12ec1583c9832a41c1",
           "8930316ee7635dead915c906b3e579ee31997d18",
           "25cd529d06f2515c052547a206f7c1098475d2f2",
@@ -25,6 +26,7 @@
           "d85a5e2ce223b3148d7912bdb4251aac1cb4a974"
         ],
         "author": [
+          "GitHub Actions <actions@github.com>",
           "anshap32 <73296024+anshap32@users.noreply.github.com>",
           "GitHub Actions <actions@github.com>",
           "danweinberger <daniel.weinberger@yale.edu>",
@@ -33,6 +35,7 @@
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Fri Aug 7 04:30:44 2026 +0000",
           "Fri Jul 31 09:18:23 2026 -0400",
           "Fri Jul 24 05:25:02 2026 +0000",
           "Tue Jul 21 23:33:07 2026 -0400",
@@ -41,6 +44,7 @@
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "fixed MI bug, updated webpage",
           "scheduled data build",
           "fix michigan county archiving which was causing double counting of some rows",
@@ -59,11 +63,11 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-08-07 04:29:53.724074",
-      "last_modified": "2026-08-07 04:29:53.724074",
+      "created": "2026-08-08 03:30:03.290315",
+      "last_modified": "2026-08-08 03:30:03.290315",
       "vintage": {},
-      "row_count": 319,
-      "entity_count": 71,
+      "row_count": 320,
+      "entity_count": 72,
       "schema": {
         "fields": [
           {
@@ -114,6 +118,7 @@
               "26089": 5,
               "26091": 5,
               "26093": 5,
+              "26095": 1,
               "26099": 5,
               "26101": 5,
               "26103": 3,
@@ -149,7 +154,7 @@
           },
           {
             "name": "time",
-            "duplicates": 314,
+            "duplicates": 315,
             "info": [],
             "time_range": [3, 4],
             "type": "string",
@@ -159,12 +164,12 @@
               "2026-07-18": 64,
               "2026-07-25": 70,
               "2026-08-01": 71,
-              "2026-08-08": 71
+              "2026-08-08": 72
             }
           },
           {
             "name": "mi_cyclo_cases_cumulative",
-            "duplicates": 187,
+            "duplicates": 188,
             "info": {
               "id": "mi_cyclo_cases_cumulative",
               "short_name": "Cyclosporiasis cases, cumulative (MI county)",
@@ -185,14 +190,14 @@
             "time_range": [3, 4],
             "type": "integer",
             "missing": 0,
-            "mean": 112.99373,
-            "sd": 242.658585,
+            "mean": 112.64375,
+            "sd": 242.35882,
             "min": 1,
             "max": 2131
           },
           {
             "name": "mi_cyclo_cases_new",
-            "duplicates": 230,
+            "duplicates": 231,
             "info": {
               "id": "mi_cyclo_cases_new",
               "short_name": "Cyclosporiasis new cases (MI county, weekly)",
@@ -212,7 +217,7 @@
             },
             "time_range": [0, 3],
             "type": "integer",
-            "missing": 71,
+            "missing": 72,
             "mean": 44.854839,
             "sd": 87.345115,
             "min": -1,
@@ -220,7 +225,7 @@
           }
         ]
       },
-      "sha512": "862ab12704420fd672ce0d6c17ff88e6cb539107af5161dfc28137359530d545bb2b1e072a2b503d7d0bf3a61320fc8dfc4cc8d86948113a8050c5074ea6f2cc"
+      "sha512": "f8f63132cc70724d68feba01b21e0287cc16c36b02c3c152c5a1fcea44e3d082304ef58c544a073a85ea78427e7841609b5af6e2de11152d0c3d0001b4347a95"
     }
   ],
   "measure_info": {
@@ -282,13 +287,13 @@
         "geography": {
           "status": "present",
           "same_type": true,
-          "added_levels": [],
+          "added_levels": "26095",
           "dropped_levels": []
         },
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-08-08",
+          "added_levels": [],
           "dropped_levels": []
         },
         "mi_cyclo_cases_cumulative": {
