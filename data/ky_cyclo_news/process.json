@@ -9,7 +9,14 @@
       "frequency": 0,
       "run_time": 12.46,
       "last_status": {
-        "log": ["Error in curl::curl_fetch_memory(url, handle = handle): Stream error in the HTTP/2 framing layer [amp.kentucky.com]:", "HTTP/2 stream 1 was not closed cleanly: INTERNAL_ERROR (err 2)", "Request failed [ERROR]. Retrying in 5 seconds...", "Error in curl::curl_fetch_memory(url, handle = handle): Stream error in the HTTP/2 framing layer [amp.kentucky.com]:", "HTTP/2 stream 3 was not closed cleanly: INTERNAL_ERROR (err 2)", "Request failed [ERROR]. Retrying in 5 seconds..."],
+        "log": [
+          "Error in curl::curl_fetch_memory(url, handle = handle): Stream error in the HTTP/2 framing layer [amp.kentucky.com]:",
+          "HTTP/2 stream 1 was not closed cleanly: INTERNAL_ERROR (err 2)",
+          "Request failed [ERROR]. Retrying in 5 seconds...",
+          "Error in curl::curl_fetch_memory(url, handle = handle): Stream error in the HTTP/2 framing layer [amp.kentucky.com]:",
+          "HTTP/2 stream 3 was not closed cleanly: INTERNAL_ERROR (err 2)",
+          "Request failed [ERROR]. Retrying in 5 seconds..."
+        ],
         "success": true
       }
     }
