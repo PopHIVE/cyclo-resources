@@ -5,11 +5,11 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-08-08 07:43:10",
+      "last_run": "2026-08-09 03:47:42",
       "frequency": 0,
-      "run_time": 1.858,
+      "run_time": 12.46,
       "last_status": {
-        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
+        "log": ["Error in curl::curl_fetch_memory(url, handle = handle): Stream error in the HTTP/2 framing layer [amp.kentucky.com]:", "HTTP/2 stream 1 was not closed cleanly: INTERNAL_ERROR (err 2)", "Request failed [ERROR]. Retrying in 5 seconds...", "Error in curl::curl_fetch_memory(url, handle = handle): Stream error in the HTTP/2 framing layer [amp.kentucky.com]:", "HTTP/2 stream 3 was not closed cleanly: INTERNAL_ERROR (err 2)", "Request failed [ERROR]. Retrying in 5 seconds..."],
         "success": true
       }
     }
@@ -111,7 +111,12 @@
       "https://news.google.com/rss/articles/CBMimAFBVV95cUxONUJDcVkxSERyVTQwbmViZzg1eXBvbzNMMUVCSWxNT2VZVHRiU0tKa0FBRWpNRklRWVBEMkRKd0Z4Y2xrbmhkVVQ0NmhnSEw1U0l2aEUteDg1V1VPSXMyRkVnbURtbENEUnVZdzg1aWgySmVsRWlXOGJFdzZka2Z2aVdaa29mUjAtU2FYWWxNN3pnb3JOZlpfc9IBngFBVV95cUxPaUdlLTVKTVZ2ZHZ1UktQeXhJcjd4THpJVXNoT29HWE14RkE2YmdrY2dhQm9sWXV1X0xSeUdFZFFMdkxfT2M1UHpIUzNRWFEzbENpMzZPM2NydmI3ZFphNGVoQXpXUERCendCTnhzcmZ6Y180b1hwcjkyRU1kMGh2WG5pZXpXSW1YQ1B0R0JDM2RMY29jeXdMN0J1N3ZXQQ?oc=5",
       "https://news.google.com/rss/articles/CBMilgFBVV95cUxOS3VaQW5aS0xUVEZnWk0zVUZ4SVg3a1FYWVFFQVBrX0ZfRWthX2txMTd2Ukc0NS1mWnBqdjZTdlNUYWxxNF9mdWVfNzRBbUhidkpsMDdoT2NENV95ZzlzanJmdW5aNHE4TTNWM3lpUmFSM21QQkNvV3BrNlhiV2ZQRGFzeWlEb2txQmpXT3VPV3FKTlY2Tmc?oc=5",
       "https://news.google.com/rss/articles/CBMif0FVX3lxTE95b3lxOVpwZml1NlkxbllwajM2YVd5ekJzOW1RRlQ5blJaeFBLZmRDMjRDd1RtaHF4ejZMU2w2M0JEZnk0NzhuNXBpb0xpM2NDa2MtSEFpaVNmNXQ5UWZxeHdGZUViNGZ5alluRGx1Zl8zY0xzU3FoMmFxb3dUYTDSAZMBQVVfeXFMT0J6cE5TQjcxSDc3MWlWWlhGaThIUkdHUXotYzVWQlpSU1R0aXJoZW5zQVFxSlNOdFkyVjV4ZndUeF9KQ0lxajhQV1JmaXZoay1kYXYyNEVvMndUUGM0RHFIWExFRmNfcFY5cDVpYnJqQmUzME0yc1Qtal82TUhiLUU4Z1JLODgxQ2VzOFRFSDE4MmJr?oc=5",
-      "https://news.google.com/rss/articles/CBMiggFBVV95cUxPcFB0Uy0tWXc3dUluSlJxdjQ4eGRJQUtucWtzSEdaNEc2SWQ0eVpXWTJpem4wSEZhM0tOQ1FCUF90ZVJpb0VDWTlpeWxKaHVkaVRBWkNsQ3hVOFBrODNlQlpwVEx4b0g2SjhVbUFMU2lSRGdEYTBrVXNsY255MnlodHFn0gGWAUFVX3lxTE5lOERyN2NFeEl2WWsyNDZTcC01MXV0TUFwSlR0QWxPSzhXMGRZdWo0dGg4d1ZPR1IzYWdwMUw4LVdGTm9hdThpM2JYdTJ4Yk01OXJFLUJtak4ydGpMT2xkc2VSZjRhdjNsNXZRTXFlSVdQNXd6U284ZmE4TU02eVRzZDV2UzVFYzczaUdqTFRvT0M4YjlIQQ?oc=5"
+      "https://news.google.com/rss/articles/CBMiggFBVV95cUxPcFB0Uy0tWXc3dUluSlJxdjQ4eGRJQUtucWtzSEdaNEc2SWQ0eVpXWTJpem4wSEZhM0tOQ1FCUF90ZVJpb0VDWTlpeWxKaHVkaVRBWkNsQ3hVOFBrODNlQlpwVEx4b0g2SjhVbUFMU2lSRGdEYTBrVXNsY255MnlodHFn0gGWAUFVX3lxTE5lOERyN2NFeEl2WWsyNDZTcC01MXV0TUFwSlR0QWxPSzhXMGRZdWo0dGg4d1ZPR1IzYWdwMUw4LVdGTm9hdThpM2JYdTJ4Yk01OXJFLUJtak4ydGpMT2xkc2VSZjRhdjNsNXZRTXFlSVdQNXd6U284ZmE4TU02eVRzZDV2UzVFYzczaUdqTFRvT0M4YjlIQQ?oc=5",
+      "https://news.google.com/rss/articles/CBMixAFBVV95cUxOZVRYU25xMEFqVzYyWEQyZVR1amdtbmZxbVI4WHRhVFZ3emFEdDlIWXVKamQzSVR5VEJPMWJmVHVqdktlSFotTnQ4V0ZQMU1CajFMOW1NaDYyRzFkVnFVNFR5bWdSNG40ZnR0OU92QmU2NzBqWGdzZDRLd1FBTHpBSFJGcm5ENlM0VFhTODh2T3hxX0pLTlFoaVllWUoyQTFpdU1OTHhnTGpEOGs5NTdFUW1VeXkzTGVMcnBxc2xvbTJBT1Vu?oc=5",
+      "https://news.google.com/rss/articles/CBMiigFBVV95cUxQNXlnOVlHbTFjQWREcjJVRUllOEo2b2VveEdlYVQtMXRqZ1M2SklEWWFEeWxtT3hWNDl5c2gwaW5iTFFYX0RINGM5SzkyTS1pWHBnQWo3QXF0WnR1U1NaZXkzS29zZjhTOXVoNjBkcktzUXlCV3BCVWhXczhXYnpZRG8xaTA4RXNvZVE?oc=5",
+      "https://news.google.com/rss/articles/CBMimgFBVV95cUxNSXF2dTFHUE1XdHlvQkdUdnNfSjBfbnBHMzdQQVJFS0NsNWZkVmRubDVXMEtXRVZWcldNZ2NOcVVlMVY1S1o0eFUzSUh3TTgwejhFcEJCT3FpWF80YVZrd0lQQV9QYW85NGZEM01qMnhqN1V5cUY4ZS1PS1pkSllrbzdZTTRYSWlBWEJRUWJXZm5iekNLUk5PakR3?oc=5",
+      "https://news.google.com/rss/articles/CBMidEFVX3lxTFBfUTZDTnIxVGtPZmNBWHBpdVl3WlRKUkdzN08yQUl5THlsZHdQd2RESUxBMm4wZmV6T1FTUHBCaUsxbkVUTmVuWTFJWkVZRDd4OFIwZFVUcUNsdDMzNkxISGliT1pQQ0VzUEVCV21xMGdLOUND0gF0QVVfeXFMUF9RNkNOcjFUa09mY0FYcGl1WXdaVEpSR3M3TzJBSXlMeWxkd1B3ZERJTEEybjBmZXpPUVNQcEJpSzFuRVROZW5ZMUlaRVlEN3g4UjBkVVRxQ2x0MzM2TEhIaWJPWlBDRXNQRUJXbXEwZ0s5Q0M?oc=5",
+      "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQQkJFTUpheUhkY2J6Xzk1QkFuSzR4WVdjMzFVNEdtVmRCQk9xTWpBektYVXFRandxeUlUQ2gyUmRDLWlRXzRxNWhvZ3lBSDE4SEZiV090cTJtdFhfenhDMnB4dXcwQkxwdWZkc0tWVDVvVXhhb05KTk1jdkJVVmpEV0xqdjBXM0M3Z2F1b2NFTW53enZxRVRoRU1TYkpHTEo3SHNpSXVSNTVIN3VpeFY5dmpyamJQMVZt?oc=5"
     ],
     "processed_embeds": [
       "cyclospora-in-kentucky-1hnp27ejvprdy4g@2026-07-24T20:48:08.000Z",
