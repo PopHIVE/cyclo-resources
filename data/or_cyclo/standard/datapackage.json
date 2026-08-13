@@ -9,17 +9,25 @@
   },
   "resources": [
     {
-      "bytes": 1791,
-      "encoding": "windows-1252",
-      "md5": "28dbe0c0ac3495ce922152db45660c2a",
+      "bytes": 1798,
+      "encoding": "windows-1250",
+      "md5": "b3652c820dc2680e7338cf810046b837",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
-        "hash": ["256c65b8d1b6cee9ffa9f84d04feaf46e2fc9555"],
-        "author": ["weinbergerlab <dweinber@gmail.com>"],
-        "date": ["Tue Jul 14 10:02:28 2026 -0400"],
-        "message": ["adds oregon scraper"]
+        "hash": [
+          "256c65b8d1b6cee9ffa9f84d04feaf46e2fc9555"
+        ],
+        "author": [
+          "weinbergerlab <dweinber@gmail.com>"
+        ],
+        "date": [
+          "Tue Jul 14 10:02:28 2026 -0400"
+        ],
+        "message": [
+          "adds oregon scraper"
+        ]
       },
       "source": [],
       "data_format": "wide",
@@ -31,22 +39,22 @@
       "id_length": 0,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-07-14 18:18:27.22134",
-      "last_modified": "2026-07-14 18:18:27.22134",
+      "created": "2026-08-13 04:17:14.954144",
+      "last_modified": "2026-08-13 04:17:14.954144",
       "vintage": {},
-      "row_count": 676,
+      "row_count": 677,
       "entity_count": 37,
       "schema": {
         "fields": [
           {
             "name": "geography",
-            "duplicates": 639,
+            "duplicates": 640,
             "info": [],
-            "time_range": [0, 63],
+            "time_range": [0, 64],
             "type": "string",
             "missing": 0,
             "table": {
-              "41": 64,
+              "41": 65,
               "41001": 17,
               "41003": 17,
               "41005": 17,
@@ -89,7 +97,7 @@
             "name": "time",
             "duplicates": 612,
             "info": [],
-            "time_range": [0, 63],
+            "time_range": [0, 64],
             "type": "string",
             "missing": 0,
             "table": {
@@ -156,7 +164,8 @@
               "2026-03-01": 37,
               "2026-04-01": 37,
               "2026-05-01": 1,
-              "2026-06-01": 1
+              "2026-06-01": 1,
+              "2026-07-01": 1
             }
           },
           {
@@ -180,17 +189,17 @@
                 }
               ]
             },
-            "time_range": [0, 63],
+            "time_range": [0, 64],
             "type": "integer",
             "missing": 612,
-            "mean": 1.609375,
-            "sd": 2.990021,
+            "mean": 1.923077,
+            "sd": 3.692508,
             "min": 0,
-            "max": 12
+            "max": 17
           },
           {
             "name": "suppressed_flag",
-            "duplicates": 674,
+            "duplicates": 675,
             "info": {
               "id": "suppressed_flag",
               "short_name": "Statewide count suppressed flag",
@@ -208,7 +217,7 @@
                 }
               ]
             },
-            "time_range": [0, 63],
+            "time_range": [0, 64],
             "type": "integer",
             "missing": 612,
             "mean": 0,
@@ -218,7 +227,7 @@
           },
           {
             "name": "or_cyclo_cases_county",
-            "duplicates": 674,
+            "duplicates": 675,
             "info": {
               "id": "or_cyclo_cases_county",
               "short_name": "Cyclosporiasis cases, by county (OR)",
@@ -239,7 +248,7 @@
             },
             "time_range": [46, 60],
             "type": "integer",
-            "missing": 136,
+            "missing": 137,
             "mean": 0,
             "sd": 0,
             "min": 0,
@@ -247,7 +256,7 @@
           },
           {
             "name": "county_suppressed_flag",
-            "duplicates": 673,
+            "duplicates": 674,
             "info": {
               "id": "county_suppressed_flag",
               "short_name": "County count suppressed flag",
@@ -267,7 +276,7 @@
             },
             "time_range": [45, 61],
             "type": "integer",
-            "missing": 64,
+            "missing": 65,
             "mean": 0.117647,
             "sd": 0.322453,
             "min": 0,
@@ -275,7 +284,7 @@
           }
         ]
       },
-      "sha512": "29d53e5206a514178281a470e1cf32c29cda46135e023cb485efc669525f9a34d3424408042fbbc3e715632cd7a10674f02a7aa4efc2d3f8c06b914beba4d4b6"
+      "sha512": "0dc41316092ca220d1265c54aadf86364a6721576252f527906863b7f5ce3e5ef2fcab4d54f3a1bc8b41cd3b90597d040d0036e14fdf83a895620acfa773196d"
     }
   ],
   "measure_info": {
@@ -370,7 +379,37 @@
   },
   "change_report": {
     "data.csv.gz": {
-      "state": "new file"
+      "state": "changed",
+      "variables": {
+        "geography": {
+          "status": "present",
+          "same_type": true,
+          "added_levels": [],
+          "dropped_levels": []
+        },
+        "time": {
+          "status": "present",
+          "same_type": true,
+          "added_levels": "2026-07-01",
+          "dropped_levels": []
+        },
+        "or_cyclo_cases": {
+          "status": "present",
+          "same_type": true
+        },
+        "suppressed_flag": {
+          "status": "present",
+          "same_type": true
+        },
+        "or_cyclo_cases_county": {
+          "status": "present",
+          "same_type": true
+        },
+        "county_suppressed_flag": {
+          "status": "present",
+          "same_type": true
+        }
+      }
     }
   }
 }
