@@ -5,18 +5,11 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-08-11 03:48:34",
+      "last_run": "2026-08-14 08:09:59",
       "frequency": 0,
-      "run_time": 12.679,
+      "run_time": 18.061,
       "last_status": {
-        "log": [
-          "Error in curl::curl_fetch_memory(url, handle = handle): Stream error in the HTTP/2 framing layer [www.kentucky.com]:",
-          "HTTP/2 stream 1 was not closed cleanly: INTERNAL_ERROR (err 2)",
-          "Request failed [ERROR]. Retrying in 5 seconds...",
-          "Error in curl::curl_fetch_memory(url, handle = handle): Stream error in the HTTP/2 framing layer [www.kentucky.com]:",
-          "HTTP/2 stream 3 was not closed cleanly: INTERNAL_ERROR (err 2)",
-          "Request failed [ERROR]. Retrying in 5 seconds..."
-        ],
+        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
         "success": true
       }
     }
@@ -127,7 +120,11 @@
       "https://news.google.com/rss/articles/CBMijAFBVV95cUxPQlh0Zk43R2xJa090eU0tbGNhajVCQmNub1d5elRZNHBJNXBUd1RFSnRoaVFCVWhLRk85M3FpZWp5dzVPRnE4Z0YtY0pwSkZHV2o3SUt0MGNFVVNIOUxzd3Y3dzJjTGk5MXB6TkhnOWhpZHk1eW1ILVNteHJpbklWYUF3R3RUVFh1TUJnNg?oc=5",
       "https://news.google.com/rss/articles/CBMizwFBVV95cUxPV1hrZ0tSd3JHcUEtbUt0UHdDLUw4cERuQ185eGdQNjgxM1JoUnh5Tm1rLXVJWGRJRTFwMUQtdUN0NFpjRldWeEhHeUwzc3RUbVQ2SzA3bUxyLVNWZ0lXaXpGWUlTZUQ5RFM5c05DREtvVWI2dzJMLVpYMUNzbkxzN1VJUGVyc0lITnlDVGRpT3NaMzRrTU5vaUMtMzl0N0R2X1FscmIydHEtakxaZW9yZ2tld2k3Tm5BRloyc01iM1ZTY2lqMXBFdDZlREVrRWM?oc=5",
       "https://news.google.com/rss/articles/CBMidEFVX3lxTFA3MFpQM2x5b214YkhWZlBlc0JwSEVJOEdzWmx2Mlh2QVlzdTh2QlZVVElBSTVMZFFMMzNlZlZ0X0wxSWJWRElyZ3oya0V4WkoyajVNQXo5VTJqYUZ5WWYyQl94Rk1EMkhZVkVhbFRxYTJwendK0gF0QVVfeXFMUF9RNkNOcjFUa09mY0FYcGl1WXdaVEpSR3M3TzJBSXlMeWxkd1B3ZERJTEEybjBmZXpPUVNQcEJpSzFuRVROZW5ZMUlaRVlEN3g4UjBkVVRxQ2x0MzM2TEhIaWJPWlBDRXNQRUJXbXEwZ0s5Q0M?oc=5",
-      "https://news.google.com/rss/articles/CBMiiwFBVV95cUxQTWxyWUl1QVJPT0x4QWJ0WEJGWlctMjhobVk5bDBNWENMWURaU1VWZjhiWVZqZ2FhZUZSbVNGQVM0bUdjRUtfQXVWLVFWVHFlWFV2RVNLQnlPbF9uNmlKeTc0b2pxYWZuWFY1ZnVvVGU5NHlTWEZNY2dieVFIZnBxWmt2S1lHTzNyYW5F0gGfAUFVX3lxTE5mTzU5Y3hDaWUzYmRxSGZseWk5X2pQUXZXWFprb0Y0M0dVYTB4eno5ZFZPUkp6eHl3QlRhQWRRZWU4QTdjRmtCS3c1VWxLeG1UUUxlTFMyZ0NXeEUzRkg4RkY2Q25wSy1sLWdDaG5BbDU3N3NfckJvWU5HVnRuN1owOElGVS03TU1xSmd2MXNsU0NMUkRzZktOVUVwMnFtWQ?oc=5"
+      "https://news.google.com/rss/articles/CBMiiwFBVV95cUxQTWxyWUl1QVJPT0x4QWJ0WEJGWlctMjhobVk5bDBNWENMWURaU1VWZjhiWVZqZ2FhZUZSbVNGQVM0bUdjRUtfQXVWLVFWVHFlWFV2RVNLQnlPbF9uNmlKeTc0b2pxYWZuWFY1ZnVvVGU5NHlTWEZNY2dieVFIZnBxWmt2S1lHTzNyYW5F0gGfAUFVX3lxTE5mTzU5Y3hDaWUzYmRxSGZseWk5X2pQUXZXWFprb0Y0M0dVYTB4eno5ZFZPUkp6eHl3QlRhQWRRZWU4QTdjRmtCS3c1VWxLeG1UUUxlTFMyZ0NXeEUzRkg4RkY2Q25wSy1sLWdDaG5BbDU3N3NfckJvWU5HVnRuN1owOElGVS03TU1xSmd2MXNsU0NMUkRzZktOVUVwMnFtWQ?oc=5",
+      "https://news.google.com/rss/articles/CBMif0FVX3lxTE8tZFU5WF9BaEhzVGJNeHNudEUxT1pOU19lZUhHekp0SGxueFV4UlRtSjNrU3NnY1RsNDR0VzNzeUZ2VlhoTUNGcjFMVncwOE9GY1UzZzZZVjNXX244YXhKdkswVDQ0MjVwZTU4dHE2eWV6enYyNEVrSU9qTm15T0k?oc=5",
+      "https://news.google.com/rss/articles/CBMihwFBVV95cUxOVFhpSTdwcjByS3lQSDctQWNhTjZwdEY2dGlMSGM2eDV5OW1EbXZveXp6T3hCZl9Heno3SXM5OG51UGZDS0EyTnp4OVJMOGQtMVVUa0FKZ2dJSl9rVFNFYTVuX25YRmtpdXRGOEFqRjg5dnhEa1B6WkxYMGlyb19sVklhcTdTY1U?oc=5",
+      "https://news.google.com/rss/articles/CBMikwFBVV95cUxNVl9PMkJYUm9xSXFqa19GcWM1SUk1WDhFREVUZjdvREhIOG15OF9jVTZKcmpZdXJFZDM0RTlFd3ZQN2VZR0Q5aDBsTXdpV2dyN3hCZ0M5V21uRlAzT2hvb3hJcXg2a2RCT0szTnFBSjE5Ry14WmdJRi1BNWpVcUdWSWVubzk5c0MyeGFBLTlNbWNocjQ?oc=5",
+      "https://news.google.com/rss/articles/CBMisAFBVV95cUxNNmJiN1VPcjY5RWlCMHFYNDNRX0xyMzBnc2VJTmM1Smg5bHFxdGtCUWtzOWFRUEItZTdQeHVialFkV2pWaXgtWHdQS0tKczlsdS1rS3pwMkRTekgyTG1EcDdNWUlxM2kwZGYzSVg1OEJkVUh3SWhzNlE0YWtHM215aHNId1Vud1RRQ24zTUNfa21haVFKX3ItaTNRek83LUZheHBXRktXQ3g2MUNPYWZDMw?oc=5"
     ],
     "processed_embeds": [
       "cyclospora-in-kentucky-1hnp27ejvprdy4g@2026-07-24T20:48:08.000Z",
