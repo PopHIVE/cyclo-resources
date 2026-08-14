@@ -9,14 +9,15 @@
   },
   "resources": [
     {
-      "bytes": 165358,
+      "bytes": 165432,
       "encoding": "windows-1250",
-      "md5": "38a48fde2ea62402238265147720ab79",
+      "md5": "d92b6b4a04bf1064a3c92c759e49835e",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "dbadab6713e72f833a880a4a65d5976bbeb9b88b",
           "486e846026ab961a81a6320e6e6397194cdf16eb",
           "eb5093e9ad97944e7953cdc670f753cf7fa4c67d",
           "c952797c94273c42f14519397530d18750162a20",
@@ -36,9 +37,11 @@
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Sat Aug 8 03:30:51 2026 +0000",
           "Fri Aug 7 04:30:44 2026 +0000",
           "Sat Aug 1 05:33:01 2026 +0000",
           "Fri Jul 31 05:41:06 2026 +0000",
@@ -50,6 +53,7 @@
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "scheduled data build",
           "scheduled data build",
           "scheduled data build",
@@ -71,8 +75,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-08-08 03:30:44.738826",
-      "last_modified": "2026-08-08 03:30:44.738826",
+      "created": "2026-08-14 04:13:59.094333",
+      "last_modified": "2026-08-14 04:13:59.094333",
       "vintage": {},
       "row_count": 62480,
       "entity_count": 88,
@@ -920,10 +924,10 @@
             "time_range": [0, 709],
             "type": "integer",
             "missing": 0,
-            "mean": 0.090365,
-            "sd": 2.808283,
+            "mean": 0.098399,
+            "sd": 2.97062,
             "min": 0,
-            "max": 368
+            "max": 380
           },
           {
             "name": "suppressed_flag",
@@ -955,7 +959,7 @@
           }
         ]
       },
-      "sha512": "e970e727f381436a1fbcc5a834422e9b2bb5af74a34768ed14e45acd1b589ba36362c8b275db3505fbbc4c1d096d799e969743f39150421793d9f61bfb8d94bf"
+      "sha512": "0560f38b7ee47c3e494291e30c5346d96056db96a8ac121c0d437e80aa4f280c6e4f63048600be3624070c20a068710ce2b3596bff8cfe0dd73d6f426cb0a218"
     }
   ],
   "measure_info": {
@@ -1024,7 +1028,7 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-08-08",
+          "added_levels": [],
           "dropped_levels": []
         },
         "oh_cyclo_cases": {
