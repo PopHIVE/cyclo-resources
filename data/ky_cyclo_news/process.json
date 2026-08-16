@@ -9,7 +9,10 @@
       "frequency": 0,
       "run_time": 15.123,
       "last_status": {
-        "log": ["Request failed [403]. Retrying in 5 seconds...", "Request failed [403]. Retrying in 5 seconds..."],
+        "log": [
+          "Request failed [403]. Retrying in 5 seconds...",
+          "Request failed [403]. Retrying in 5 seconds..."
+        ],
         "success": true
       }
     }
