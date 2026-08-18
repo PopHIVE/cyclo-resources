@@ -5,9 +5,9 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-08-15 02:55:28",
+      "last_run": "2026-08-18 03:02:22",
       "frequency": 0,
-      "run_time": 0.78,
+      "run_time": 0.742,
       "last_status": {
         "log": [],
         "success": true
@@ -23,11 +23,11 @@
   },
   "standalone": false,
   "raw_state": {
-    "last_update_date": "2026-08-14",
-    "county_data": "Adams:9|Allen:490|Bartholomew:4|Blackford:2|Boone:7|Brown:2|Cass:3|Clark:57|Clay:1|Clinton:2|Crawford:11|Dearborn:2|Decatur:1|DeKalb:142|Delaware:21|Dubois:3|Elkhart:104|Floyd:46|Fountain:1|Fulton:3|Grant:3|Greene:2|Hamilton:31|Hancock:35|Harrison:74|Hendricks:26|Henry:7|Howard:8|Huntington:26|Jackson:17|Jasper:3|Jay:1|Jefferson:8|Jennings:6|Johnson:10|Knox:1|Kosciusko:108|LaGrange:21|Lake:21|LaPorte:2|Lawrence:3|Madison:11|Marion:140|Marshall:15|Martin:1|Monroe:8|Montgomery:2|Morgan:20|N/A:1|Noble:142|Orange:6|Owen:4|Perry:2|Porter:5|Posey:1|Putnam:3|Randolph:2|Ripley:4|Rush:2|Scott:5|Shelby:6|St. Joseph:71|Steuben:132|Sullivan:1|Switzerland:4|Tippecanoe:9|Union:1|Vanderburgh:11|Vigo:10|Wabash:11|Warrick:1|Washington:9|Wayne:10|Wells:5|White:1|Whitley:31"
+    "last_update_date": "2026-08-17",
+    "county_data": "Adams:9|Allen:501|Bartholomew:4|Blackford:2|Boone:7|Brown:2|Cass:3|Clark:58|Clay:1|Clinton:2|Crawford:11|Dearborn:2|Decatur:2|DeKalb:144|Delaware:21|Dubois:4|Elkhart:106|Floyd:46|Fountain:1|Fulton:3|Grant:3|Greene:2|Hamilton:31|Hancock:35|Harrison:74|Hendricks:26|Henry:7|Howard:9|Huntington:26|Jackson:18|Jasper:3|Jay:1|Jefferson:8|Jennings:6|Johnson:10|Knox:1|Kosciusko:113|LaGrange:21|Lake:22|LaPorte:2|Lawrence:2|Madison:12|Marion:145|Marshall:15|Martin:1|Miami:1|Monroe:8|Montgomery:2|Morgan:21|N/A:1|Noble:144|Orange:6|Owen:4|Perry:2|Porter:5|Posey:1|Putnam:3|Randolph:2|Ripley:4|Rush:2|Scott:5|Shelby:6|St. Joseph:71|Steuben:132|Sullivan:1|Switzerland:4|Tippecanoe:9|Union:1|Vanderburgh:11|Vigo:10|Wabash:11|Warrick:1|Washington:9|Wayne:10|Wells:5|White:1|Whitley:33"
   },
   "standard_state": {
     "./data/in_cyclo/measure_info.json": "865f3d3e567c513c4bae1ada094b1626",
-    "./data/in_cyclo/standard/data.csv.gz": "af205f7b1628a83bb8ba1943cec0c194"
+    "./data/in_cyclo/standard/data.csv.gz": "d0d764e3c6b9abe37d172c70e064c7c4"
   }
 }
