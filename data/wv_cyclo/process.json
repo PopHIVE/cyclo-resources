@@ -5,9 +5,9 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-08-15 02:56:22",
+      "last_run": "2026-08-22 02:58:33",
       "frequency": 0,
-      "run_time": 1.265,
+      "run_time": 0.924,
       "last_status": {
         "log": ["Linking to ImageMagick 6.9.12.98", "Enabled features: fontconfig, freetype, fftw, heic, lcms, pango, raw, webp, x11", "Disabled features: cairo, ghostscript, rsvg", "Using 4 threads"],
         "success": true
@@ -23,11 +23,11 @@
   },
   "standalone": false,
   "raw_state": {
-    "last_update_date": "2026-08-14",
-    "county_data": "Barbour:3|Berkeley:1|Boone:3|Braxton:1|Brooke:10|Cabell:53|Fayette:6|Hancock:24|Harrison:7|Jackson:3|Kanawha:57|Lewis:1|Lincoln:2|Logan:3|Marion:10|Marshall:2|Mason:8|Mineral:1|Mingo:1|Monongalia:13|Morgan:2|Ohio:8|Pendleton:1|Preston:3|Putnam:31|Raleigh:3|Randolph:1|Ritchie:3|Roane:3|Taylor:1|Tucker:2|Upshur:1|Wayne:22|Wetzel:1|Wirt:1|Wood:12"
+    "last_update_date": "2026-08-21",
+    "county_data": "Barbour:3|Berkeley:1|Boone:3|Braxton:1|Brooke:10|Cabell:54|Fayette:6|Hancock:25|Harrison:7|Jackson:3|Kanawha:61|Lewis:1|Lincoln:2|Logan:3|Marion:10|Marshall:2|Mason:8|Mineral:1|Mingo:1|Monongalia:14|Morgan:2|Ohio:8|Pendleton:1|Preston:4|Putnam:31|Raleigh:3|Randolph:1|Ritchie:3|Roane:3|Taylor:1|Tucker:2|Upshur:1|Wayne:23|Wetzel:1|Wirt:1|Wood:12"
   },
   "standard_state": {
     "./data/wv_cyclo/measure_info.json": "cba161e835adac7a184205025e81a961",
-    "./data/wv_cyclo/standard/data.csv.gz": "05ce43a3e5fde3b795e1dbfd1bf443bc"
+    "./data/wv_cyclo/standard/data.csv.gz": "5d233f91a23d21b3c092c3667b90ca16"
   }
 }
