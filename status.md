@@ -30,7 +30,7 @@ flowchart LR
     end
     subgraph mi_cyclo["`mi_cyclo`"]
         direction LR
-        n5["`data.csv.gz`"]:::pass
+        n5["`data.csv.gz<br /><br />Script Failed:<br />Failed to fetch MDHHS Infectious Disease Outbreaks page: HTTP 403`"]:::fail
     end
     subgraph oh_cyclo["`oh_cyclo`"]
         direction LR

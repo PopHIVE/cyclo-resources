@@ -9,14 +9,15 @@
   },
   "resources": [
     {
-      "bytes": 165949,
+      "bytes": 163957,
       "encoding": "KOI8-R",
-      "md5": "3653aa272d7239a57e9044ea23c28ed2",
+      "md5": "25796d359b367acd74d6d2af0485ba84",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "c4c1ac7375711ec75d686063fe521de5fa4b0604",
           "830b23f13d7cfa6e4fbd6f0637b1d7d638dcd919",
           "2f421816e58b21010c395f7f501d02308451308f",
           "fa7dd1ed19e76325f4536f123b2ad10bcca533e0",
@@ -44,9 +45,11 @@
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Sat Aug 22 02:58:33 2026 +0000",
           "Fri Aug 21 03:07:22 2026 +0000",
           "Sat Aug 15 02:56:23 2026 +0000",
           "Fri Aug 14 04:14:05 2026 +0000",
@@ -62,6 +65,7 @@
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "scheduled data build",
           "scheduled data build",
           "scheduled data build",
@@ -87,8 +91,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-08-22 02:58:27.38404",
-      "last_modified": "2026-08-22 02:58:27.38404",
+      "created": "2026-08-28 13:59:39.284968",
+      "last_modified": "2026-08-28 13:59:39.284968",
       "vintage": {},
       "row_count": 62656,
       "entity_count": 88,
@@ -916,7 +920,7 @@
           },
           {
             "name": "oh_cyclo_cases",
-            "duplicates": 62594,
+            "duplicates": 62655,
             "info": {
               "id": "oh_cyclo_cases",
               "short_name": "Cyclosporiasis cases (OH)",
@@ -938,10 +942,10 @@
             "time_range": [0, 711],
             "type": "integer",
             "missing": 0,
-            "mean": 0.104842,
-            "sd": 3.251014,
+            "mean": 0,
+            "sd": 0,
             "min": 0,
-            "max": 396
+            "max": 0
           },
           {
             "name": "suppressed_flag",
@@ -973,7 +977,7 @@
           }
         ]
       },
-      "sha512": "5f0a5042c66c63b47470e863d3bddede9d7954fe0f745bade029b6264d52427568c5a91b9fcaabd85273350edcc89c33c9506d1d280d149aa50f11f80325309c"
+      "sha512": "f1bc196f9a60518d817d60e5bf448e730271b67ba53230ce86c90331b946cfc2d4b3899fe75c2b16e03bb9b322e04a0089aee4f3c1bcc8ded06e7c32c7229791"
     }
   ],
   "measure_info": {
@@ -1042,7 +1046,7 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-08-22",
+          "added_levels": [],
           "dropped_levels": []
         },
         "oh_cyclo_cases": {
