@@ -5,11 +5,11 @@
     {
       "path": "ingest.R",
       "manual": false,
-      "last_run": "2026-08-21 03:06:37",
+      "last_run": "2026-08-28 19:10:33",
       "frequency": 0,
-      "run_time": 0.379,
+      "run_time": 1.076,
       "last_status": {
-        "log": [],
+        "log": ["", "Attaching package: ‘dplyr’", "", "The following objects are masked from ‘package:stats’:", "", "    filter, lag", "", "The following objects are masked from ‘package:base’:", "", "    intersect, setdiff, setequal, union", ""],
         "success": true
       }
     }
@@ -23,11 +23,11 @@
   },
   "standalone": false,
   "raw_state": {
-    "last_update_date": "2026-08-20",
-    "county_data": "Alcona:22|Allegan:129|Alpena:160|Antrim:3|Arenac:12|Barry:43|Bay:18|Benzie:3|Berrien:36|Branch:20|Calhoun:406|Cass:14|Charlevoix:5|Cheboygan:3|Clare:69|Clinton:247|Crawford:58|Delta:2|Detroit City:432|Eaton:425|Emmet:5|Genesee:653|Gladwin:5|Grand Traverse:15|Gratiot:279|Hillsdale:71|Houghton:2|Huron:50|Ingham:921|Ionia:202|Iosco:39|Isabella:148|Jackson:432|Kalamazoo:369|Kalkaska:7|Kent:274|Lake:14|Lapeer:39|Leelanau:2|Lenawee:419|Livingston:484|Luce:1|Macomb:503|Manistee:6|Marquette:4|Mason:9|Mecosta:38|Midland:45|Missaukee:1|Monroe:401|Montcalm:76|Montmorency:5|Muskegon:583|Newaygo:81|Oakland:1538|Oceana:45|Ogemaw:8|Osceola:51|Oscoda:5|Otsego:3|Ottawa:207|Presque Isle:13|Roscommon:14|Saginaw:105|Sanilac:44|Shiawassee:495|St. Clair:31|St Joseph:52|Tuscola:23|Van Buren:150|Washtenaw:1105|Wayne:2095|Wexford:2"
+    "last_update_date": "2026-08-27",
+    "county_data": "Alcona:22|Allegan:129|Alpena:163|Antrim:3|Arenac:12|Barry:43|Bay:18|Benzie:3|Berrien:39|Branch:20|Calhoun:408|Cass:14|Charlevoix:5|Cheboygan:3|Clare:73|Clinton:250|Crawford:58|Delta:2|Detroit City:451|Eaton:430|Emmet:5|Genesee:659|Gladwin:5|Grand Traverse:15|Gratiot:279|Hillsdale:71|Houghton:2|Huron:50|Ingham:925|Ionia:205|Iosco:40|Isabella:152|Jackson:440|Kalamazoo:373|Kalkaska:7|Kent:279|Lake:14|Lapeer:40|Leelanau:2|Lenawee:421|Livingston:489|Luce:1|Macomb:520|Manistee:6|Marquette:5|Mason:9|Mecosta:39|Midland:46|Missaukee:1|Monroe:403|Montcalm:78|Montmorency:5|Muskegon:587|Newaygo:83|Oakland:1599|Oceana:46|Ogemaw:8|Osceola:51|Oscoda:5|Otsego:3|Ottawa:210|Presque Isle:13|Roscommon:14|Saginaw:105|Sanilac:44|Shiawassee:501|St. Clair:31|St Joseph:52|Tuscola:23|Van Buren:155|Washtenaw:1114|Wayne:2130|Wexford:2"
   },
   "standard_state": {
     "./data/mi_cyclo/measure_info.json": "a637e2964c370746c7621070efc7844b",
-    "./data/mi_cyclo/standard/data.csv.gz": "b7ebe453f8308572bf05344610a5d2e4"
+    "./data/mi_cyclo/standard/data.csv.gz": "02979d26d2c0b802d284c592882bd574"
   }
 }
