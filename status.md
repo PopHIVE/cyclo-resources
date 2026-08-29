@@ -30,11 +30,11 @@ flowchart LR
     end
     subgraph mi_cyclo["`mi_cyclo`"]
         direction LR
-        n5["`data.csv.gz<br /><br />Script Failed:<br />Failed to fetch MDHHS Infectious Disease Outbreaks page: HTTP 403`"]:::fail
+        n5["`data.csv.gz`"]:::pass
     end
     subgraph oh_cyclo["`oh_cyclo`"]
         direction LR
-        n6["`data.csv.gz`"]:::pass
+        n6["`data.csv.gz<br /><br />Script Failed:<br />Can't combine '..1$cases' <character> and '..2$cases' <double>.`"]:::fail
     end
     subgraph or_cyclo["`or_cyclo`"]
         direction LR
