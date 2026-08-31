@@ -23,10 +23,10 @@
   },
   "standalone": false,
   "raw_state": {
-    "n_rows": 0,
-    "total_cases": 0,
-    "last_week": "2026-08-22",
-    "hash": "2da1e5ea733053c9cadded16a975441c"
+    "n_rows": 979,
+    "total_cases": 6755,
+    "last_week": "2026-08-29",
+    "hash": "0f7249f51a5bb086a27e7393391eacbd"
   },
   "standard_state": {
     "./data/oh_cyclo/measure_info.json": "4a51df2084eb928ef1df99bb05fa31df",

@@ -139,28 +139,6 @@ query_window <- function(start_date, end_date, retries = 3) {
 # Step 1: cheap annual scan to find which years have ANY Cyclosporiasis
 # activity in Ohio, so we only drill into weekly resolution where needed.
 # -----------------------------------------------------------------------------
-years <- seq(as.integer(format(history_start, "%Y")), as.integer(format(today, "%Y")))
-
-cat("Scanning", length(years), "years for Cyclosporiasis activity...\n")
-active_years <- integer(0)
-for (yr in years) {
-  yr_start <- as.Date(sprintf("%d-01-01", yr))
-  yr_end   <- min(as.Date(sprintf("%d-12-31", yr)), today)
-  d <- query_window(yr_start, yr_end)
-  d <- d[!is.na(d$cases) & tolower(d$county) != "unknown", , drop = FALSE]
-  yr_total <- sum(d$cases)
-  cat(" ", yr, ": statewide total =", yr_total, "\n")
-  if (yr_total > 0) active_years <- c(active_years, yr)
-  Sys.sleep(0.2)
-}
-cat("Active years (weekly drill-down needed):", paste(active_years, collapse = ", "), "\n")
-
-# -----------------------------------------------------------------------------
-# Step 2: figure out which active-year weeks actually need (re-)fetching this
-# run -- everything else is either zero-filled directly (inactive year) or
-# trusted from the persistent history cache (already fetched, outside the
-# refresh window).
-# -----------------------------------------------------------------------------
 if (!dir.exists("raw")) dir.create("raw")
 
 history_cached <- if (file.exists(HISTORY_PATH)) {
@@ -176,6 +154,44 @@ fetched_weeks_manifest <- if (file.exists(FETCHED_WEEKS_PATH)) {
   as.Date(character(0))
 }
 
+years <- seq(as.integer(format(history_start, "%Y")), as.integer(format(today, "%Y")))
+
+cat("Scanning", length(years), "years for Cyclosporiasis activity...\n")
+active_years <- integer(0)
+for (yr in years) {
+  yr_start <- as.Date(sprintf("%d-01-01", yr))
+  yr_end   <- min(as.Date(sprintf("%d-12-31", yr)), today)
+  d <- query_window(yr_start, yr_end)
+  d <- d[!is.na(d$cases) & tolower(d$county) != "unknown", , drop = FALSE]
+  yr_total <- sum(d$cases)
+  cat(" ", yr, ": statewide total =", yr_total, "\n")
+  if (yr_total > 0) active_years <- c(active_years, yr)
+  Sys.sleep(0.2)
+}
+
+# Safety net: a transient hiccup on the Tableau endpoint (e.g. a blocked or
+# empty response) looks identical to a genuine "no cases" year -- an empty
+# CSV body. If that happens on every year in one run, the naive result is
+# active_years = integer(0), which would zero-fill and overwrite the ENTIRE
+# persistent cache/manifest/standard output, discarding real history (this
+# happened in production on 2026-08-28). Guard against it by never letting a
+# year already known to have cases in the cache drop out of active_years just
+# because this run's scan failed to reproduce that finding.
+history_active_years <- if (nrow(history_cached) > 0) {
+  unique(as.integer(format(history_cached$week_end[history_cached$cases > 0], "%Y")))
+} else {
+  integer(0)
+}
+active_years <- sort(union(active_years, history_active_years))
+
+cat("Active years (weekly drill-down needed):", paste(active_years, collapse = ", "), "\n")
+
+# -----------------------------------------------------------------------------
+# Step 2: figure out which active-year weeks actually need (re-)fetching this
+# run -- everything else is either zero-filled directly (inactive year) or
+# trusted from the persistent history cache (already fetched, outside the
+# refresh window).
+# -----------------------------------------------------------------------------
 refresh_cutoff <- max(week_ends) - 7 * (REFRESH_WEEKS_BACK - 1)
 
 active_week_ends <- week_ends[vapply(week_ends, function(we) {
