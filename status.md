@@ -34,7 +34,7 @@ flowchart LR
     end
     subgraph oh_cyclo["`oh_cyclo`"]
         direction LR
-        n6["`data.csv.gz<br /><br />Script Failed:<br />Can't combine '..1$cases' <character> and '..2$cases' <double>.`"]:::fail
+        n6["`data.csv.gz`"]:::pass
     end
     subgraph or_cyclo["`or_cyclo`"]
         direction LR
