@@ -169,7 +169,7 @@
       </div>
 </header>
 
-<nav id="header_top" role="navigation" class="row g-0 info">
+<nav id="header_top" role="banner" class="row g-0 info">
     <div class="col-12">
         <ul id="header_elem-list" class="row">
                                             <li id="top-menu-nav-btn" class="col-auto" title="Main Menu">
@@ -195,11 +195,13 @@
                                             Indiana Department of Health
                                     </a>
             </li>
-                                    <li id="header_search" class="col-12 col-md-4 col-lg-3">
+                        <!-- profile: health -->
+            <!-- collection: idepd -->
+                        <li id="header_search" class="col-12 col-md-4 col-lg-3">
                 <form id="agency-fb-search" action="/health/idepd/search-results" method="get" role="search">
                     <input type="hidden" name="profile" value="health">
-                                                            <input type="hidden" name="collection" value="idepd">
-                                        <ul id="header_search-list">
+                    <input type="hidden" name="collection" value="idepd">
+                    <ul id="header_search-list">
                         <li>
                             <button type="button" class="button" id="button_voice-search"
                                 title="Search by voice" style="display: inline-block;"><i
@@ -220,7 +222,7 @@
                                     class="browser-ie11">&gt;</span><span class="visually-hidden">Submit text
                                     search</span></button>
                         </li>
-                                                                    </ul>
+                    </ul>
                 </form>
             </li>
                     </ul>
