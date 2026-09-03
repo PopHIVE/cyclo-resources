@@ -22,7 +22,7 @@ flowchart LR
     end
     subgraph in_cyclo["`in_cyclo`"]
         direction LR
-        n3["`data.csv.gz`"]:::pass
+        n3["`data.csv.gz<br /><br />Script Failed:<br />Could not find the 'Last updated' caption on the page - source page structure may have changed.`"]:::fail
     end
     subgraph ky_cyclo_news["`ky_cyclo_news`"]
         direction LR
