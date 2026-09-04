@@ -1151,14 +1151,18 @@ county_block <- function(abbr) {
 # separate small maps. Reuses the same counties_geojson (built from all
 # SCRAPER_STATE_FIPS states) and just widens `locations`/fitbounds to the
 # whole region instead of one state.
-# height/width ratio of the padded lon/lat window, correcting lon degrees by
-# cos(latitude) since a degree of longitude covers less ground than a degree
-# of latitude away from the equator - used to size the responsive wrapper in
-# county_block_region() below so the map's aspect ratio (not a fixed pixel
-# height picked for one particular screen width) determines how tall it is.
+# height/width ratio of the padded lon/lat window - used to size the
+# responsive wrapper in county_block_region() below so the map's aspect ratio
+# (not a fixed pixel height picked for one particular screen width) determines
+# how tall it is. No cos(latitude) correction: the map below has no `scope`/
+# `projection` set, so plotly defaults to an uncorrected equirectangular
+# projection (x = lon, y = lat) - matching that here, rather than correcting
+# for true ground distance, is what keeps the wrapper's aspect ratio in sync
+# with plotly's own rendered aspect. A mismatch here previously left a large
+# blank gap under the map (plotly letterboxing its true-aspect render inside
+# a wrapper box built for a taller, distance-corrected aspect).
 geo_aspect <- function(rng) {
-  mean_lat <- mean(rng$lat)
-  (rng$lat[2] - rng$lat[1]) / ((rng$lon[2] - rng$lon[1]) * cos(mean_lat * pi / 180))
+  (rng$lat[2] - rng$lat[1]) / (rng$lon[2] - rng$lon[1])
 }
 
 make_region_county_plot <- function(abbrs, rng) {
