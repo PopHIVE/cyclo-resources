@@ -9,14 +9,15 @@
   },
   "resources": [
     {
-      "bytes": 166045,
+      "bytes": 166081,
       "encoding": "windows-1252",
-      "md5": "dda8d1521f2a314503c119d41a41fd88",
+      "md5": "c67aad8032d1f346f453ebf68dff3008",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "459d317968f45430dcf243b6c0bc2ce7c62ba904",
           "1fa6788127a93630d96d841bdc17313638bcc4f8",
           "10bb887585a767019da5024411e673e6c2e25269",
           "c4c1ac7375711ec75d686063fe521de5fa4b0604",
@@ -35,6 +36,7 @@
           "d85a5e2ce223b3148d7912bdb4251aac1cb4a974"
         ],
         "author": [
+          "GitHub Actions <actions@github.com>",
           "anshap32 <73296024+anshap32@users.noreply.github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
@@ -53,6 +55,7 @@
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Tue Sep 1 07:29:21 2026 +0000",
           "Mon Aug 31 16:21:26 2026 -0400",
           "Fri Aug 28 13:59:46 2026 +0000",
           "Sat Aug 22 02:58:33 2026 +0000",
@@ -71,6 +74,7 @@
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "fixed OH bug",
           "scheduled data build",
           "scheduled data build",
@@ -99,8 +103,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-09-01 07:29:14.809725",
-      "last_modified": "2026-09-01 07:29:14.809725",
+      "created": "2026-09-04 07:05:23.479295",
+      "last_modified": "2026-09-04 07:05:23.479295",
       "vintage": {},
       "row_count": 62744,
       "entity_count": 88,
@@ -951,10 +955,10 @@
             "time_range": [0, 712],
             "type": "integer",
             "missing": 0,
-            "mean": 0.10766,
-            "sd": 3.363358,
+            "mean": 0.112043,
+            "sd": 3.593449,
             "min": 0,
-            "max": 404
+            "max": 456
           },
           {
             "name": "suppressed_flag",
@@ -986,7 +990,7 @@
           }
         ]
       },
-      "sha512": "4a45aef996d6b6830a05c4c5b28c68dd0eef8dd9d72e786cb5ca5e79271a35e18606f3da6a737ccb2a53d7c2f1a0c6039ef9bede4b74ea05aca01f7b609de604"
+      "sha512": "f62c1efb8e498217b9b69c9ee1bcd11b3b1946a5bd1e1204fabbeeed5212f3795130d73fccb81dac5d0692aad468a56e72c5daf17e298e7444bbf0453a8054f9"
     }
   ],
   "measure_info": {
@@ -1055,7 +1059,7 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-08-29",
+          "added_levels": [],
           "dropped_levels": []
         },
         "oh_cyclo_cases": {
