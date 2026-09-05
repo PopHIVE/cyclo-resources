@@ -9,14 +9,15 @@
   },
   "resources": [
     {
-      "bytes": 1464,
+      "bytes": 1603,
       "encoding": "windows-1252",
-      "md5": "60d5c58f17a03304302137ea38cd8d57",
+      "md5": "305ba5b056fa26da2e1fc72d2f7bc70e",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "10bb887585a767019da5024411e673e6c2e25269",
           "c4c1ac7375711ec75d686063fe521de5fa4b0604",
           "2f421816e58b21010c395f7f501d02308451308f",
           "4c3389eef115e67e89ead46be42d2a6246612263",
@@ -38,9 +39,11 @@
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Fri Aug 28 13:59:46 2026 +0000",
           "Sat Aug 22 02:58:33 2026 +0000",
           "Sat Aug 15 02:56:23 2026 +0000",
           "Wed Aug 12 04:13:02 2026 +0000",
@@ -53,6 +56,7 @@
           "Mon Jul 20 22:29:39 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "scheduled data build",
           "scheduled data build",
           "scheduled data build",
@@ -75,67 +79,68 @@
       "id_length": 0,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-08-28 13:59:45.746069",
-      "last_modified": "2026-08-28 13:59:45.746069",
+      "created": "2026-09-05 06:49:15.134103",
+      "last_modified": "2026-09-05 06:49:15.134103",
       "vintage": {},
-      "row_count": 378,
-      "entity_count": 39,
+      "row_count": 417,
+      "entity_count": 40,
       "schema": {
         "fields": [
           {
             "name": "geography",
-            "duplicates": 339,
+            "duplicates": 377,
             "info": [],
-            "time_range": [0, 10],
+            "time_range": [0, 11],
             "type": "string",
             "missing": 0,
             "table": {
-              "54": 11,
-              "54001": 8,
-              "54003": 9,
-              "54005": 11,
-              "54007": 11,
-              "54009": 11,
-              "54011": 11,
+              "54": 12,
+              "54001": 9,
+              "54003": 10,
+              "54005": 12,
+              "54007": 12,
+              "54009": 12,
+              "54011": 12,
               "54015": 1,
-              "54019": 10,
-              "54029": 11,
-              "54033": 11,
-              "54035": 11,
-              "54039": 11,
-              "54041": 11,
-              "54043": 11,
-              "54045": 11,
-              "54049": 11,
-              "54051": 9,
-              "54053": 11,
-              "54057": 10,
-              "54059": 6,
-              "54061": 11,
-              "54065": 11,
-              "54069": 11,
-              "54071": 11,
-              "54075": 1,
-              "54077": 11,
-              "54079": 11,
-              "54081": 11,
-              "54083": 5,
-              "54085": 11,
-              "54087": 11,
-              "54091": 9,
-              "54093": 9,
-              "54097": 7,
-              "54099": 11,
-              "54103": 8,
-              "54105": 11,
-              "54107": 11
+              "54019": 11,
+              "54025": 1,
+              "54029": 12,
+              "54033": 12,
+              "54035": 12,
+              "54039": 12,
+              "54041": 12,
+              "54043": 12,
+              "54045": 12,
+              "54049": 12,
+              "54051": 10,
+              "54053": 12,
+              "54057": 11,
+              "54059": 7,
+              "54061": 12,
+              "54065": 12,
+              "54069": 12,
+              "54071": 12,
+              "54075": 2,
+              "54077": 12,
+              "54079": 12,
+              "54081": 12,
+              "54083": 6,
+              "54085": 12,
+              "54087": 12,
+              "54091": 10,
+              "54093": 10,
+              "54097": 8,
+              "54099": 12,
+              "54103": 9,
+              "54105": 12,
+              "54107": 12
             }
           },
           {
             "name": "time",
-            "duplicates": 367,
+            "duplicates": 405,
             "info": [],
-            "time_range": [0, 10],
+            "time_range": [0, 11],
             "type": "string",
             "missing": 0,
             "table": {
@@ -149,12 +154,13 @@
               "2026-08-11": 37,
               "2026-08-14": 37,
               "2026-08-21": 37,
-              "2026-08-28": 38
+              "2026-08-28": 38,
+              "2026-09-04": 39
             }
           },
           {
             "name": "wv_cyclo_cases_cumulative",
-            "duplicates": 328,
+            "duplicates": 366,
             "info": {
               "id": "wv_cyclo_cases_cumulative",
               "short_name": "Cyclosporiasis cases, cumulative (WV county)",
@@ -172,17 +178,17 @@
                 }
               ]
             },
-            "time_range": [0, 10],
+            "time_range": [0, 11],
             "type": "integer",
             "missing": 0,
-            "mean": 15.174603,
-            "sd": 45.103726,
+            "mean": 15.266187,
+            "sd": 45.611904,
             "min": 1,
             "max": 315
           },
           {
             "name": "wv_cyclo_cases_new",
-            "duplicates": 360,
+            "duplicates": 399,
             "info": {
               "id": "wv_cyclo_cases_new",
               "short_name": "Cyclosporiasis new cases (WV county)",
@@ -200,17 +206,17 @@
                 }
               ]
             },
-            "time_range": [1, 10],
+            "time_range": [1, 11],
             "type": "integer",
-            "missing": 39,
-            "mean": 1,
-            "sd": 4.155982,
+            "missing": 40,
+            "mean": 0.896552,
+            "sd": 3.952835,
             "min": -1,
             "max": 56
           }
         ]
       },
-      "sha512": "890873af5a1410453df66601fbb9bc26182703adc0f4d47561d56104e2b6016272068c4aafd03e08255f0abde0e681f8d5b329851830cc57985538ddb09b8d01"
+      "sha512": "c8f80c5826f8e5fa5d48623098e0dc1eb41ac5631da7542cba37372f01b69461fabd7b38c95585524dbaa6158e5b5db767f5968e299c099ee679a73089aefc44"
     }
   ],
   "measure_info": {
@@ -272,13 +278,13 @@
         "geography": {
           "status": "present",
           "same_type": true,
-          "added_levels": "54075",
+          "added_levels": "54025",
           "dropped_levels": []
         },
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-08-28",
+          "added_levels": "2026-09-04",
           "dropped_levels": []
         },
         "wv_cyclo_cases_cumulative": {
