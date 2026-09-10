@@ -9,23 +9,27 @@
   },
   "resources": [
     {
-      "bytes": 1798,
-      "encoding": "windows-1250",
-      "md5": "b3652c820dc2680e7338cf810046b837",
+      "bytes": 1802,
+      "encoding": "windows-1252",
+      "md5": "39b13fbd3928780678ea8a4fbb229eb1",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "ca56813437256ab7d350ec4372feb60a8f93ff55",
           "256c65b8d1b6cee9ffa9f84d04feaf46e2fc9555"
         ],
         "author": [
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Thu Aug 13 04:17:16 2026 +0000",
           "Tue Jul 14 10:02:28 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "adds oregon scraper"
         ]
       },
@@ -39,22 +43,22 @@
       "id_length": 0,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-08-13 04:17:14.954144",
-      "last_modified": "2026-08-13 04:17:14.954144",
+      "created": "2026-09-10 07:09:25.529966",
+      "last_modified": "2026-09-10 07:09:25.529966",
       "vintage": {},
-      "row_count": 677,
+      "row_count": 678,
       "entity_count": 37,
       "schema": {
         "fields": [
           {
             "name": "geography",
-            "duplicates": 640,
+            "duplicates": 641,
             "info": [],
-            "time_range": [0, 64],
+            "time_range": [0, 65],
             "type": "string",
             "missing": 0,
             "table": {
-              "41": 65,
+              "41": 66,
               "41001": 17,
               "41003": 17,
               "41005": 17,
@@ -97,7 +101,7 @@
             "name": "time",
             "duplicates": 612,
             "info": [],
-            "time_range": [0, 64],
+            "time_range": [0, 65],
             "type": "string",
             "missing": 0,
             "table": {
@@ -165,12 +169,13 @@
               "2026-04-01": 37,
               "2026-05-01": 1,
               "2026-06-01": 1,
-              "2026-07-01": 1
+              "2026-07-01": 1,
+              "2026-08-01": 1
             }
           },
           {
             "name": "or_cyclo_cases",
-            "duplicates": 666,
+            "duplicates": 667,
             "info": {
               "id": "or_cyclo_cases",
               "short_name": "Cyclosporiasis cases, statewide (OR)",
@@ -189,17 +194,17 @@
                 }
               ]
             },
-            "time_range": [0, 64],
+            "time_range": [0, 65],
             "type": "integer",
             "missing": 612,
-            "mean": 1.923077,
-            "sd": 3.692508,
+            "mean": 2.121212,
+            "sd": 4.602725,
             "min": 0,
-            "max": 17
+            "max": 29
           },
           {
             "name": "suppressed_flag",
-            "duplicates": 675,
+            "duplicates": 676,
             "info": {
               "id": "suppressed_flag",
               "short_name": "Statewide count suppressed flag",
@@ -217,7 +222,7 @@
                 }
               ]
             },
-            "time_range": [0, 64],
+            "time_range": [0, 65],
             "type": "integer",
             "missing": 612,
             "mean": 0,
@@ -227,7 +232,7 @@
           },
           {
             "name": "or_cyclo_cases_county",
-            "duplicates": 675,
+            "duplicates": 676,
             "info": {
               "id": "or_cyclo_cases_county",
               "short_name": "Cyclosporiasis cases, by county (OR)",
@@ -248,7 +253,7 @@
             },
             "time_range": [46, 60],
             "type": "integer",
-            "missing": 137,
+            "missing": 138,
             "mean": 0,
             "sd": 0,
             "min": 0,
@@ -256,7 +261,7 @@
           },
           {
             "name": "county_suppressed_flag",
-            "duplicates": 674,
+            "duplicates": 675,
             "info": {
               "id": "county_suppressed_flag",
               "short_name": "County count suppressed flag",
@@ -276,7 +281,7 @@
             },
             "time_range": [45, 61],
             "type": "integer",
-            "missing": 65,
+            "missing": 66,
             "mean": 0.117647,
             "sd": 0.322453,
             "min": 0,
@@ -284,7 +289,7 @@
           }
         ]
       },
-      "sha512": "0dc41316092ca220d1265c54aadf86364a6721576252f527906863b7f5ce3e5ef2fcab4d54f3a1bc8b41cd3b90597d040d0036e14fdf83a895620acfa773196d"
+      "sha512": "6480ce00c3048bdbdc67efff12bd24d99d2ca59cc4a3ff3cb7b76c9d686920cd98e6c75cd6b8af5f23a2a3d0443959e097e8c7497c6dde4ec513c20ac761b85b"
     }
   ],
   "measure_info": {
@@ -390,7 +395,7 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-07-01",
+          "added_levels": "2026-08-01",
           "dropped_levels": []
         },
         "or_cyclo_cases": {
