@@ -9,14 +9,15 @@
   },
   "resources": [
     {
-      "bytes": 166653,
+      "bytes": 166660,
       "encoding": "windows-1251",
-      "md5": "abdb7dcf02dd92662843f5af871f859f",
+      "md5": "9e31936bc7b8f9ca4584ea622a36f1ea",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "ecc9b183355e345714880fe91e61431a2d611551",
           "aaf11985f5ada7b7e4487e51ccf4efa0686a9266",
           "3155a75eee77eeed042d33457caf8bc5b2904cf6",
           "6223cd5cc0ac3ad94a2d20f11539802828c77742",
@@ -43,6 +44,7 @@
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "anshap32 <73296024+anshap32@users.noreply.github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
@@ -61,6 +63,7 @@
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Sat Sep 12 07:00:59 2026 +0000",
           "Fri Sep 11 07:10:44 2026 +0000",
           "Sat Sep 5 06:49:15 2026 +0000",
           "Fri Sep 4 07:05:31 2026 +0000",
@@ -83,6 +86,7 @@
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "scheduled data build",
           "scheduled data build",
           "scheduled data build",
@@ -115,8 +119,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-09-12 07:00:52.06587",
-      "last_modified": "2026-09-12 07:00:52.06587",
+      "created": "2026-09-18 07:12:51.931505",
+      "last_modified": "2026-09-18 07:12:51.931505",
       "vintage": {},
       "row_count": 62920,
       "entity_count": 88,
@@ -947,7 +951,7 @@
           },
           {
             "name": "oh_cyclo_cases",
-            "duplicates": 62857,
+            "duplicates": 62856,
             "info": {
               "id": "oh_cyclo_cases",
               "short_name": "Cyclosporiasis cases (OH)",
@@ -969,10 +973,10 @@
             "time_range": [0, 714],
             "type": "integer",
             "missing": 0,
-            "mean": 0.112746,
-            "sd": 3.61961,
+            "mean": 0.112842,
+            "sd": 3.616106,
             "min": 0,
-            "max": 462
+            "max": 458
           },
           {
             "name": "suppressed_flag",
@@ -1004,7 +1008,7 @@
           }
         ]
       },
-      "sha512": "d9b38d300dc41247f74a0dd55ef6ab8cf3702f434025191ac0e8be64ad36c4b448030aee30b6bbecfd6167d2bf0350d251bb729f95ef7920cc4a7f8d09e5392c"
+      "sha512": "534eed687d5c79828236cdf773c64ba731e48c9b0754d8c21bca608dd975a05b5b24de5fe55ac686a02f4d4a084e5a4a1bf575e445c2e52aa75e39c18df048c3"
     }
   ],
   "measure_info": {
@@ -1073,7 +1077,7 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-09-12",
+          "added_levels": [],
           "dropped_levels": []
         },
         "oh_cyclo_cases": {
