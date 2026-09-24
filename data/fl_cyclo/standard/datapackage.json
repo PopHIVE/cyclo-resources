@@ -9,14 +9,15 @@
   },
   "resources": [
     {
-      "bytes": 18257,
+      "bytes": 18251,
       "encoding": "windows-1250",
-      "md5": "1cce552fbaf0b1233492f76e052c189a",
+      "md5": "3f5df219aad0747d5982bf01c56904db",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "5cfbdd49cc8770547f4a9ab4aa0150d2683039e3",
           "628f05e774eff30ea2b731972be9dc81ff5230c9",
           "dceb1256635da3afc0190b9d417e76df3546dd0f",
           "20b2973db47a4638bcef89441b3327276cbe566a",
@@ -44,9 +45,11 @@
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Thu Sep 17 07:21:53 2026 +0000",
           "Thu Sep 10 07:09:27 2026 +0000",
           "Thu Sep 3 07:01:02 2026 +0000",
           "Thu Aug 27 12:32:21 2026 +0000",
@@ -62,6 +65,7 @@
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "scheduled data build",
           "scheduled data build",
           "scheduled data build",
@@ -87,8 +91,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-09-17 07:20:59.626221",
-      "last_modified": "2026-09-17 07:20:59.626221",
+      "created": "2026-09-24 07:25:35.102525",
+      "last_modified": "2026-09-24 07:25:35.102525",
       "vintage": {},
       "row_count": 6968,
       "entity_count": 67,
@@ -179,7 +183,6 @@
             "type": "string",
             "missing": 0,
             "table": {
-              "2024-09-21": 67,
               "2024-09-28": 67,
               "2024-10-05": 67,
               "2024-10-12": 67,
@@ -282,7 +285,8 @@
               "2026-08-22": 67,
               "2026-08-29": 67,
               "2026-09-05": 67,
-              "2026-09-12": 67
+              "2026-09-12": 67,
+              "2026-09-19": 67
             }
           },
           {
@@ -309,8 +313,8 @@
             "time_range": [0, 103],
             "type": "integer",
             "missing": 0,
-            "mean": 0.031573,
-            "sd": 0.24989,
+            "mean": 0.030855,
+            "sd": 0.24854,
             "min": 0,
             "max": 8
           },
@@ -345,7 +349,7 @@
           }
         ]
       },
-      "sha512": "9de1bdc36c0c228130871b056d8a73ecf75186beaa611162c33514c261c537c9ba3f1daaeba02404655b37205172ae0f7adcb2c168e050939d369cb535b91568"
+      "sha512": "4fb07e8b8e460cdecc00995a318c50f639d3413741576f07198f4f0f256787ddc90373450060a07aa4b34563dff0463c3029396be446be5b889ec10b9b698820"
     }
   ],
   "measure_info": {
@@ -413,8 +417,8 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-09-12",
-          "dropped_levels": "2024-09-14"
+          "added_levels": "2026-09-19",
+          "dropped_levels": "2024-09-21"
         },
         "fl_cyclo_cases": {
           "status": "present",
