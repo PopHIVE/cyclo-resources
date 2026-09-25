@@ -9,14 +9,15 @@
   },
   "resources": [
     {
-      "bytes": 166704,
+      "bytes": 166710,
       "encoding": "windows-1250",
-      "md5": "2449138f4a39eaad0c77d2c659aef422",
+      "md5": "9bf17a3c50e4b6e003168df38d84f1cc",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "ccc7ec60fab09ff37d518ef56dc47391aea989cc",
           "753db57459f370204c1e4c89bc2223b15cecc48b",
           "ecc9b183355e345714880fe91e61431a2d611551",
           "aaf11985f5ada7b7e4487e51ccf4efa0686a9266",
@@ -47,6 +48,7 @@
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "anshap32 <73296024+anshap32@users.noreply.github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
@@ -65,6 +67,7 @@
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Sat Sep 19 07:11:05 2026 +0000",
           "Fri Sep 18 07:12:58 2026 +0000",
           "Sat Sep 12 07:00:59 2026 +0000",
           "Fri Sep 11 07:10:44 2026 +0000",
@@ -89,6 +92,7 @@
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
           "scheduled data build",
           "scheduled data build",
           "scheduled data build",
@@ -123,8 +127,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-09-19 07:10:58.555686",
-      "last_modified": "2026-09-19 07:10:58.555686",
+      "created": "2026-09-25 07:20:23.41674",
+      "last_modified": "2026-09-25 07:20:23.41674",
       "vintage": {},
       "row_count": 63008,
       "entity_count": 88,
@@ -978,8 +982,8 @@
             "time_range": [0, 715],
             "type": "integer",
             "missing": 0,
-            "mean": 0.112684,
-            "sd": 3.613582,
+            "mean": 0.112748,
+            "sd": 3.61412,
             "min": 0,
             "max": 458
           },
@@ -1013,7 +1017,7 @@
           }
         ]
       },
-      "sha512": "e027e11dcdbb3db1ff6a64179dcfa61efde521961eddd973c341fabc075604a99d75f8048bc5d95347757c7abdbd9fc845611a1790610ade0e5ec3546819ffa1"
+      "sha512": "67a3c30a85b24a78e97641548c96f28c84a07a129201b6e2004b456850170243ce221bff7bd6a4fa9d609f2ea3bdcf1909cda242692f0fd65b60aa5e5680b104"
     }
   ],
   "measure_info": {
@@ -1082,7 +1086,7 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-09-19",
+          "added_levels": [],
           "dropped_levels": []
         },
         "oh_cyclo_cases": {
