@@ -1,6 +1,7 @@
 on:
-  schedule:
-    - cron: '0 2 * * *'
+  # Daily schedule disabled 2026-10-08; page no longer updated. Re-enable if another outbreak occurs.
+  # schedule:
+  #   - cron: '0 2 * * *'
   workflow_dispatch:
 
 jobs:
