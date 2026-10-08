@@ -91,6 +91,10 @@ a:hover { color: #4e98e4; }
 </nav>
 ```
 
+::: {.callout-important}
+As of 10/08/2026, we are no longer updating this page. We will resume if another outbreak occurs.
+:::
+
 ```{r}
 #| label: setup
 #| include: false

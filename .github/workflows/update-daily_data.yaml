@@ -1,7 +1,8 @@
 on:
-  schedule:
-    # 2am ET (07:00 UTC; during EDT this runs at 3am)
-    - cron: '0 7 * * *'
+  # Daily schedule disabled 2026-10-08; page no longer updated. Re-enable if another outbreak occurs.
+  # schedule:
+  #   # 2am ET (07:00 UTC; during EDT this runs at 3am)
+  #   - cron: '0 7 * * *'
   workflow_dispatch:
 
 concurrency:
