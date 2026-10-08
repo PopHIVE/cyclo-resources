@@ -9,14 +9,18 @@
   },
   "resources": [
     {
-      "bytes": 18182,
-      "encoding": "windows-1252",
-      "md5": "cf2393078473f83ecdce0e5285a96543",
+      "bytes": 18155,
+      "encoding": "windows-1250",
+      "md5": "6f6f68af956407866366695e0f0817a4",
       "format": "csv",
       "name": "data.csv",
       "filename": "data.csv.gz",
       "versions": {
         "hash": [
+          "6a3b521b330ca8400d860c3dffcbd9c6f8720659",
+          "5cfbdd49cc8770547f4a9ab4aa0150d2683039e3",
+          "628f05e774eff30ea2b731972be9dc81ff5230c9",
+          "dceb1256635da3afc0190b9d417e76df3546dd0f",
           "20b2973db47a4638bcef89441b3327276cbe566a",
           "73684a194f3f5b50352595d86eec3496741503af",
           "ca56813437256ab7d350ec4372feb60a8f93ff55",
@@ -40,9 +44,17 @@
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
           "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
+          "GitHub Actions <actions@github.com>",
           "weinbergerlab <dweinber@gmail.com>"
         ],
         "date": [
+          "Thu Sep 24 07:26:29 2026 +0000",
+          "Thu Sep 17 07:21:53 2026 +0000",
+          "Thu Sep 10 07:09:27 2026 +0000",
+          "Thu Sep 3 07:01:02 2026 +0000",
           "Thu Aug 27 12:32:21 2026 +0000",
           "Thu Aug 20 03:01:08 2026 +0000",
           "Thu Aug 13 04:17:16 2026 +0000",
@@ -56,6 +68,10 @@
           "Fri Jul 10 23:35:15 2026 -0400"
         ],
         "message": [
+          "scheduled data build",
+          "scheduled data build",
+          "scheduled data build",
+          "scheduled data build",
           "scheduled data build",
           "scheduled data build",
           "scheduled data build",
@@ -79,8 +95,8 @@
       "id_length": 5,
       "time": "time",
       "profile": "data-resource",
-      "created": "2026-09-03 07:00:07.763366",
-      "last_modified": "2026-09-03 07:00:07.763366",
+      "created": "2026-10-08 08:35:21.710229",
+      "last_modified": "2026-10-08 08:35:21.710229",
       "vintage": {},
       "row_count": 6968,
       "entity_count": 67,
@@ -171,11 +187,6 @@
             "type": "string",
             "missing": 0,
             "table": {
-              "2024-09-07": 67,
-              "2024-09-14": 67,
-              "2024-09-21": 67,
-              "2024-09-28": 67,
-              "2024-10-05": 67,
               "2024-10-12": 67,
               "2024-10-19": 67,
               "2024-10-26": 67,
@@ -274,7 +285,12 @@
               "2026-08-08": 67,
               "2026-08-15": 67,
               "2026-08-22": 67,
-              "2026-08-29": 67
+              "2026-08-29": 67,
+              "2026-09-05": 67,
+              "2026-09-12": 67,
+              "2026-09-19": 67,
+              "2026-09-26": 67,
+              "2026-10-03": 67
             }
           },
           {
@@ -301,8 +317,8 @@
             "time_range": [0, 103],
             "type": "integer",
             "missing": 0,
-            "mean": 0.032865,
-            "sd": 0.253997,
+            "mean": 0.030425,
+            "sd": 0.247725,
             "min": 0,
             "max": 8
           },
@@ -337,7 +353,7 @@
           }
         ]
       },
-      "sha512": "975070f27b0f2b69f9cd9b791a8400b6a5afce330bda312db8cf803b902e005a69ddb73ab4721d8969326a192557fb5afb8c22f12e53d632ca581a99a5be666e"
+      "sha512": "6d96cad47118fd610a74bed61906da8cb8938b6ae02ed70f1ce96b011bd38da0791da596bc9a76d996ef88e3adfae6afbcb01a39144f5bdfc621eb736b14620b"
     }
   ],
   "measure_info": {
@@ -405,8 +421,8 @@
         "time": {
           "status": "present",
           "same_type": true,
-          "added_levels": "2026-08-29",
-          "dropped_levels": "2024-08-31"
+          "added_levels": ["2026-09-26", "2026-10-03"],
+          "dropped_levels": ["2024-09-28", "2024-10-05"]
         },
         "fl_cyclo_cases": {
           "status": "present",
